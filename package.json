@@ -1,22 +1,23 @@
 {
-  "name": "remotion-three-scaffold",
+  "name": "remotion-animation-project",
   "version": "1.0.0",
-  "description": "A React Three Fiber Project",
+  "description": "Remotion + React Three Fiber character scene",
   "repository": {},
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@react-three/fiber": "9.2.0",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.2.0",
     "@remotion/cli": "4.0.534",
     "@remotion/media": "4.0.534",
     "@remotion/three": "4.0.534",
     "@remotion/zod-types": "4.0.534",
+    "mediabunny": "1.56.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.534",
-    "three": "0.178.0",
-    "zod": "4.5.4",
-    "mediabunny": "1.56.1"
+    "three": "^0.178.0",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.534",
