@@ -107,7 +107,7 @@ const CaptionOverlay = ({ frame, activeLine }) => {
             fontWeight: 700,
             letterSpacing: 2,
             marginBottom: 6,
-            color: isHuman ? "#9A9A9A" : "#4FD1C5",
+            color: isHuman ? "#9A9A9A" : "#D97757",
             fontFamily: "system-ui, sans-serif",
           }}
         >
@@ -118,7 +118,7 @@ const CaptionOverlay = ({ frame, activeLine }) => {
             fontSize: 28,
             fontWeight: 700,
             lineHeight: 1.35,
-            color: isHuman ? "#EDEDED" : "#F6C945",
+            color: isHuman ? "#EDEDED" : "#FF8C5A",
             fontFamily: "system-ui, sans-serif",
           }}
         >
@@ -149,7 +149,7 @@ export const MainScene = () => {
   const activeLine = getActiveLine(frame, dialogue);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#0a1628" }}>
+    <AbsoluteFill style={{ backgroundColor: "#6BA8D9" }}>
       <div style={{ width: "100%", height: "100%", position: "relative" }}>
         <div
           style={{
@@ -193,8 +193,8 @@ export const MainScene = () => {
           shadows
           camera={{ position: [0, 1.4, 4.5], fov: 42, near: 0.1, far: 100 }}
         >
-          <color attach="background" args={["#0a1628"]} />
-          <fog attach="fog" args={["#0a1628", 22, 55]} />
+          <color attach="background" args={["#6BA8D9"]} />
+          <fog attach="fog" args={["#C5D9EC", 22, 60]} />
 
           <Stage />
           <CameraRig preset={currentPreset} />

@@ -45,13 +45,14 @@ export class AIAgentModel {
         emissiveIntensity: intensity,
       });
 
+    // Claude / Anthropic coral-orange palette
     this.materials = {
-      chassis: lambert("#191E2D"),
-      chassisLight: lambert("#2A3344"),
-      metal: lambert("#6B7C8D"),
-      accent: glow("#5EC8E8", 0.7),
-      eyeGlow: glow("#39FF14", 1.6),
-      thruster: glow("#FFA500", 1.4),
+      chassis: lambert("#D97757"),
+      chassisLight: lambert("#E68A68"),
+      metal: lambert("#B85C3E"),
+      accent: glow("#FFB08A", 0.9),
+      eyeGlow: glow("#FFF4EC", 1.6),
+      thruster: glow("#FF8C5A", 1.4),
     };
   }
 

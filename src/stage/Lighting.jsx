@@ -1,51 +1,34 @@
 import React from "react";
 
-export default function Lighting() {
+export default function Lighting({ mood = 0 }) {
+  const sunIntensity = 1.8 - mood * 0.4;
+
   return (
     <>
-      <ambientLight intensity={0.75} color="#2a4a6c" />
-      <hemisphereLight args={["#6a90b8", "#1a3020", 0.45]} />
+      <ambientLight intensity={0.6} color="#FFE4B5" />
 
-      {/* Moonlight */}
+      {/* Golden hour sun */}
       <directionalLight
-        position={[5, 12, -5]}
-        intensity={1.3}
-        color="#e8f2ff"
+        position={[12, 18, -8]}
+        intensity={sunIntensity}
+        color="#FFD580"
         castShadow
       />
 
-      {/* Warm left-side fill */}
-      <pointLight
-        position={[-3.5, 2.5, 2.5]}
-        intensity={1.8}
-        color="#FF8C42"
-        distance={14}
-        decay={1.2}
+      {/* Soft cool fill */}
+      <directionalLight
+        position={[-8, 4, 5]}
+        intensity={0.4}
+        color="#C8D8FF"
       />
 
-      {/* Byte's teal bounce */}
+      {/* Subtle warm bench lamp */}
       <pointLight
-        position={[2.5, 1.8, 1.5]}
-        intensity={1.1}
-        color="#00FFB2"
-        distance={10}
-        decay={1.2}
-      />
-
-      {/* Warm lamp pool over the bench */}
-      <pointLight
-        position={[0, 3.2, 1.2]}
-        color="#ffcc77"
-        intensity={3.5}
-        distance={12}
-        decay={1.5}
-      />
-      <pointLight
-        position={[1.5, 2.4, 0.8]}
-        color="#ffb347"
-        intensity={2.2}
-        distance={8}
-        decay={1.5}
+        position={[1.5, 2.5, 1]}
+        color="#FFB347"
+        intensity={0.8}
+        distance={6}
+        decay={2}
       />
     </>
   );

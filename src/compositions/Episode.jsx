@@ -37,17 +37,20 @@ export default function Episode() {
     ) || timeline[0];
 
   return (
-    <AbsoluteFill style={{ background: "#050A14" }}>
+    <AbsoluteFill style={{ background: "#6BA8D9" }}>
       <Canvas
         style={{ width, height }}
         camera={{ fov: 36, near: 0.1, far: 100 }}
         gl={{ antialias: true }}
         shadows
       >
-        <color attach="background" args={["#0a1628"]} />
-        <fog attach="fog" args={["#0a1628", 18, 45]} />
-        <Stage />
-        <CameraRig preset={currentLine.camera} />
+        <color attach="background" args={["#6BA8D9"]} />
+        <fog attach="fog" args={["#C5D9EC", 22, 60]} />
+        <Stage mood={currentLine.mood} />
+        <CameraRig
+          preset={currentLine.camera}
+          lineStartFrame={currentLine.startFrame}
+        />
 
         {/* Y≈-0.45 + bent legs = hips on seat at Y=0.45 */}
         <Human

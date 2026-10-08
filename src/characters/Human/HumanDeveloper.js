@@ -1,13 +1,14 @@
 import * as THREE from "three";
 
 /**
- * Standalone "Human Developer" character (boxes + cylinders).
+ * Standalone low-poly "Human Developer" character.
+ * Boxy body, but a clearly human head, face and hands.
  * Fully independent of AIAgent — add `human.group` to any scene.
  *
- * Hierarchy (animation-ready joints):
+ * Hierarchy (animation-ready joints — MainScene / Episode drive these by name):
  *   humanGroup
  *     └── hips
- *           ├── torso → neck → head (+ eyes, brows, hair)
+ *           ├── torso → neck → head (+ skull, hair, face, ears)
  *           │         ├── leftUpperArm → leftForearm → leftHand
  *           │         └── rightUpperArm → rightForearm → rightHand
  *           ├── leftUpperLeg → leftLowerLeg → leftFoot
@@ -42,7 +43,8 @@ export class HumanDeveloper {
     upperArmLength: 0.28,
     forearmLength: 0.36,
     armThickness: 0.13,
-    handSize: 0.13,
+    /** Hand span — large enough to read from Z≈4–7 on the bench */
+    handSize: 0.17,
     upperLegLength: 0.4,
     lowerLegLength: 0.38,
     legThickness: 0.17,
@@ -66,11 +68,34 @@ export class HumanDeveloper {
       shirt: mat("#3474A4"),
       skin: mat("#E8AF87"),
       brown: mat("#2F241F"),
+      eyeWhite: mat("#F5F0E8"),
+      iris: mat("#3D2914"),
+      lip: mat("#C47A6A"),
     };
   }
 
   _box(w, h, d, material) {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
+  }
+
+  _sphere(radius, material, wSeg = 16, hSeg = 12) {
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(radius, wSeg, hSeg),
+      material,
+    );
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
+  }
+
+  _cylinder(rTop, rBot, height, material, segments = 10) {
+    const mesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(rTop, rBot, height, segments),
+      material,
+    );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     return mesh;
@@ -105,36 +130,22 @@ export class HumanDeveloper {
     this.torso.add(torsoMesh);
     this.hips.add(this.torso);
 
-    // Neck — thin box connector (matches final blocky look)
+    // Neck — soft cylinder
     this.neck = new THREE.Group();
     this.neck.name = "neck";
     this.neck.position.set(0, p.torsoHeight * 0.5 + p.neckHeight * 0.5 + p.jointGap, 0);
-    const neckMesh = this._box(p.neckWidth, p.neckHeight, p.neckWidth, this.materials.skin);
+    const neckMesh = this._cylinder(
+      p.neckWidth * 0.55,
+      p.neckWidth * 0.62,
+      p.neckHeight,
+      this.materials.skin,
+      12,
+    );
     neckMesh.name = "neckMesh";
     this.neck.add(neckMesh);
     this.torso.add(this.neck);
 
-    // Head
-    this.head = new THREE.Group();
-    this.head.name = "head";
-    this.head.position.set(0, p.neckHeight * 0.5 + p.headSize * 0.5 + p.jointGap * 0.5, 0);
-    const headMesh = this._box(p.headSize, p.headSize, p.headSize * 0.92, this.materials.skin);
-    headMesh.name = "headMesh";
-    this.head.add(headMesh);
-
-    // Hair cap — dark brown slab on top / back
-    const hair = this._box(
-      p.headSize * 1.02,
-      p.headSize * 0.22,
-      p.headSize * 0.95,
-      this.materials.brown,
-    );
-    hair.name = "hair";
-    hair.position.set(0, p.headSize * 0.42, -p.headSize * 0.04);
-    this.head.add(hair);
-
-    this._addFace(p.headSize);
-    this.neck.add(this.head);
+    this._buildHead();
 
     this.leftUpperArm = this._buildArm("left");
     this.rightUpperArm = this._buildArm("right");
@@ -150,59 +161,113 @@ export class HumanDeveloper {
     this.hips.add(this.leftUpperLeg, this.rightUpperLeg);
   }
 
-  _addFace(headSize) {
-    const faceZ = headSize * 0.47;
-    const eyeX = headSize * 0.16;
-    const eyeY = headSize * 0.06;
-    // Solid dark cubes — matches final animation look
-    const eye = headSize * 0.11;
+  // ── Head ───────────────────────────────────────────────────────────────
 
-    const leftEye = this._box(eye, eye, headSize * 0.04, this.materials.brown);
-    leftEye.name = "leftEye";
-    leftEye.position.set(-eyeX, eyeY, faceZ);
-    this.head.add(leftEye);
+  _buildHead() {
+    const p = this.params;
+    const R = p.headSize * 0.5;
 
-    const rightEye = this._box(eye, eye, headSize * 0.04, this.materials.brown);
-    rightEye.name = "rightEye";
-    rightEye.position.set(eyeX, eyeY, faceZ);
-    this.head.add(rightEye);
+    this.head = new THREE.Group();
+    this.head.name = "head";
+    this.head.position.set(0, p.neckHeight * 0.5 + R * 1.05 + p.jointGap * 0.5, 0);
 
-    const browW = eye * 1.35;
-    const browH = headSize * 0.045;
-    const browY = eyeY + headSize * 0.14;
+    // Skull — slightly oval sphere (wider than deep, a touch taller than wide)
+    const skull = this._sphere(R, this.materials.skin, 24, 18);
+    skull.name = "headMesh";
+    skull.scale.set(0.9, 1.05, 0.85);
+    this.head.add(skull);
 
-    const leftBrow = this._box(browW, browH, headSize * 0.04, this.materials.brown);
-    leftBrow.name = "leftEyebrow";
-    leftBrow.position.set(-eyeX, browY, faceZ);
-    this.head.add(leftBrow);
+    this._addHair(R);
+    this._addFace(R);
 
-    const rightBrow = this._box(browW, browH, headSize * 0.04, this.materials.brown);
-    rightBrow.name = "rightEyebrow";
-    rightBrow.position.set(eyeX, browY, faceZ);
-    this.head.add(rightBrow);
+    this.neck.add(this.head);
+  }
 
-    // Nose — small skin-tone block sticking out from the face
-    const nose = this._box(
-      headSize * 0.12,
-      headSize * 0.14,
-      headSize * 0.12,
-      this.materials.skin,
-    );
-    nose.name = "nose";
-    nose.position.set(0, -headSize * 0.04, faceZ + headSize * 0.04);
-    this.head.add(nose);
-
-    // Lips — thin dark bar below the nose
-    const lips = this._box(
-      headSize * 0.22,
-      headSize * 0.05,
-      headSize * 0.05,
+  _addHair(R) {
+    // Top cap — a partial sphere hugging the crown. The cut sits ~55° down
+    // from the pole, so the hairline lands high on the forehead and the
+    // brows, eyes and forehead stay skin-coloured (no visor band).
+    const cap = new THREE.Mesh(
+      new THREE.SphereGeometry(R * 1.08, 24, 12, 0, Math.PI * 2, 0, 0.95),
       this.materials.brown,
     );
-    lips.name = "lips";
-    lips.position.set(0, -headSize * 0.18, faceZ + headSize * 0.01);
-    this.head.add(lips);
+    cap.name = "hairTop";
+    cap.scale.set(0.9, 1.05, 0.85);
+    cap.castShadow = true;
+    this.head.add(cap);
+
+    // Back — hair mass behind the skull, reaching down to the nape
+    const back = this._sphere(R * 0.62, this.materials.brown, 14, 10);
+    back.name = "hairBack";
+    back.position.set(0, R * 0.1, -R * 0.52);
+    back.scale.set(1.0, 1.15, 0.72);
+    this.head.add(back);
+
+    // Sideburns — behind the face plane, above and behind the ears
+    [-1, 1].forEach((sign) => {
+      const burn = this._sphere(R * 0.2, this.materials.brown, 8, 6);
+      burn.name = sign < 0 ? "hairSideL" : "hairSideR";
+      burn.position.set(sign * R * 0.8, R * 0.15, -R * 0.28);
+      burn.scale.set(0.5, 1.2, 0.8);
+      this.head.add(burn);
+    });
   }
+
+  _addFace(R) {
+    const eyeX = R * 0.34;
+    const eyeY = R * 0.1;
+    const eyeR = R * 0.15;
+    /** Face plane — just proud of the skull so every feature reads */
+    const faceZ = R * 0.8;
+
+    [-1, 1].forEach((sign) => {
+      const side = sign < 0 ? "left" : "right";
+
+      // Eye — white sclera with a dark brown iris, protruding on +Z
+      const white = this._sphere(eyeR, this.materials.eyeWhite, 10, 8);
+      white.name = `${side}Eye`;
+      white.position.set(sign * eyeX, eyeY, faceZ);
+      white.scale.set(1.15, 0.9, 0.5);
+      this.head.add(white);
+
+      const iris = this._sphere(eyeR * 0.6, this.materials.iris, 8, 6);
+      iris.name = `${side}Iris`;
+      iris.position.set(sign * eyeX, eyeY, faceZ + eyeR * 0.4);
+      this.head.add(iris);
+
+      // Brow — short thin box above its own eye, not one continuous band
+      const brow = this._box(eyeR * 2.0, eyeR * 0.36, eyeR * 0.4, this.materials.brown);
+      brow.name = `${side}Eyebrow`;
+      brow.position.set(sign * eyeX, eyeY + eyeR * 2.2, faceZ + R * 0.02);
+      brow.rotation.z = -sign * 0.12;
+      this.head.add(brow);
+    });
+
+    // Nose — large, protruding skin-coloured sphere (readable in a medium shot)
+    const nose = this._sphere(R * 0.22, this.materials.skin, 12, 10);
+    nose.name = "nose";
+    nose.position.set(0, -R * 0.14, faceZ + R * 0.1);
+    nose.scale.set(0.78, 1.1, 1.3);
+    this.head.add(nose);
+
+    // Lips — soft lip-coloured shape under the nose
+    const lips = this._sphere(R * 0.2, this.materials.lip, 12, 8);
+    lips.name = "lips";
+    lips.position.set(0, -R * 0.5, faceZ + R * 0.02);
+    lips.scale.set(1.4, 0.45, 0.6);
+    this.head.add(lips);
+
+    // Ears — small, on the sides of the skull
+    [-1, 1].forEach((sign) => {
+      const ear = this._sphere(R * 0.24, this.materials.skin, 8, 6);
+      ear.name = sign < 0 ? "earL" : "earR";
+      ear.position.set(sign * R * 0.9, 0, -R * 0.05);
+      ear.scale.set(0.4, 1.05, 0.65);
+      this.head.add(ear);
+    });
+  }
+
+  // ── Arms ───────────────────────────────────────────────────────────────
 
   _buildArm(side) {
     const p = this.params;
@@ -241,10 +306,37 @@ export class HumanDeveloper {
     const hand = new THREE.Group();
     hand.name = `${side}Hand`;
     hand.position.set(0, -(p.forearmLength + p.jointGap), 0);
-    const handMesh = this._box(p.handSize, p.handSize * 0.9, p.handSize * 0.75, this.materials.skin);
-    handMesh.name = `${side}HandMesh`;
-    handMesh.position.y = -p.handSize * 0.4;
-    hand.add(handMesh);
+
+    // Palm
+    const palm = this._box(
+      p.handSize * 1.05,
+      p.handSize * 0.55,
+      p.handSize * 0.85,
+      this.materials.skin,
+    );
+    palm.name = `${side}HandMesh`;
+    palm.position.set(0, -p.handSize * 0.28, 0);
+    hand.add(palm);
+
+    // Fingers — hang from the palm, readable from camera
+    const fingerW = p.handSize * 0.22;
+    const fingerH = p.handSize * 0.55;
+    const fingerD = p.handSize * 0.22;
+    const fingerYs = -p.handSize * 0.28 - fingerH * 0.55;
+    const spreads = [-0.35, -0.12, 0.12, 0.35];
+    spreads.forEach((sx, i) => {
+      const finger = this._box(fingerW, fingerH, fingerD, this.materials.skin);
+      finger.name = `${side}Finger${i}`;
+      finger.position.set(p.handSize * sx, fingerYs, p.handSize * 0.15);
+      hand.add(finger);
+    });
+
+    // Thumb — angled outward
+    const thumb = this._box(fingerW * 1.1, fingerH * 0.7, fingerD, this.materials.skin);
+    thumb.name = `${side}Thumb`;
+    thumb.position.set(sign * p.handSize * 0.45, -p.handSize * 0.2, p.handSize * 0.1);
+    thumb.rotation.z = sign * 0.6;
+    hand.add(thumb);
 
     forearm.add(hand);
     upperArm.add(forearm);
@@ -259,6 +351,8 @@ export class HumanDeveloper {
 
     return upperArm;
   }
+
+  // ── Legs ───────────────────────────────────────────────────────────────
 
   _buildLeg(side) {
     const p = this.params;

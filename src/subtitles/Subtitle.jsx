@@ -16,13 +16,13 @@ export default function Subtitle({ text, speaker }) {
           fontFamily: "Inter, system-ui, sans-serif",
           fontSize: 28,
           fontWeight: 600,
-          color: isHuman ? "#ffffff" : "#00FFB2",
+          color: isHuman ? "#ffffff" : "#D97757",
           textShadow: "0 2px 8px rgba(0,0,0,0.9)",
           lineHeight: 1.4,
           padding: "8px 16px",
           background: "rgba(0,0,0,0.35)",
           borderRadius: 8,
-          borderLeft: isHuman ? "3px solid #ffffff" : "3px solid #00FFB2",
+          borderLeft: isHuman ? "3px solid #ffffff" : "3px solid #D97757",
         }}
       >
         {text}
