@@ -200,8 +200,8 @@ export const MainScene = () => {
           <CameraRig preset={currentPreset} />
 
           {/* Y≈-0.45 places hips on the seat (Y=0.45) once legs are bent */}
-          <Human ref={humanRef} position={[-0.7, -0.45, 0.25]} rotation={[0, 0.25, 0]} />
-          <AIAgent ref={agentRef} position={[0.7, 0.05, 0.25]} rotation={[0, -0.25, 0]} />
+          <Human ref={humanRef} position={[-0.55, -0.45, 0.2]} rotation={[0, 0.2, 0]} />
+          <AIAgent ref={agentRef} position={[0.55, 0.55, 0.2]} rotation={[0, -0.2, 0]} />
 
           <CharacterDriver
             frame={frame}
