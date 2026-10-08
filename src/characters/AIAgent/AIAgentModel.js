@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { toneToExpression, EXPRESSIONS, blendExpressions } from '../expressions.js'
+
 
 /**
  * Standalone voxel "AI Agent" character — floating robot, no legs.
@@ -25,6 +27,11 @@ export class AIAgentModel {
     this._buildBody();
 
     this._hoverBaseY = this.body.position.y;
+
+    this.isSpeaking = false
+    this.currentExpression = { ...EXPRESSIONS.NEUTRAL }
+    this.targetExpression  = { ...EXPRESSIONS.NEUTRAL }
+    this.expressionStartFrame = 0
   }
 
   static DEFAULT_PARAMS = {
@@ -147,6 +154,46 @@ export class AIAgentModel {
     module.add(accent);
 
     return module;
+  }
+
+  // ── Expression system ──────────────────────────────────────────────────
+
+  setTone(tone, isSpeaking, frame) {
+    this.isSpeaking = isSpeaking
+    const key = isSpeaking ? toneToExpression(tone) : 'LISTENING'
+    this.targetExpression = { ...EXPRESSIONS[key] }
+    this.expressionStartFrame = frame
+  }
+
+  updateExpression(frame, fps = 30) {
+    const elapsed = frame - this.expressionStartFrame
+    const t = Math.min(elapsed / 12, 1.0)
+    const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t
+
+    const expr = blendExpressions(this.currentExpression, this.targetExpression, ease)
+
+    const eyeScaleY = Math.max(0.1, 1.0 + expr.eyeWide * 0.5 - expr.eyeSquint * 0.6)
+    this.leftEye.scale.y = eyeScaleY
+    this.rightEye.scale.y = eyeScaleY
+
+    const glow = 1.6 + expr.mouthSmile * 0.6 - expr.eyeSquint * 0.8
+    this.leftEye.material.emissiveIntensity = Math.max(0.3, glow)
+    this.rightEye.material.emissiveIntensity = Math.max(0.3, glow)
+
+    if (this.isSpeaking) {
+      const talk = Math.abs(Math.sin(frame * 0.65))
+      this.mouth.scale.x = 1.0 + talk * 0.15
+      this.mouth.scale.y = 1.0 + talk * 1.8
+      this.mouth.material.emissiveIntensity = 1.6 + talk * 0.4
+    } else {
+      this.mouth.scale.x = Math.max(0.3, 1.0 + expr.mouthSmile * 0.5 - expr.mouthFrown * 0.3)
+      this.mouth.scale.y = 1.0
+      this.mouth.material.emissiveIntensity = 1.6
+    }
+
+    if (t >= 1.0) {
+      this.currentExpression = { ...this.targetExpression }
+    }
   }
 
   // ── Animation helpers (agent-specific) ─────────────────────────────────

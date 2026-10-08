@@ -8,6 +8,7 @@ function buildTimeline(dialogue, fps = 30, defaultFrames = 90) {
       endFrame: frame + duration,
       speaker: line.speaker,
       text: line.text,
+      tone: line.tone,
       camera: line.camera,
       mood: line.mood,
       state: line.state,

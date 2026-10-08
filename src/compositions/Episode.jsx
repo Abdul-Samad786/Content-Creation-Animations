@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { Canvas } from "@react-three/fiber";
 import dialogue from "../episodes/ep01-degree/dialogue.json";
@@ -11,6 +11,14 @@ import Subtitle from "../subtitles/Subtitle";
 
 const timeline = buildTimeline(dialogue);
 const totalFrames = timeline[timeline.length - 1].endFrame;
+
+const ExpressionDriver = ({ humanRef, agentRef, frame }) => {
+  useLayoutEffect(() => {
+    humanRef.current?.updateExpression(frame)
+    agentRef.current?.updateExpression(frame)
+  })
+  return null
+}
 
 /** Bend legs so Human reads as seated on the bench. */
 const SitDriver = ({ humanRef }) => {
@@ -35,6 +43,13 @@ export default function Episode() {
     timeline.find(
       (entry) => frame >= entry.startFrame && frame < entry.endFrame,
     ) || timeline[0];
+
+  useEffect(() => {
+    if (!humanRef.current || !agentRef.current) return
+    const isSpeaking = currentLine.speaker === 'human'
+    humanRef.current.setTone(currentLine.tone, isSpeaking, currentLine.startFrame)
+    agentRef.current.setTone(currentLine.tone, !isSpeaking, currentLine.startFrame)
+  }, [currentLine.lineId])
 
   return (
     <AbsoluteFill style={{ background: "#6BA8D9" }}>
@@ -64,6 +79,7 @@ export default function Episode() {
           rotation={[0, -0.2, 0]}
         />
         <SitDriver humanRef={humanRef} />
+        <ExpressionDriver humanRef={humanRef} agentRef={agentRef} frame={frame} />
       </Canvas>
       <Subtitle text={currentLine.text} speaker={currentLine.speaker} />
     </AbsoluteFill>

@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import { FaceController } from '../FaceController.js'
+import { toneToExpression, EXPRESSIONS } from '../expressions.js'
+
 
 /**
  * Standalone low-poly "Human Developer" character.
@@ -27,6 +30,12 @@ export class HumanDeveloper {
     this._buildBody();
 
     this._torsoBaseScale = new THREE.Vector3(1, 1, 1);
+
+    this.faceController = new FaceController(this.headMesh)
+    this.isSpeaking = false
+    this.currentExpression = { ...EXPRESSIONS.NEUTRAL }
+    this.targetExpression  = { ...EXPRESSIONS.NEUTRAL }
+    this.expressionStartFrame = 0
   }
 
   static DEFAULT_PARAMS = {
@@ -59,6 +68,35 @@ export class HumanDeveloper {
 
   // ── Materials (matte) ──────────────────────────────────────────────────
 
+  setTone(tone, isSpeaking, frame) {
+    this.isSpeaking = isSpeaking
+    const key = isSpeaking ? toneToExpression(tone) : 'LISTENING'
+    this.targetExpression = { ...EXPRESSIONS[key] }
+    this.expressionStartFrame = frame
+  }
+
+  updateExpression(frame, fps = 30) {
+    const elapsed = frame - this.expressionStartFrame
+    const t = Math.min(elapsed / 12, 1.0)
+    const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t
+
+    this.faceController.updateFrame(this.currentExpression, this.targetExpression, ease)
+
+    if (t >= 1.0) {
+      this.currentExpression = { ...this.targetExpression }
+    }
+
+    if (this.isSpeaking) {
+      const talk = Math.abs(Math.sin(frame * 0.65))
+      if (this.lips) {
+        this.lips.scale.y = 0.45 + talk * 0.2
+      }
+    } else {
+      if (this.lips) {
+        this.lips.scale.y = 0.45
+      }
+    }
+  }
   _buildMaterials() {
     const mat = (hex) =>
       new THREE.MeshLambertMaterial({ color: new THREE.Color(hex) });
@@ -175,6 +213,7 @@ export class HumanDeveloper {
     const skull = this._sphere(R, this.materials.skin, 24, 18);
     skull.name = "headMesh";
     skull.scale.set(0.9, 1.05, 0.85);
+    this.headMesh = skull;
     this.head.add(skull);
 
     this._addHair(R);
@@ -255,6 +294,8 @@ export class HumanDeveloper {
     lips.name = "lips";
     lips.position.set(0, -R * 0.5, faceZ + R * 0.02);
     lips.scale.set(1.4, 0.45, 0.6);
+    this.lips = lips;
+    this._lipsBaseY = lips.position.y;
     this.head.add(lips);
 
     // Ears — small, on the sides of the skull
