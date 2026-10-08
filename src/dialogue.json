@@ -1,0 +1,58 @@
+[
+  {
+    "id": "01",
+    "speaker": "human",
+    "text": "Why does my code work locally but break in prod?",
+    "startFrame": 0,
+    "endFrame": 75
+  },
+  {
+    "id": "02",
+    "speaker": "ai",
+    "text": "Because prod doesn't have your .env file.",
+    "startFrame": 85,
+    "endFrame": 150
+  },
+  {
+    "id": "03",
+    "speaker": "human",
+    "text": "...I forgot to add it.",
+    "startFrame": 160,
+    "endFrame": 210
+  },
+  {
+    "id": "04",
+    "speaker": "ai",
+    "text": "You always forget. Use a secrets manager.",
+    "startFrame": 220,
+    "endFrame": 290
+  },
+  {
+    "id": "05",
+    "speaker": "human",
+    "text": "What if I just hardcode it?",
+    "startFrame": 300,
+    "endFrame": 355
+  },
+  {
+    "id": "06",
+    "speaker": "ai",
+    "text": "Then I watch you get hacked and say nothing.",
+    "startFrame": 365,
+    "endFrame": 430
+  },
+  {
+    "id": "07",
+    "speaker": "human",
+    "text": "Fair point. Secrets manager it is.",
+    "startFrame": 440,
+    "endFrame": 500
+  },
+  {
+    "id": "08",
+    "speaker": "ai",
+    "text": "Good. Now sleep at night.",
+    "startFrame": 510,
+    "endFrame": 560
+  }
+]
