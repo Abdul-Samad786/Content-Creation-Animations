@@ -1,24 +1,21 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   AbsoluteFill,
-  interpolate,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 import { Human } from "../characters/Human";
 import { AIAgent } from "../characters/AIAgent";
 import Stage from "../stage/Stage";
+import CameraRig from "../camera/CameraRig";
 import dialogue from "../dialogue.json";
 import {
   aiGlow,
   aiHover,
   armRaise,
-  cameraShift,
   captionOpacity,
   getActiveLine,
-  getLatestLine,
   headNod,
 } from "../animations";
 
@@ -74,46 +71,6 @@ const CharacterDriver = ({ frame, fps, humanRef, agentRef, activeLine }) => {
   }, [frame, fps, humanRef, agentRef, activeLine]);
 
   return null;
-};
-
-const CameraLookAt = () => {
-  useFrame((state) => {
-    state.camera.lookAt(0, 1, 0);
-  });
-  return null;
-};
-
-const SceneCamera = ({ frame, latestLine }) => {
-  const speakerSide =
-    latestLine?.speaker === "human"
-      ? "left"
-      : latestLine?.speaker === "ai"
-        ? "right"
-        : null;
-
-  const targetX = cameraShift(frame, speakerSide);
-
-  const camX = latestLine
-    ? interpolate(
-        frame,
-        [latestLine.startFrame, latestLine.startFrame + 14],
-        [targetX * 0.25, targetX],
-        { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-      )
-    : 0;
-
-  return (
-    <>
-      <PerspectiveCamera
-        makeDefault
-        position={[camX, 1.8, 4.5]}
-        fov={40}
-        near={0.1}
-        far={100}
-      />
-      <CameraLookAt />
-    </>
-  );
 };
 
 const CaptionOverlay = ({ frame, activeLine }) => {
@@ -172,43 +129,91 @@ const CaptionOverlay = ({ frame, activeLine }) => {
   );
 };
 
+const PRESET_BUTTONS = [
+  "TWO_SHOT",
+  "HUMAN_CU",
+  "AI_CU",
+  "OVER_HUMAN",
+  "OVER_AI",
+  "WIDE_SEA",
+];
+
 export const MainScene = () => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
 
   const humanRef = useRef(null);
   const agentRef = useRef(null);
+  const [currentPreset, setCurrentPreset] = useState("TWO_SHOT");
 
   const activeLine = getActiveLine(frame, dialogue);
-  const latestLine = getLatestLine(frame, dialogue);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#0a1628" }}>
-      <Canvas
-        style={{ width, height }}
-        gl={{ antialias: true }}
-        shadows
-      >
-        <SceneCamera frame={frame} latestLine={latestLine} />
-        <color attach="background" args={["#0a1628"]} />
-        <fog attach="fog" args={["#0a1628", 22, 55]} />
+      <div style={{ width: "100%", height: "100%", position: "relative" }}>
+        <div
+          style={{
+            position: "absolute",
+            top: 8,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: 4,
+            zIndex: 9999,
+            pointerEvents: "all",
+          }}
+        >
+          {PRESET_BUTTONS.map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentPreset(p);
+              }}
+              style={{
+                fontSize: 9,
+                padding: "4px 8px",
+                background: currentPreset === p ? "#00ff88" : "#111",
+                color: currentPreset === p ? "#000" : "#00ff88",
+                border: "1px solid #00ff88",
+                cursor: "pointer",
+                borderRadius: 3,
+                pointerEvents: "all",
+              }}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
 
-        <Stage />
+        <Canvas
+          style={{ width, height, pointerEvents: "none" }}
+          gl={{ antialias: true }}
+          shadows
+          camera={{ position: [0, 1.4, 4.5], fov: 42, near: 0.1, far: 100 }}
+        >
+          <color attach="background" args={["#0a1628"]} />
+          <fog attach="fog" args={["#0a1628", 22, 55]} />
 
-        {/* Y≈-0.45 places hips on the seat (Y=0.45) once legs are bent */}
-        <Human ref={humanRef} position={[-0.7, -0.45, 0.25]} rotation={[0, 0.25, 0]} />
-        <AIAgent ref={agentRef} position={[0.7, 0.05, 0.25]} rotation={[0, -0.25, 0]} />
+          <Stage />
+          <CameraRig preset={currentPreset} />
 
-        <CharacterDriver
-          frame={frame}
-          fps={fps}
-          humanRef={humanRef}
-          agentRef={agentRef}
-          activeLine={activeLine}
-        />
-      </Canvas>
+          {/* Y≈-0.45 places hips on the seat (Y=0.45) once legs are bent */}
+          <Human ref={humanRef} position={[-0.7, -0.45, 0.25]} rotation={[0, 0.25, 0]} />
+          <AIAgent ref={agentRef} position={[0.7, 0.05, 0.25]} rotation={[0, -0.25, 0]} />
 
-      <CaptionOverlay frame={frame} activeLine={activeLine} />
+          <CharacterDriver
+            frame={frame}
+            fps={fps}
+            humanRef={humanRef}
+            agentRef={agentRef}
+            activeLine={activeLine}
+          />
+        </Canvas>
+
+        <CaptionOverlay frame={frame} activeLine={activeLine} />
+      </div>
     </AbsoluteFill>
   );
 };
