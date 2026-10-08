@@ -8,6 +8,19 @@ const HILLS = [
   { pos: [0, 0, -28], scale: [20, 0.4, 12], color: "#527A40" },
 ];
 
+// Distant layer — desaturated, lighter for atmospheric perspective
+const FAR_HILLS = [
+  { pos: [-14, -3, -44], scale: [22, 0.25, 8], color: "#8AA48A" },
+  { pos: [5,   -2, -48], scale: [20, 0.22, 7], color: "#8CAE8C" },
+  { pos: [18,  -3, -42], scale: [18, 0.2,  7], color: "#90A890" },
+];
+
+const FAR_CONES = [
+  [-16, -2.5, -42, 0.45], [-11, -2.2, -45, 0.55], [-4,  -2.0, -46, 0.50],
+  [2,   -1.8, -48, 0.60], [8,   -2.1, -43, 0.48], [14,  -2.3, -41, 0.52],
+  [20,  -2.5, -40, 0.44],
+];
+
 // Y sits on hill crests (tops ≈ -0.6 / -0.1 / 0.4) — trunks planted into surface
 const CONES = [
   [-12, -0.55, -18, 0.9], [-8, -0.45, -19, 1.0], [-4, -0.5, -17.5, 0.85],
@@ -78,6 +91,27 @@ function RoundTree({ position, scale = 1, phase = 0 }) {
 export default function Hills() {
   return (
     <group>
+      {/* Far layer — static, desaturated */}
+      {FAR_HILLS.map((h, i) => (
+        <mesh key={`fh${i}`} position={h.pos} scale={h.scale}>
+          <sphereGeometry args={[1, 16, 10]} />
+          <meshStandardMaterial color={h.color} roughness={0.95} fog />
+        </mesh>
+      ))}
+      {FAR_CONES.map(([x, y, z, s], i) => (
+        <group key={`ft${i}`} position={[x, y, z]} scale={s}>
+          <mesh position={[0, 0.2, 0]}>
+            <cylinderGeometry args={[0.06, 0.08, 0.5, 5]} />
+            <meshStandardMaterial color="#9A8070" roughness={0.9} />
+          </mesh>
+          <mesh position={[0, 0.9, 0]}>
+            <coneGeometry args={[0.45, 1.4, 5]} />
+            <meshStandardMaterial color="#7A9878" roughness={0.9} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Mid layer */}
       {HILLS.map((h, i) => (
         <mesh key={i} position={h.pos} scale={h.scale} receiveShadow>
           <sphereGeometry args={[1, 24, 16]} />

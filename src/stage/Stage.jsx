@@ -5,6 +5,7 @@ import Ground from "./Ground";
 import Bench from "./Bench";
 import Lighting from "./Lighting";
 import Foreground from "./Foreground";
+import Particles from "./Particles";
 
 export default function Stage({ mood = 0 }) {
   return (
@@ -15,6 +16,7 @@ export default function Stage({ mood = 0 }) {
       <Ground />
       <Bench position={[0, 0, 0.2]} />
       <Foreground />
+      <Particles />
     </group>
   );
 }

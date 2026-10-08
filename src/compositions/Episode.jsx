@@ -52,15 +52,15 @@ export default function Episode() {
   }, [currentLine.lineId])
 
   return (
-    <AbsoluteFill style={{ background: "#6BA8D9" }}>
+    <AbsoluteFill style={{ background: "#5E8FC4" }}>
       <Canvas
         style={{ width, height }}
         camera={{ fov: 36, near: 0.1, far: 100 }}
         gl={{ antialias: true }}
         shadows
       >
-        <color attach="background" args={["#6BA8D9"]} />
-        <fog attach="fog" args={["#C5D9EC", 22, 60]} />
+        <color attach="background" args={["#5E8FC4"]} />
+        <fog attach="fog" args={["#D4906A", 16, 52]} />
         <Stage mood={currentLine.mood} />
         <CameraRig
           preset={currentLine.camera}
@@ -81,6 +81,13 @@ export default function Episode() {
         <SitDriver humanRef={humanRef} />
         <ExpressionDriver humanRef={humanRef} agentRef={agentRef} frame={frame} />
       </Canvas>
+      {/* Vignette — draws focus toward center */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.42) 100%)',
+        pointerEvents: 'none',
+      }} />
       <Subtitle text={currentLine.text} speaker={currentLine.speaker} />
     </AbsoluteFill>
   );

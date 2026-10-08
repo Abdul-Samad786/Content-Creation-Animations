@@ -57,9 +57,39 @@ function GrassClump({ position }) {
 export default function Ground() {
   return (
     <group>
+      {/* Base ground */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 2]} receiveShadow>
         <planeGeometry args={[40, 20]} />
         <meshStandardMaterial color="#C4A882" roughness={0.9} metalness={0} />
+      </mesh>
+
+      {/* Color variation patches — slightly greener/darker zones */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-5, 0.002, 0.5]}>
+        <planeGeometry args={[8, 5]} />
+        <meshStandardMaterial color="#B8A275" roughness={0.95} transparent opacity={0.6} depthWrite={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[6, 0.002, 1]}>
+        <planeGeometry args={[7, 4]} />
+        <meshStandardMaterial color="#C8B490" roughness={0.95} transparent opacity={0.5} depthWrite={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, -3]}>
+        <planeGeometry args={[12, 6]} />
+        <meshStandardMaterial color="#B0956E" roughness={0.95} transparent opacity={0.45} depthWrite={false} />
+      </mesh>
+
+      {/* Worn dirt path leading to bench */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.003, 2.5]}>
+        <planeGeometry args={[1.6, 9]} />
+        <meshStandardMaterial color="#A8845A" roughness={0.98} />
+      </mesh>
+      {/* Path edges — softer blend */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-1.2, 0.002, 2.5]}>
+        <planeGeometry args={[0.8, 9]} />
+        <meshStandardMaterial color="#B0906A" roughness={0.97} transparent opacity={0.5} depthWrite={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1.2, 0.002, 2.5]}>
+        <planeGeometry args={[0.8, 9]} />
+        <meshStandardMaterial color="#B0906A" roughness={0.97} transparent opacity={0.5} depthWrite={false} />
       </mesh>
 
       {ROCKS.map((rock, i) => (
