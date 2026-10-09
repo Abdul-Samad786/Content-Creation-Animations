@@ -1,0 +1,160 @@
+{
+  "number": 2,
+  "title": "typing...",
+  "hook": "when they've been \"typing...\" for 4 minutes 😶",
+  "outro": "Ep 3 → mom texted \"call me.\"",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "haha ok" },
+      { "from": "me", "text": "haha ok" },
+      { "from": "me", "text": "wait what are you doing this weekend" }
+    ],
+    "seen": "Seen 8:15 PM",
+    "visible": true
+  },
+  "start": {
+    "mia": { "face": "excited", "pose": "phone", "look": "phone" },
+    "byte": { "face": "curious", "look": "phone" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "He's typing. Byte. HE'S TYPING.",
+      "tts": "[excited whisper] He's typing. Byte. [squeals] HE'S TYPING.",
+      "camera": "two",
+      "phone": [{ "typing": true, "at": 0 }],
+      "mia": [
+        { "face": "excited", "do": "bounce", "look": "phone" },
+        { "face": "sparkle", "do": "jump", "look": "byte", "at": "HE'S" }
+      ],
+      "byte": { "face": "shocked", "do": "gasp", "look": "mia", "at": "HE'S" },
+      "fx": [{ "type": "sparkles", "on": "mia", "at": "HE'S" }],
+      "sfx": [{ "id": "pop", "at": 0 }, { "id": "boing", "at": "HE'S" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Stay calm. Act normal.",
+      "tts": "[nervously] Stay calm. [trembling] Act... normal.",
+      "camera": "close:byte",
+      "byte": { "face": "determined", "do": "shiver", "look": "camera" },
+      "fx": [{ "type": "sweat", "on": "byte", "at": "Act" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 0.9,
+      "camera": "two",
+      "phone": [{ "typing": false, "at": 0.1 }],
+      "mia": { "face": "shocked", "do": "gasp", "look": "phone" },
+      "byte": { "face": "shocked", "look": "phone" },
+      "sfx": [{ "id": "record-scratch", "at": 0.1 }]
+    },
+    {
+      "say": "mia",
+      "text": "He stopped.",
+      "tts": "[devastated] He... stopped.",
+      "camera": "zoom:mia",
+      "mia": { "face": "sad", "pose": "slump", "look": "phone" },
+      "fx": [{ "type": "rain", "on": "mia", "at": "stopped", "dur": 1.4 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "No, no. He's writing something long. Something romantic.",
+      "tts": "[reassuring] No, no. He's writing something long. [dreamy] Something... romantic.",
+      "camera": "two",
+      "phone": [{ "typing": true, "at": "long" }],
+      "byte": [
+        { "face": "happy", "do": "zoom", "look": "mia" },
+        { "face": "love", "do": "wiggle", "at": "romantic" }
+      ],
+      "mia": { "face": "hopeful", "pose": "phone", "look": "byte", "at": "long" },
+      "fx": [{ "type": "hearts", "on": "byte", "at": "romantic" }],
+      "sfx": [{ "id": "sparkle", "at": "romantic" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Maybe it's a poem.",
+      "tts": "[dreamy sigh] Maybe it's a poem.",
+      "camera": "close:mia",
+      "mia": { "face": "love", "pose": "cheeks", "do": "wiggle", "look": "away" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": "poem" }, { "type": "blush", "on": "mia", "at": 0 }],
+      "pause": 0.1
+    },
+    {
+      "say": "byte",
+      "text": "Maybe it's a PROPOSAL.",
+      "tts": "[gasps] Maybe it's a PROPOSAL.",
+      "camera": "two",
+      "byte": { "face": "sparkle", "do": "spin", "look": "mia" },
+      "mia": { "face": "shocked", "do": "gasp", "look": "byte", "at": "PROPOSAL" },
+      "fx": [{ "type": "sparkles", "on": "byte", "at": "PROPOSAL" }],
+      "sfx": [{ "id": "sparkle", "at": "PROPOSAL" }],
+      "pause": 0.3
+    },
+    {
+      "beat": 1.4,
+      "camera": "two",
+      "phone": [
+        { "typing": false, "at": 0.2 },
+        { "receive": "👍", "at": 0.25 }
+      ],
+      "mia": { "face": "excited", "pose": "phone", "look": "phone", "do": "lean" },
+      "byte": { "face": "excited", "look": "phone", "do": "lean" },
+      "sfx": [{ "id": "message-in", "at": 0.25 }, { "id": "crickets", "at": 0.6 }]
+    },
+    {
+      "say": "mia",
+      "text": "Four minutes. For a thumb.",
+      "tts": "[flatly] Four minutes. [deadpan] For a thumb.",
+      "camera": "two",
+      "mia": { "face": "deadpan", "do": "freeze", "look": "camera" },
+      "byte": { "face": "deadpan", "do": "freeze", "look": "phone" },
+      "pause": 0.25
+    },
+    {
+      "say": "byte",
+      "text": "A very thoughtful thumb.",
+      "tts": "[trying to be supportive] A very... thoughtful thumb.",
+      "camera": "close:byte",
+      "byte": { "face": "smug", "do": "nod", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "It IS a nice thumb.",
+      "tts": "[giggles] It IS a nice thumb.",
+      "camera": "two",
+      "mia": { "face": "flustered", "pose": "cheeks", "do": "wiggle", "look": "phone" },
+      "byte": { "face": "happy", "look": "mia" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": "nice" }, { "type": "blush", "on": "mia", "at": 0 }],
+      "sfx": [{ "id": "aww", "at": "nice" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 1.1,
+      "camera": "two",
+      "phone": [{ "draft": "omg i love thumbs", "at": 0.05, "dur": 0.9 }],
+      "mia": { "face": "focused", "pose": "phone", "look": "phone", "do": "type" },
+      "byte": { "face": "neutral", "look": "mia" },
+      "sfx": [{ "id": "typing", "at": 0.05 }]
+    },
+    {
+      "say": "byte",
+      "text": "...And now she's been typing for six.",
+      "tts": "[deadpan, to the audience] ...And now she's been typing for six.",
+      "camera": "close:byte",
+      "phone": [
+        { "clear": true, "at": "now" },
+        { "draft": "haha nice", "at": "typing", "dur": 0.7 }
+      ],
+      "byte": { "face": "deadpan", "look": "camera" },
+      "mia": { "do": "type", "look": "phone" },
+      "sfx": [{ "id": "typing", "at": "typing" }],
+      "pause": 0.6
+    }
+  ]
+}

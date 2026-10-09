@@ -1,0 +1,154 @@
+{
+  "number": 1,
+  "title": "haha ok",
+  "hook": "when they leave you on seen 👀",
+  "outro": "Ep 2 → he's typing...",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "that movie was SO good 😂" },
+      { "from": "me", "text": "haha ok" }
+    ],
+    "seen": "Seen 9:41 PM"
+  },
+  "start": {
+    "mia": { "face": "worried", "pose": "phone", "look": "phone" },
+    "byte": { "visible": false, "face": "neutral" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "He saw my message... eleven minutes ago.",
+      "tts": "[nervous] He saw my message... [whispers] eleven minutes ago.",
+      "camera": "close:mia",
+      "mia": { "face": "worried", "do": "freeze", "look": "phone" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "eleven" }],
+      "sfx": [{ "id": "clock-tick", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "And?",
+      "tts": "[curious] And?",
+      "camera": "two",
+      "byte": { "visible": true, "do": "pop-in", "face": "curious", "look": "mia" },
+      "mia": { "look": "byte" },
+      "sfx": [{ "id": "boing", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "And NOTHING. He hates me. My life is over.",
+      "tts": "[dramatic] And NOTHING. [sobbing] He hates me. My life is over.",
+      "camera": "two",
+      "mia": [
+        { "face": "panic", "do": "shake" },
+        { "face": "crying", "do": "flop", "at": "hates" }
+      ],
+      "byte": { "face": "deadpan" },
+      "fx": [{ "type": "rain", "on": "mia", "at": "hates", "dur": 2.6 }],
+      "sfx": [{ "id": "sad-trombone", "at": "over" }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Let me see what you sent.",
+      "tts": "[sighs] Let me see what you sent.",
+      "camera": "two",
+      "byte": { "face": "focused", "do": "zoom" },
+      "mia": { "face": "sad", "pose": "sit", "look": "byte" },
+      "phone": [{ "show": true, "at": "see" }],
+      "sfx": [{ "id": "pop", "at": "see" }],
+      "pause": 0.4
+    },
+    {
+      "say": "mia",
+      "text": "Is that bad? Byte. Is that bad?",
+      "tts": "[anxious] Is that bad? Byte. [panicking] Is that BAD?",
+      "camera": "two",
+      "mia": { "face": "panic", "do": "grab", "look": "byte" },
+      "byte": { "face": "dizzy", "do": "shake" },
+      "fx": [{ "type": "sweat", "on": "mia" }],
+      "sfx": [{ "id": "wobble", "at": "Byte" }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "You sent \"haha ok.\" Nobody can reply to \"haha ok.\"",
+      "tts": "[deadpan] You sent... haha ok. [flatly] Nobody can reply to haha ok.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "mia": { "face": "embarrassed", "pose": "slump" },
+      "pause": 0.3
+    },
+    {
+      "beat": 1.3,
+      "camera": "two",
+      "phone": [
+        { "typing": true, "at": 0 },
+        { "typing": false, "at": 1.2 }
+      ],
+      "mia": { "face": "shocked", "do": "gasp", "look": "phone", "pose": "phone" },
+      "byte": { "face": "shocked", "do": "gasp", "look": "phone" },
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.1 }],
+      "sfx": [{ "id": "phone-buzz", "at": 0 }]
+    },
+    {
+      "say": "mia",
+      "text": "HE REPLIED!",
+      "tts": "[excited] [gasps] HE REPLIED!",
+      "camera": "zoom:mia",
+      "mia": { "face": "joy", "do": "jump", "pose": "cheer" },
+      "byte": { "face": "sparkle", "do": "spin" },
+      "fx": [{ "type": "confetti", "at": 0 }, { "type": "hearts", "on": "mia", "at": 0.2 }],
+      "sfx": [{ "id": "sparkle", "at": 0 }],
+      "pause": 0.1
+    },
+    {
+      "say": "byte",
+      "text": "What did he say?!",
+      "tts": "[excited] What did he say?!",
+      "camera": "two",
+      "byte": { "face": "sparkle", "do": "bounce", "look": "phone" },
+      "mia": { "face": "excited", "pose": "phone", "look": "phone" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "...\"haha ok.\"",
+      "tts": "[flatly] ...haha ok.",
+      "camera": "two",
+      "phone": [{ "receive": "haha ok", "at": 0 }],
+      "mia": { "face": "deadpan", "do": "freeze", "look": "phone" },
+      "byte": { "face": "deadpan", "do": "freeze", "look": "phone" },
+      "sfx": [{ "id": "message-in", "at": 0 }, { "id": "crickets", "at": "end" }],
+      "pause": 0.9
+    },
+    {
+      "say": "byte",
+      "text": "You two are perfect for each other.",
+      "tts": "[warmly] [laughs softly] You two are perfect for each other.",
+      "camera": "two",
+      "byte": { "face": "happy", "do": "wiggle", "look": "mia" },
+      "mia": { "face": "flustered", "pose": "cheeks", "look": "byte", "at": "perfect" },
+      "fx": [{ "type": "hearts", "on": "byte", "at": "perfect" }, { "type": "blush", "on": "mia", "at": "perfect" }],
+      "sfx": [{ "id": "aww", "at": "perfect" }],
+      "pause": 0.3
+    },
+    {
+      "beat": 2.1,
+      "camera": "close:mia",
+      "phone": [
+        { "draft": "haha ok", "at": 0.1, "dur": 0.8 },
+        { "send": "haha ok", "at": 1.1 },
+        { "seen": "Seen 9:52 PM", "at": 1.7 }
+      ],
+      "mia": [
+        { "face": "smug", "pose": "phone", "look": "phone", "do": "type" },
+        { "face": "worried", "do": "freeze", "at": 1.7 }
+      ],
+      "sfx": [{ "id": "typing", "at": 0.1 }, { "id": "whoosh", "at": 1.1 }, { "id": "clock-tick", "at": 1.7 }]
+    }
+  ]
+}

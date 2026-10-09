@@ -1,0 +1,5 @@
+{
+  "_about": "Written by scripts/make_sfx.py and scripts/make_music.py. Lists the audio files that exist under public/, so renders never reference a missing file.",
+  "sfx": [],
+  "music": {}
+}

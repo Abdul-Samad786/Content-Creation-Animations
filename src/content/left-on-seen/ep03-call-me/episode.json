@@ -1,0 +1,148 @@
+{
+  "number": 3,
+  "title": "call me.",
+  "hook": "when mom texts \"call me.\" WITH a period 😰",
+  "outro": "Ep 4 → he finally asks 😳",
+  "phone": {
+    "contact": "Mom",
+    "avatar": "#FFB347",
+    "messages": [
+      { "from": "them", "text": "did you eat?" },
+      { "from": "me", "text": "yes mama ❤️" }
+    ]
+  },
+  "start": {
+    "mia": { "face": "happy", "pose": "phone", "look": "phone" },
+    "byte": { "face": "happy", "look": "mia" }
+  },
+  "lines": [
+    {
+      "beat": 0.7,
+      "camera": "two",
+      "phone": [{ "show": true, "at": 0 }, { "receive": "Call me.", "at": 0.15 }],
+      "mia": { "face": "shocked", "do": "gasp", "look": "phone", "at": 0.2 },
+      "byte": { "face": "shocked", "do": "gasp", "look": "phone", "at": 0.25 },
+      "sfx": [{ "id": "phone-buzz", "at": 0 }, { "id": "dun-dun", "at": 0.2 }]
+    },
+    {
+      "say": "mia",
+      "text": "Mom texted \"call me.\" With a PERIOD.",
+      "tts": "[panicking] Mom texted... call me. [horrified] With a PERIOD.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "worried", "look": "byte" },
+        { "face": "panic", "do": "shake", "look": "camera", "at": "PERIOD" }
+      ],
+      "fx": [{ "type": "shock", "on": "mia", "at": "PERIOD" }, { "type": "sweat", "on": "mia", "at": "PERIOD" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Okay. Nobody panic.",
+      "tts": "[panicking] Okay. [very fast] Nobody panic.",
+      "camera": "two",
+      "byte": { "face": "panic", "do": "shiver", "look": "mia" },
+      "fx": [{ "type": "sweat", "on": "byte", "at": 0 }],
+      "pause": 0.1
+    },
+    {
+      "say": "mia",
+      "text": "What did I do?! Did she see my grades? Did she see my ROOM?",
+      "tts": "[frantic] What did I do?! Did she see my grades? [shrieks] Did she see my ROOM?",
+      "camera": "two",
+      "mia": [
+        { "face": "panic", "do": "shake", "pose": "grab", "look": "byte" },
+        { "face": "crying", "pose": "cheeks", "at": "ROOM" }
+      ],
+      "byte": { "face": "dizzy", "do": "shake", "at": "grades" },
+      "fx": [{ "type": "question", "on": "mia", "at": "grades" }],
+      "sfx": [{ "id": "wobble", "at": "grades" }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Mia. Did you eat the cake in the fridge?",
+      "tts": "[suspicious] Mia. [slowly] Did you eat the cake... in the fridge?",
+      "camera": "close:byte",
+      "byte": { "face": "suspicious", "do": "zoom", "look": "mia" },
+      "mia": { "face": "nervous", "pose": "sit", "look": "byte" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "That cake was for GUESTS?",
+      "tts": "[high-pitched, guilty] That cake was for GUESTS?",
+      "camera": "zoom:mia",
+      "mia": { "face": "shocked", "do": "gasp", "look": "byte" },
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.1 }],
+      "sfx": [{ "id": "record-scratch", "at": 0.05 }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Call her. Be brave. I'll be right here.",
+      "tts": "[gently] Call her. Be brave. [softly] I'll be right here.",
+      "camera": "two",
+      "byte": [
+        { "face": "determined", "do": "nod", "look": "mia" },
+        { "face": "happy", "do": "zoom", "at": "right" }
+      ],
+      "mia": { "face": "nervous", "pose": "phone", "look": "byte" },
+      "fx": [{ "type": "sparkles", "on": "byte", "at": "brave" }],
+      "pause": 0.15
+    },
+    {
+      "beat": 1.3,
+      "camera": "two",
+      "phone": [{ "call": "Mom", "at": 0 }],
+      "mia": { "face": "nervous", "pose": "phone", "do": "shiver", "look": "phone" },
+      "byte": { "face": "worried", "pose": "hide", "look": "mia" },
+      "sfx": [{ "id": "phone-ring", "at": 0 }]
+    },
+    {
+      "say": "mia",
+      "text": "Hi mama! I love you so much!",
+      "tts": "[overly sweet, nervous] Hi mama! [laughs nervously] I love you SO much!",
+      "camera": "close:mia",
+      "mia": { "face": "nervous-smile", "do": "wiggle", "look": "phone" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "love" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mom",
+      "text": "Sweetie, how do I make the letters bigger on my phone?",
+      "tts": "[warm, a little confused] Sweetie, how do I make the letters bigger on my phone?",
+      "camera": "two",
+      "mia": { "face": "deadpan", "do": "freeze", "look": "phone", "at": "letters" },
+      "byte": { "face": "deadpan", "pose": "hover", "look": "camera", "at": "bigger" },
+      "pause": 0.3
+    },
+    {
+      "beat": 0.9,
+      "camera": "two",
+      "phone": [{ "endCall": true, "at": 0.1 }],
+      "mia": { "face": "relieved", "pose": "flop", "look": "byte" },
+      "byte": { "face": "relieved", "pose": "droop", "look": "mia" },
+      "sfx": [{ "id": "phew", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "We survived.",
+      "tts": "[exhausted, relieved] We... survived.",
+      "camera": "two",
+      "byte": { "face": "happy", "do": "bounce", "look": "mia" },
+      "mia": { "face": "joy", "pose": "sit", "look": "byte" },
+      "fx": [{ "type": "sparkles", "on": "byte", "at": "survived" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 1.6,
+      "camera": "zoom:mia",
+      "phone": [{ "receive": "who ate the cake.", "at": 0.1 }],
+      "mia": { "face": "panic", "do": "gasp", "pose": "phone", "look": "phone", "at": 0.25 },
+      "byte": { "face": "panic", "do": "gasp", "look": "phone", "at": 0.3 },
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.3 }, { "type": "sweat", "on": "byte", "at": 0.4 }],
+      "sfx": [{ "id": "phone-buzz", "at": 0.1 }, { "id": "dun-dun", "at": 0.3 }]
+    }
+  ]
+}

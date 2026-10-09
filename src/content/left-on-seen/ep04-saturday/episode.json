@@ -1,0 +1,443 @@
+{
+  "number": 4,
+  "title": "saturday?",
+  "hook": "when your crush finally asks you out 😳",
+  "outro": "Left on Seen · follow for season 2 💌",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      {
+        "from": "them",
+        "text": "👍"
+      },
+      {
+        "from": "me",
+        "text": "haha nice"
+      }
+    ],
+    "seen": "Seen 7:02 PM"
+  },
+  "start": {
+    "mia": {
+      "face": "sleepy",
+      "pose": "sit",
+      "look": "byte"
+    },
+    "byte": {
+      "face": "sleepy",
+      "pose": "hover",
+      "look": "mia"
+    }
+  },
+  "lines": [
+    {
+      "beat": 0.8,
+      "camera": "two",
+      "phone": [
+        {
+          "show": true,
+          "at": 0
+        },
+        {
+          "receive": "are you free saturday?",
+          "at": 0.15
+        }
+      ],
+      "mia": {
+        "face": "shocked",
+        "do": "gasp",
+        "pose": "phone",
+        "look": "phone",
+        "at": 0.25
+      },
+      "byte": {
+        "face": "shocked",
+        "do": "gasp",
+        "look": "phone",
+        "at": 0.3
+      },
+      "fx": [
+        {
+          "type": "shock",
+          "on": "mia",
+          "at": 0.3
+        }
+      ],
+      "sfx": [
+        {
+          "id": "phone-buzz",
+          "at": 0
+        },
+        {
+          "id": "boing",
+          "at": 0.25
+        }
+      ]
+    },
+    {
+      "say": "byte",
+      "text": "He asked you OUT!",
+      "tts": "[gasps] [excited] He asked you OUT!",
+      "camera": "two",
+      "byte": {
+        "face": "sparkle",
+        "do": "spin",
+        "look": "mia"
+      },
+      "mia": {
+        "face": "flustered",
+        "pose": "cheeks",
+        "do": "wiggle",
+        "look": "phone",
+        "at": "OUT"
+      },
+      "fx": [
+        {
+          "type": "hearts",
+          "on": "mia",
+          "at": "OUT"
+        },
+        {
+          "type": "blush",
+          "on": "mia",
+          "at": "OUT"
+        },
+        {
+          "type": "confetti",
+          "at": "OUT"
+        }
+      ],
+      "sfx": [
+        {
+          "id": "sparkle",
+          "at": "OUT"
+        }
+      ],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Okay. Okay. Be cool. Be chill. Be... mysterious.",
+      "tts": "[breathing fast] Okay. Okay. Be cool. Be chill. [lowers voice] Be... mysterious.",
+      "camera": "close:mia",
+      "mia": [
+        {
+          "face": "determined",
+          "pose": "sit",
+          "do": "nod",
+          "look": "camera"
+        },
+        {
+          "face": "smug",
+          "look": "camera",
+          "at": "mysterious"
+        }
+      ],
+      "fx": [
+        {
+          "type": "sparkles",
+          "on": "mia",
+          "at": "mysterious"
+        }
+      ],
+      "pause": 0.15
+    },
+    {
+      "beat": 1.2,
+      "camera": "two",
+      "phone": [
+        {
+          "draft": "YES YES YES!!!!!!!!!!!!!!!!!!!",
+          "at": 0.05,
+          "dur": 0.9
+        }
+      ],
+      "mia": {
+        "face": "excited",
+        "pose": "phone",
+        "do": "type",
+        "look": "phone"
+      },
+      "byte": {
+        "face": "shocked",
+        "do": "gasp",
+        "look": "phone",
+        "at": 0.6
+      },
+      "sfx": [
+        {
+          "id": "typing",
+          "at": 0.05
+        }
+      ]
+    },
+    {
+      "say": "byte",
+      "text": "That's nineteen exclamation marks.",
+      "tts": "[deadpan] That's... nineteen exclamation marks.",
+      "camera": "close:byte",
+      "byte": {
+        "face": "deadpan",
+        "look": "camera"
+      },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Fine. Mysterious mode.",
+      "tts": "[sighs] Fine. [smugly] Mysterious mode.",
+      "camera": "two",
+      "phone": [
+        {
+          "clear": true,
+          "at": 0
+        },
+        {
+          "draft": "maybe idk lol",
+          "at": "Mysterious",
+          "dur": 0.7
+        }
+      ],
+      "mia": {
+        "face": "smug",
+        "do": "type",
+        "look": "phone"
+      },
+      "byte": {
+        "face": "deadpan",
+        "look": "mia"
+      },
+      "sfx": [
+        {
+          "id": "typing",
+          "at": "Mysterious"
+        }
+      ],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Mia. You like him. Just say yes.",
+      "tts": "[softly, warmly] Mia. You like him. [gently] Just say yes.",
+      "camera": "two",
+      "byte": {
+        "face": "warm",
+        "do": "zoom",
+        "look": "mia"
+      },
+      "mia": [
+        {
+          "face": "nervous",
+          "pose": "sit",
+          "look": "byte"
+        },
+        {
+          "face": "flustered",
+          "pose": "cheeks",
+          "at": "like"
+        }
+      ],
+      "fx": [
+        {
+          "type": "hearts",
+          "on": "byte",
+          "at": "yes"
+        },
+        {
+          "type": "blush",
+          "on": "mia",
+          "at": "like"
+        }
+      ],
+      "sfx": [
+        {
+          "id": "aww",
+          "at": "like"
+        }
+      ],
+      "pause": 0.3
+    },
+    {
+      "beat": 1.5,
+      "camera": "close:mia",
+      "phone": [
+        {
+          "clear": true,
+          "at": 0
+        },
+        {
+          "draft": "yes :)",
+          "at": 0.3,
+          "dur": 0.5
+        },
+        {
+          "send": "yes :)",
+          "at": 0.95
+        }
+      ],
+      "mia": [
+        {
+          "face": "happy",
+          "pose": "phone",
+          "do": "type",
+          "look": "phone"
+        },
+        {
+          "face": "joy",
+          "do": "bounce",
+          "at": 0.95
+        }
+      ],
+      "fx": [
+        {
+          "type": "sparkles",
+          "on": "mia",
+          "at": 1.0
+        }
+      ],
+      "sfx": [
+        {
+          "id": "typing",
+          "at": 0.3
+        },
+        {
+          "id": "whoosh",
+          "at": 0.95
+        }
+      ]
+    },
+    {
+      "beat": 1.3,
+      "camera": "two",
+      "phone": [
+        {
+          "typing": true,
+          "at": 0.1
+        },
+        {
+          "typing": false,
+          "at": 0.8
+        },
+        {
+          "receive": "haha ok",
+          "at": 0.85
+        }
+      ],
+      "mia": {
+        "face": "excited",
+        "do": "lean",
+        "look": "phone"
+      },
+      "byte": {
+        "face": "excited",
+        "do": "lean",
+        "look": "phone"
+      },
+      "sfx": [
+        {
+          "id": "message-in",
+          "at": 0.85
+        }
+      ]
+    },
+    {
+      "beat": 1.0,
+      "camera": "two",
+      "mia": {
+        "face": "deadpan",
+        "do": "freeze",
+        "look": "byte"
+      },
+      "byte": {
+        "face": "deadpan",
+        "do": "freeze",
+        "look": "mia"
+      },
+      "sfx": [
+        {
+          "id": "crickets",
+          "at": 0
+        }
+      ]
+    },
+    {
+      "say": "byte",
+      "text": "Perfect for each other.",
+      "tts": "[laughing] Perfect for each other.",
+      "camera": "two",
+      "byte": {
+        "face": "happy",
+        "do": "wiggle",
+        "look": "mia"
+      },
+      "mia": [
+        {
+          "face": "joy",
+          "do": "bounce",
+          "pose": "cheeks",
+          "look": "byte",
+          "at": "Perfect"
+        }
+      ],
+      "fx": [
+        {
+          "type": "hearts",
+          "on": "mia",
+          "at": "Perfect"
+        },
+        {
+          "type": "hearts",
+          "on": "byte",
+          "at": "each"
+        },
+        {
+          "type": "confetti",
+          "at": "other"
+        }
+      ],
+      "sfx": [
+        {
+          "id": "aww",
+          "at": "Perfect"
+        }
+      ],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Saturday!",
+      "tts": "[giggles] [happily] Saturday!",
+      "camera": "two",
+      "mia": {
+        "face": "love",
+        "pose": "cheer",
+        "do": "jump",
+        "look": "camera"
+      },
+      "byte": {
+        "face": "love",
+        "do": "spin"
+      },
+      "fx": [
+        {
+          "type": "hearts",
+          "on": "mia",
+          "at": 0
+        },
+        {
+          "type": "sparkles",
+          "on": "byte",
+          "at": 0.1
+        }
+      ],
+      "sfx": [
+        {
+          "id": "sparkle",
+          "at": 0
+        }
+      ],
+      "pause": 0.9
+    }
+  ]
+}

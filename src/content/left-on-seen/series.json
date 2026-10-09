@@ -1,0 +1,101 @@
+{
+  "id": "left-on-seen",
+  "title": "Left on Seen",
+  "compositionPrefix": "LeftOnSeen",
+  "format": { "width": 1080, "height": 1920, "fps": 30 },
+  "stage": "bedroom-night",
+  "music": {
+    "file": "music/left-on-seen.mp3",
+    "prompt": "Cute lo-fi bedroom pop loop, soft ukulele and glockenspiel, gentle brushed drums, warm and playful, 90 bpm, no vocals",
+    "lengthSeconds": 60,
+    "volume": 0.13,
+    "duckedVolume": 0.05
+  },
+  "tts": {
+    "model": "eleven_v3",
+    "fallbackModel": "eleven_multilingual_v2"
+  },
+  "cast": [
+    {
+      "id": "mia",
+      "name": "Mia",
+      "model": "girl",
+      "mark": "left",
+      "color": "#FF6FAE",
+      "look": {
+        "skin": "#FFC9A6",
+        "hair": "#5B3A2E",
+        "hoodie": "#FFB3CF",
+        "hoodieTrim": "#FF8DB8",
+        "pants": "#8C9EFF",
+        "shoes": "#FFFFFF",
+        "eyes": "#3B2A4A",
+        "blush": "#FF8FA8"
+      },
+      "voice": {
+        "id": "cgSgspJ2msm6clMCkdW9",
+        "name": "Jessica",
+        "candidates": [
+          { "id": "cgSgspJ2msm6clMCkdW9", "name": "Jessica" },
+          { "id": "FGY2WhTYpPnrIDTdsKH5", "name": "Laura" },
+          { "id": "pFZP5JQG7iQjIQuC4Bku", "name": "Lily" },
+          { "id": "EXAVITQu4vr4xnVAWWQ6", "name": "Sarah" },
+          { "id": "XrExE9yKIg1WjnnlVkGX", "name": "Matilda" }
+        ],
+        "audition": "[gasps] He replied! Byte, HE REPLIED! [giggles] Okay, okay... be cool.",
+        "stability": 0.5,
+        "similarity": 0.8,
+        "speed": 1.05
+      }
+    },
+    {
+      "id": "byte",
+      "name": "Byte",
+      "model": "robot",
+      "mark": "right",
+      "color": "#3FD8C0",
+      "look": {
+        "body": "#BFF3E6",
+        "bodyShade": "#8FE3CF",
+        "screen": "#1B2440",
+        "glow": "#6FFFE3",
+        "accent": "#FF8FB8",
+        "blush": "#FF8FB8"
+      },
+      "voice": {
+        "id": "TX3LPaxmHKxFdv7VOQHJ",
+        "name": "Liam",
+        "candidates": [
+          { "id": "TX3LPaxmHKxFdv7VOQHJ", "name": "Liam" },
+          { "id": "bIHbv24MWmeRgasZH58o", "name": "Will" },
+          { "id": "IKne3meq5aSn9XLyUdCD", "name": "Charlie" },
+          { "id": "iP95p4xoKVk53GoZ742B", "name": "Chris" },
+          { "id": "N2lVS1w4EtoT3dr4eOWO", "name": "Callum" }
+        ],
+        "audition": "[deadpan] You sent 'haha ok'. [sighs] Nobody can reply to 'haha ok'.",
+        "stability": 0.5,
+        "similarity": 0.8,
+        "speed": 1.05
+      }
+    },
+    {
+      "id": "mom",
+      "name": "Mom",
+      "model": null,
+      "color": "#FFB347",
+      "voice": {
+        "id": "XB0fDUnXU5powFXDhCwa",
+        "name": "Charlotte",
+        "candidates": [
+          { "id": "XB0fDUnXU5powFXDhCwa", "name": "Charlotte" },
+          { "id": "21m00Tcm4TlvDq8ikWAM", "name": "Rachel" },
+          { "id": "Xb7hH8MSUJpSbSDYk0k2", "name": "Alice" }
+        ],
+        "audition": "Sweetie! [warmly] How do I make the letters bigger on my phone?",
+        "stability": 0.5,
+        "similarity": 0.8,
+        "speed": 1.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "_about": "Shared sound effects for every series. Generate the files with: python scripts/make_sfx.py  (ElevenLabs sound effects → public/sfx/<id>.mp3). Episodes reference these by id.",
+  "sounds": {
+    "boing": { "prompt": "Cute cartoon boing spring sound, short and bouncy", "seconds": 0.8, "volume": 0.55 },
+    "pop": { "prompt": "Soft cute bubble pop, single, clean", "seconds": 0.5, "volume": 0.6 },
+    "sparkle": { "prompt": "Magical sparkle chime glissando, bright twinkly fairy dust, cute", "seconds": 1.2, "volume": 0.45 },
+    "whoosh": { "prompt": "Quick soft swoosh of a text message being sent from a phone", "seconds": 0.6, "volume": 0.55 },
+    "message-in": { "prompt": "Short pleasant two-note phone message notification ding", "seconds": 0.7, "volume": 0.6 },
+    "phone-buzz": { "prompt": "Phone vibrating twice on a wooden table, buzz buzz", "seconds": 1.0, "volume": 0.65 },
+    "phone-ring": { "prompt": "Gentle cartoon phone ringing tone, outgoing call ringback, two rings", "seconds": 1.4, "volume": 0.4 },
+    "typing": { "prompt": "Fast tapping on a smartphone touch keyboard, soft clicks", "seconds": 1.0, "volume": 0.45 },
+    "clock-tick": { "prompt": "Loud dramatic clock ticking, four ticks, comedic suspense", "seconds": 2.0, "volume": 0.4 },
+    "sad-trombone": { "prompt": "Comedic sad trombone wah wah wah waaah", "seconds": 2.0, "volume": 0.4 },
+    "crickets": { "prompt": "Awkward silence crickets chirping, comedic, short", "seconds": 1.6, "volume": 0.4 },
+    "record-scratch": { "prompt": "Vinyl record scratch stop, comedic freeze", "seconds": 0.7, "volume": 0.5 },
+    "wobble": { "prompt": "Cartoon wobble shake sound, boingy jelly wiggle", "seconds": 0.8, "volume": 0.45 },
+    "aww": { "prompt": "Soft warm magical heart chime, gentle and sweet, single bell twinkle", "seconds": 1.0, "volume": 0.4 },
+    "dun-dun": { "prompt": "Dramatic comedic orchestral sting dun dun duuun", "seconds": 1.6, "volume": 0.4 },
+    "phew": { "prompt": "Soft cartoon deflating balloon relief sound, comedic sigh of relief", "seconds": 1.0, "volume": 0.4 }
+  }
+}
