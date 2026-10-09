@@ -10,9 +10,9 @@ const HILLS = [
 
 // Distant layer — desaturated, lighter for atmospheric perspective
 const FAR_HILLS = [
-  { pos: [-14, -3, -44], scale: [22, 0.25, 8], color: "#8AA48A" },
-  { pos: [5,   -2, -48], scale: [20, 0.22, 7], color: "#8CAE8C" },
-  { pos: [18,  -3, -42], scale: [18, 0.2,  7], color: "#90A890" },
+  { pos: [-14, -3, -44], scale: [22, 0.25, 8], color: "#B4A67E" },
+  { pos: [5,   -2, -48], scale: [20, 0.22, 7], color: "#B8AC84" },
+  { pos: [18,  -3, -42], scale: [18, 0.2,  7], color: "#BCA882" },
 ];
 
 const FAR_CONES = [
@@ -102,11 +102,11 @@ export default function Hills() {
         <group key={`ft${i}`} position={[x, y, z]} scale={s}>
           <mesh position={[0, 0.2, 0]}>
             <cylinderGeometry args={[0.06, 0.08, 0.5, 5]} />
-            <meshStandardMaterial color="#9A8070" roughness={0.9} />
+            <meshStandardMaterial color="#A88A70" roughness={0.9} />
           </mesh>
           <mesh position={[0, 0.9, 0]}>
             <coneGeometry args={[0.45, 1.4, 5]} />
-            <meshStandardMaterial color="#7A9878" roughness={0.9} />
+            <meshStandardMaterial color="#A49A72" roughness={0.9} />
           </mesh>
         </group>
       ))}

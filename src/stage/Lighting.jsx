@@ -15,11 +15,11 @@ export default function Lighting({ mood = 0 }) {
         castShadow
       />
 
-      {/* Soft cool fill */}
+      {/* Soft warm fill (a cool fill read as blue daylight) */}
       <directionalLight
         position={[-8, 4, 5]}
         intensity={0.4}
-        color="#C8D8FF"
+        color="#FFD9B8"
       />
 
       {/* Subtle warm bench lamp */}

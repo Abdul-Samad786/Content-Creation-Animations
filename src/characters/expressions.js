@@ -1,22 +1,24 @@
 // Facial expression presets — each is a target blend shape value set
 // Values 0.0 = neutral, 1.0 = full expression
 
+// browInner: inner brow ends up (worry, grief) when positive, down (anger) when negative.
 export const EXPRESSIONS = {
-  NEUTRAL:     { browRaise: 0,    browFurrow: 0,    mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0 },
-  TIRED:       { browRaise: 0,    browFurrow: 0.3,  mouthSmile: 0,    mouthFrown: 0.2, eyeWide: 0,    eyeSquint: 0.4 },
-  SAD:         { browRaise: 0.2,  browFurrow: 0.5,  mouthSmile: 0,    mouthFrown: 0.5, eyeWide: 0.1,  eyeSquint: 0.2 },
-  FRUSTRATED:  { browRaise: 0,    browFurrow: 0.8,  mouthSmile: 0,    mouthFrown: 0.3, eyeWide: 0,    eyeSquint: 0.5 },
-  CONCERNED:   { browRaise: 0.5,  browFurrow: 0.3,  mouthSmile: 0,    mouthFrown: 0.2, eyeWide: 0.3,  eyeSquint: 0   },
-  HOPEFUL:     { browRaise: 0.4,  browFurrow: 0,    mouthSmile: 0.3,  mouthFrown: 0,   eyeWide: 0.3,  eyeSquint: 0   },
-  SURPRISED:   { browRaise: 0.9,  browFurrow: 0,    mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0.9,  eyeSquint: 0   },
-  CALM:        { browRaise: 0.1,  browFurrow: 0,    mouthSmile: 0.1,  mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.1 },
-  THOUGHTFUL:  { browRaise: 0.2,  browFurrow: 0.2,  mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.2 },
-  DEFEATED:    { browRaise: 0,    browFurrow: 0.4,  mouthSmile: 0,    mouthFrown: 0.6, eyeWide: 0,    eyeSquint: 0.5 },
-  BITTER:      { browRaise: 0,    browFurrow: 0.7,  mouthSmile: 0.1,  mouthFrown: 0.2, eyeWide: 0,    eyeSquint: 0.6 },
-  LISTENING:   { browRaise: 0.15, browFurrow: 0.1,  mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0.2,  eyeSquint: 0   },
-  ANGRY:       { browRaise: 0,    browFurrow: 1.0,  mouthSmile: 0,    mouthFrown: 0.4, eyeWide: 0.2,  eyeSquint: 0.3 },
-  WARM:        { browRaise: 0.1,  browFurrow: 0,    mouthSmile: 0.25, mouthFrown: 0,   eyeWide: 0.1,  eyeSquint: 0.1 },
-  WRY:         { browRaise: 0.1,  browFurrow: 0.1,  mouthSmile: 0.25, mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.3 },
+  NEUTRAL:     { browRaise: 0,    browFurrow: 0,    browInner: 0,    mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0 },
+  TIRED:       { browRaise: 0,    browFurrow: 0.3,  browInner: 0.2,  mouthSmile: 0,    mouthFrown: 0.2, eyeWide: 0,    eyeSquint: 0.4 },
+  SAD:         { browRaise: 0.2,  browFurrow: 0.3,  browInner: 0.9,  mouthSmile: 0,    mouthFrown: 0.5, eyeWide: 0.1,  eyeSquint: 0.2 },
+  FRUSTRATED:  { browRaise: 0,    browFurrow: 0.8,  browInner: -0.6, mouthSmile: 0,    mouthFrown: 0.3, eyeWide: 0,    eyeSquint: 0.5 },
+  CONCERNED:   { browRaise: 0.5,  browFurrow: 0.3,  browInner: 0.6,  mouthSmile: 0,    mouthFrown: 0.2, eyeWide: 0.3,  eyeSquint: 0   },
+  HOPEFUL:     { browRaise: 0.4,  browFurrow: 0,    browInner: 0.2,  mouthSmile: 0.3,  mouthFrown: 0,   eyeWide: 0.3,  eyeSquint: 0   },
+  SURPRISED:   { browRaise: 0.9,  browFurrow: 0,    browInner: 0,    mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0.9,  eyeSquint: 0   },
+  CALM:        { browRaise: 0.1,  browFurrow: 0,    browInner: 0,    mouthSmile: 0.1,  mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.1 },
+  THOUGHTFUL:  { browRaise: 0.2,  browFurrow: 0.4,  browInner: -0.1, mouthSmile: 0,    mouthFrown: 0.1, eyeWide: 0,    eyeSquint: 0.25 },
+  DEFEATED:    { browRaise: 0,    browFurrow: 0.3,  browInner: 0.7,  mouthSmile: 0,    mouthFrown: 0.6, eyeWide: 0,    eyeSquint: 0.5 },
+  BITTER:      { browRaise: 0,    browFurrow: 0.7,  browInner: -0.4, mouthSmile: 0.15, mouthFrown: 0.2, eyeWide: 0,    eyeSquint: 0.6 },
+  LISTENING:   { browRaise: 0.15, browFurrow: 0.1,  browInner: 0.1,  mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0.2,  eyeSquint: 0   },
+  ANGRY:       { browRaise: 0,    browFurrow: 1.0,  browInner: -1.0, mouthSmile: 0,    mouthFrown: 0.4, eyeWide: 0.2,  eyeSquint: 0.3 },
+  WARM:        { browRaise: 0.1,  browFurrow: 0,    browInner: 0.15, mouthSmile: 0.45, mouthFrown: 0,   eyeWide: 0.1,  eyeSquint: 0.3 },
+  WRY:         { browRaise: 0.1,  browFurrow: 0.1,  browInner: 0,    mouthSmile: 0.3,  mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.3 },
+  LAUGH:       { browRaise: 0.3,  browFurrow: 0,    browInner: 0.3,  mouthSmile: 1.0,  mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.7 },
 }
 
 // Map tone keywords from dialogue.json → expression preset
@@ -40,6 +42,7 @@ export function toneToExpression(tone) {
 // The first rule that matches the combined text wins, so order is priority:
 // anger and sarcasm before softer words, so "furious" beats "hurt" and "wary hope" stays cautious.
 const TEXT_RULES = [
+  [/human laughs|real, surprised one/, 'LAUGH'],
   [/sarcas|bitter|smug|sardonic|mock/, 'BITTER'],
   [/despair|defeat|hollow|cave|numb|surrender|collapse|deflat|hopeless|dims/, 'DEFEATED'],
   [/furious|angry|fury|rage|terror|snap/, 'ANGRY'],

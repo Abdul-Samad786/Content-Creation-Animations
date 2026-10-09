@@ -1,63 +1,49 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
-import { easeOut } from "../camera/rig";
+import { isHighIntensity } from "../camera/rig";
 
 const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 
-/** V1: dim, faint teal glow from above. Byte is not on screen yet. */
-function IntroDim() {
+/**
+ * Constant golden-hour grade over every shot, so the look never pops between
+ * shots or lines: a warm wash and a soft dark vignette.
+ */
+export function WarmGrade() {
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <AbsoluteFill style={{ background: "rgba(0,0,0,0.35)" }} />
+      <AbsoluteFill style={{ background: "rgba(255,160,80,0.10)", mixBlendMode: "soft-light" }} />
+      <AbsoluteFill
+        style={{ background: "radial-gradient(ellipse at 50% 48%, transparent 50%, rgba(40,14,0,0.38) 100%)" }}
+      />
+    </AbsoluteFill>
+  );
+}
+
+/**
+ * Emotional peak treatment for every intensity-High line: a red flare on the
+ * cut that decays across the line, and a heavy red-black vignette that holds.
+ * The caption turns red and the camera punches in (Captions.jsx, rig.js).
+ */
+function EmotionalPeak({ lineLf, duration }) {
+  const rise = clamp01(lineLf / 3);
+  const flare = rise * clamp01(1 - lineLf / duration);
+  const vignette = clamp01(lineLf / 6) * clamp01((duration - lineLf) / 8);
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <AbsoluteFill style={{ background: "rgba(255,40,40,0.5)", opacity: flare, mixBlendMode: "multiply" }} />
       <AbsoluteFill
         style={{
-          background: "radial-gradient(ellipse at 50% 0%, rgba(94,207,207,0.22) 0%, transparent 45%)",
+          background: "radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(70,0,0,0.75) 100%)",
+          opacity: vignette,
         }}
       />
     </AbsoluteFill>
   );
 }
 
-/** V6 line 13: red flare on the hard cut, decaying across the line. */
-function RedFlare({ lineLf, duration }) {
-  const rise = clamp01(lineLf / 3);
-  const fade = clamp01(1 - lineLf / duration);
-  return (
-    <AbsoluteFill
-      style={{
-        background: "rgba(255,40,40,0.55)",
-        opacity: rise * fade,
-        mixBlendMode: "multiply",
-        pointerEvents: "none",
-      }}
-    />
-  );
-}
-
-/** V6 line 14: warm, locked still frame. */
-function WarmHold({ lineLf }) {
-  return (
-    <AbsoluteFill
-      style={{
-        background: "rgba(255,170,90,0.3)",
-        opacity: easeOut(lineLf / 6),
-        pointerEvents: "none",
-      }}
-    />
-  );
-}
-
-/** All DOM layers for the current line. Triggers are keyed to the rewritten script's line ids. */
+/** Per-line DOM treatments. Driven by the line's `intensity`, not its id. */
 export default function BeatOverlays({ beat }) {
   const { line, lineLf } = beat;
-  const lineId = line ? line.lineId : null;
-  const duration = line ? line.endFrame - line.startFrame : 1;
-
-  return (
-    <>
-      {lineId === 1 && <IntroDim />}
-      {lineId === 15 && <RedFlare lineLf={lineLf} duration={duration} />}
-      {lineId === 17 && <WarmHold lineLf={lineLf} />}
-    </>
-  );
+  if (!line || !isHighIntensity(line)) return null;
+  return <EmotionalPeak lineLf={lineLf} duration={line.endFrame - line.startFrame} />;
 }

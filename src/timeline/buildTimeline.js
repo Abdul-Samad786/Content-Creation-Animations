@@ -77,23 +77,12 @@ export function buildTimeline(lines, fps = 30, audioDurations = {}) {
  *
  * @param {{lines: object[], endingNote?: {holdFrames?: number}}} dialogue
  * @param {number} fps
- * @param {object} audioDurations - optional; if provided, used for real speaking durations.
- *                                   Falls back to placeholder (90 frames) if not found.
+ * @param {object} audioDurations - audioDurations.json; lines missing from it use the
+ *                                   placeholder (90 frames).
  */
 export function buildComposition(dialogue, fps = 30, audioDurations = null) {
-  // If audioDurations not provided, load it from the JSON file (blocking, sync).
-  // This is called from Episode.jsx during render setup, so the composition can
-  // adapt to real audio durations without needing props.
-  let durations = audioDurations || {};
-  if (!audioDurations) {
-    try {
-      // Require is a special case for JSON in Webpack; it's safe to use here.
-      durations = require("../episodes/ep01-degree/audioDurations.json");
-    } catch (e) {
-      // If the file doesn't exist yet (fresh project), fall back to placeholder durations.
-      durations = {};
-    }
-  }
+  // Without measured durations every line uses the placeholder speaking length.
+  const durations = audioDurations || {};
 
   const timeline = buildTimeline(dialogue.lines, fps, durations);
   const last = timeline[timeline.length - 1];

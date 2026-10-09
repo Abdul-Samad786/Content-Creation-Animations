@@ -26,7 +26,7 @@ function Cloud({ position, size }) {
         <mesh key={i} position={[x, y, z]}>
           <sphereGeometry args={[r, 8, 6]} />
           <meshStandardMaterial
-            color="#FFF5EA"
+            color="#FFE6C8"
             transparent
             opacity={0.80}
             roughness={1}
@@ -57,11 +57,11 @@ function Bird({ bx, by, z, speed, phase }) {
     <group position={[x, y, z]} scale={0.18}>
       <mesh position={[-0.55, flap * 0.4, 0]} rotation={[0, 0, -0.3 + flap]}>
         <boxGeometry args={[1.1, 0.07, 0.05]} />
-        <meshBasicMaterial color="#1A2A4A" fog={false} />
+        <meshBasicMaterial color="#5A3424" fog={false} />
       </mesh>
       <mesh position={[0.55, flap * 0.4, 0]} rotation={[0, 0, 0.3 - flap]}>
         <boxGeometry args={[1.1, 0.07, 0.05]} />
-        <meshBasicMaterial color="#1A2A4A" fog={false} />
+        <meshBasicMaterial color="#5A3424" fog={false} />
       </mesh>
     </group>
   );
@@ -70,17 +70,17 @@ function Bird({ bx, by, z, speed, phase }) {
 export default function Sky() {
   return (
     <group>
-      {/* Base sky — deep blue */}
+      {/* Base sky — warm apricot (golden hour, no blue anywhere) */}
       <mesh>
         <sphereGeometry args={[80, 32, 16]} />
-        <meshBasicMaterial color="#3B6CA6" side={THREE.BackSide} fog={false} />
+        <meshBasicMaterial color="#E9A574" side={THREE.BackSide} fog={false} />
       </mesh>
 
-      {/* Upper-mid sky — lighter blue layer */}
+      {/* Upper-mid sky — lighter peach layer */}
       <mesh>
         <sphereGeometry args={[76, 32, 12]} />
         <meshBasicMaterial
-          color="#6BAAD8"
+          color="#F6C08C"
           side={THREE.BackSide}
           transparent
           opacity={0.55}
@@ -96,7 +96,7 @@ export default function Sky() {
           color="#F0A050"
           side={THREE.BackSide}
           transparent
-          opacity={0.32}
+          opacity={0.45}
           fog={false}
           depthWrite={false}
         />
@@ -109,7 +109,7 @@ export default function Sky() {
           color="#F8C878"
           side={THREE.BackSide}
           transparent
-          opacity={0.15}
+          opacity={0.3}
           fog={false}
           depthWrite={false}
         />

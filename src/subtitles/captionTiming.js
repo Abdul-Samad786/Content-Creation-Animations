@@ -2,7 +2,7 @@
 //
 // Each line's real speaking length (speakingFrames, from audioDurations.json)
 // is split across its words in proportion to word length, so long words get
-// more time than short ones. The pause after the line is not part of the caption.
+// more time than short ones.
 
 export function splitWords(text) {
   return text.split(/\s+/).filter(Boolean);
@@ -26,51 +26,57 @@ export function wordWindows(entry) {
   });
 }
 
-// ── Caption box fitting ──────────────────────────────────────────────────────
-// The box is 920px wide (maxWidth) with 28px side padding, and 18px top and bottom.
-// Glyph width is estimated at 0.52em, a little wider than the bold sans fallback,
-// so the estimate errs toward taller boxes.
-
-const BOX_TEXT_WIDTH_PX = 920 - 56;
-const BOX_VERTICAL_PADDING_PX = 36;
-const BOX_LINE_HEIGHT = 1.2;
-const GLYPH_EM = 0.52;
+// ── Caption layout ───────────────────────────────────────────────────────────
 
 /** Font sizes tried in order, largest first. */
-export const CAPTION_FONT_SIZES = [76, 68, 60, 52, 46];
+export const CAPTION_FONT_SIZES = [72, 66, 60, 54, 48, 44];
 
-/** Number of lines the text wraps to at `fontSize`, using greedy word wrap. */
-export function captionLineCount(text, fontSize) {
-  const perLine = Math.floor(BOX_TEXT_WIDTH_PX / (GLYPH_EM * fontSize));
-  let lines = 1;
-  let current = 0;
-  for (const word of splitWords(text)) {
-    const needed = current === 0 ? word.length : current + 1 + word.length;
-    if (needed > perLine && current > 0) {
-      lines += 1;
-      current = word.length;
-    } else {
-      current = needed;
+/** Every way to split `n` words into `k` non-empty consecutive lines (k ≤ 3). */
+function splits(n, k) {
+  if (k === 1) return [[n]];
+  const out = [];
+  if (k === 2) {
+    for (let a = 1; a < n; a++) out.push([a, n - a]);
+  } else {
+    for (let a = 1; a < n - 1; a++) {
+      for (let b = 1; a + b < n; b++) out.push([a, b, n - a - b]);
     }
   }
-  return lines;
-}
-
-/** Estimated height of the caption box in px. */
-export function captionBoxHeight(text, fontSize) {
-  return captionLineCount(text, fontSize) * fontSize * BOX_LINE_HEIGHT + BOX_VERTICAL_PADDING_PX;
+  return out;
 }
 
 /**
- * Largest font size whose wrapped box fits in `availablePx` (the room between
- * the top of the frame and the caption's bottom edge). Falls back to the
- * smallest size when nothing fits.
+ * Balanced caption lines: the largest font, then the fewest lines, whose widest
+ * line fits `maxLinePx` and whose block fits `maxHeightPx`. Among the splits for
+ * that line count it picks the most even one, and it never leaves a single short
+ * word alone on a line.
+ *
+ * @param {string} text
+ * @param {(text:string, fontSize:number) => number} measure  text width in px
+ * @returns {{fontSize:number, lines:string[][]}}
  */
-export function fitFontSize(text, availablePx) {
+export function balanceCaption(text, measure, { maxLinePx, maxLines = 3, maxHeightPx, lineHeight = 1.2 }) {
+  const words = splitWords(text);
+  let fallback = null;
   for (const fontSize of CAPTION_FONT_SIZES) {
-    if (captionBoxHeight(text, fontSize) <= availablePx) return fontSize;
+    const maxK = Math.min(maxLines, words.length, Math.floor(maxHeightPx / (fontSize * lineHeight)));
+    for (let k = 1; k <= maxK; k++) {
+      let best = null;
+      for (const sizes of splits(words.length, k)) {
+        let i = 0;
+        const lines = sizes.map((count) => words.slice(i, (i += count)));
+        const widths = lines.map((l) => measure(l.join(" "), fontSize));
+        const widest = Math.max(...widths);
+        if (widest > maxLinePx) continue;
+        const orphan = k > 1 && lines.some((l) => l.length === 1 && l[0].length < 7);
+        const score = widest + (widest - Math.min(...widths)) * 0.25 + (orphan ? 400 : 0);
+        if (!best || score < best.score) best = { score, lines };
+      }
+      if (best) return { fontSize, lines: best.lines };
+    }
+    fallback = { fontSize, lines: [words] };
   }
-  return CAPTION_FONT_SIZES[CAPTION_FONT_SIZES.length - 1];
+  return fallback;
 }
 
 /** Lower-case form of a word, without punctuation, for matching emphasis words. */

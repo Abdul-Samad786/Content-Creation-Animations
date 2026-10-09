@@ -1,170 +1,153 @@
 import React from "react";
-import { AbsoluteFill, interpolate } from "remotion";
-import { shakeOffset } from "../camera/rig";
-import { activeWordIndex, fitFontSize, normalizeWord, wordWindows } from "./captionTiming";
+import { AbsoluteFill } from "remotion";
+import { CAPTION_BAND, isHighIntensity, shakeOffset } from "../camera/rig";
+import { textCardAt } from "../beats/textCards";
+import { activeWordIndex, balanceCaption, normalizeWord, wordWindows } from "./captionTiming";
 
-// Caption boxes are anchored by their bottom edge (see captionClearance in camera/rig.js),
-// so they always clear the top of the characters. Nothing sits in the bottom 400px.
-// The font shrinks when a long caption would run off the top of the frame.
+// Captions sit in a fixed band (CAPTION_BAND), top-anchored so the first line
+// is always in the same place. They never enter the top 120px or bottom 200px
+// platform-UI zones, never exceed 3 lines, and break into balanced lines so no
+// word is left alone on the last line.
 const SHAKE_PX_PER_UNIT = 420; // converts the camera shake (world units) to pixels
-const TOP_MARGIN_PX = 24; // smallest gap kept between the caption box and the top of the frame
 
-const FONT = "Inter, system-ui, sans-serif";
+export const CAPTION_FONT = "Inter, system-ui, sans-serif";
 const SHADOW = "0 3px 10px rgba(0,0,0,0.9)";
 const HIGHLIGHT = "#FFD60A";
 const RED = "#FF3B30";
+const PAD_X = 30;
+const PAD_Y = 18;
+const LINE_HEIGHT = 1.18;
+/** Widest a caption line may be, inside the box padding. */
+const MAX_LINE_PX = 900 - PAD_X * 2;
+/** Short pauses keep the caption up so it does not flicker between lines. */
+const HOLD_THROUGH_PAUSE_FRAMES = 20;
+const FADE_FRAMES = 6;
 
-/**
- * Line-specific overrides, keyed by dialogue line id.
- *   1  — no caption for the first 0.5s, then the whole line at once
- *   15 — red, shaking with the camera snap-in on line 15
- */
+/** Line-specific overrides, keyed by dialogue line id. */
 const LINE_OVERRIDES = {
+  // Line 1: no caption for the first 0.5s, then the whole line at once
   1: { mode: "delayed-full", delayFrames: 15 },
-  15: { mode: "word", color: RED, shake: true },
 };
 
 const normalizedEmphasis = (entry) =>
   new Set((entry.emphasis ?? "").split(/\s+/).map(normalizeWord).filter(Boolean));
 
-const baseBox = {
-  maxWidth: 920,
-  textAlign: "center",
-  fontFamily: FONT,
-  fontWeight: 900,
-  fontSize: 76,
-  lineHeight: 1.2,
-  textShadow: SHADOW,
-  background: "rgba(0,0,0,0.5)",
-  borderRadius: 18,
-  padding: "18px 28px",
-};
+let measureCtx = null;
+/** Text width in px from the browser's own font metrics (deterministic per browser). */
+function measure(text, fontSize) {
+  if (typeof document === "undefined") return text.length * fontSize * 0.56;
+  if (!measureCtx) measureCtx = document.createElement("canvas").getContext("2d");
+  measureCtx.font = `900 ${fontSize}px ${CAPTION_FONT}`;
+  return measureCtx.measureText(text).width;
+}
 
-/**
- * Default: word-by-word highlight. Spoken words are white, the current word yellow,
- * unspoken words dimmed. The line's emphasis word(s) are underlined in yellow.
- */
-function WordHighlight({ entry, lineLf, color }) {
-  const windows = wordWindows(entry);
-  const active = activeWordIndex(windows, lineLf);
-  const emphasis = normalizedEmphasis(entry);
-  return (
-    <>
-      {windows.map((w, i) => {
+/** The caption entry on screen at `frame`, with its visibility (0..1). */
+function captionEntryAt(frame, timeline) {
+  for (const e of timeline) {
+    if (!e.speakingFrames) continue; // silent lines (16) have no caption
+    const lf = frame - e.startFrame;
+    const hold = Math.min(e.pauseFrames, HOLD_THROUGH_PAUSE_FRAMES);
+    const end = e.speakingFrames + hold;
+    if (lf >= 0 && lf < end) {
+      const fade = Math.min(1, (end - lf) / FADE_FRAMES);
+      return { entry: e, lf, opacity: hold < e.pauseFrames ? fade : 1 };
+    }
+  }
+  return null;
+}
+
+/** Word-by-word highlight: spoken words white, current word yellow, unspoken dimmed. */
+function Words({ lines, windows, active, emphasis, color }) {
+  let index = 0;
+  return lines.map((words, li) => (
+    <div key={li} style={{ whiteSpace: "nowrap" }}>
+      {words.map((word, wi) => {
+        const i = index++;
         const isCurrent = i === active;
         const isFuture = i > active;
-        const isEmphasis = emphasis.has(normalizeWord(w.word));
+        const isEmphasis = emphasis.has(normalizeWord(windows[i]?.word ?? word));
         return (
-          <React.Fragment key={i}>
+          <React.Fragment key={wi}>
             <span
               style={{
                 color: isCurrent ? (color ?? HIGHLIGHT) : (color ?? "#FFFFFF"),
-                opacity: isFuture ? (color ? 0.3 : 0.45) : 1,
+                opacity: isFuture ? (color ? 0.35 : 0.45) : 1,
                 textDecoration: isEmphasis ? "underline" : undefined,
                 textDecorationColor: HIGHLIGHT,
                 textDecorationThickness: "6px",
                 textUnderlineOffset: "10px",
               }}
             >
-              {w.word}
+              {word}
             </span>
-            {i < windows.length - 1 ? " " : null}
+            {wi < words.length - 1 ? " " : null}
           </React.Fragment>
         );
       })}
-    </>
-  );
+    </div>
+  ));
 }
 
-export default function Captions({ frame, timeline, bottomPx }) {
-  const entry = timeline.find(
-    (e) => frame >= e.startFrame && frame < e.startFrame + e.speakingFrames,
-  );
-  if (!entry) return null;
+export default function Captions({ frame, timeline }) {
+  const hit = captionEntryAt(frame, timeline);
+  if (!hit) return null;
+  const { entry, lf, opacity } = hit;
 
-  const lineLf = frame - entry.startFrame;
+  // A text card owns the band while it is up
+  if (textCardAt(entry, lf)) return null;
+
   const override = LINE_OVERRIDES[entry.lineId] ?? { mode: "default" };
-  const fontSize = fitFontSize(entry.text, bottomPx - TOP_MARGIN_PX);
+  if (override.mode === "delayed-full" && lf < override.delayFrames) return null;
 
-  // Line 1: nothing for the first 0.5s, then the whole line at once.
-  if (override.mode === "delayed-full") {
-    if (lineLf < override.delayFrames) return null;
-    return (
-      <CaptionBox bottomPx={bottomPx} fontSize={fontSize}>
-        <span style={{ color: "#FFFFFF" }}>{entry.text}</span>
-      </CaptionBox>
-    );
-  }
+  const layout = balanceCaption(entry.text, measure, {
+    maxLinePx: MAX_LINE_PX,
+    maxLines: 3,
+    maxHeightPx: CAPTION_BAND.bottom - CAPTION_BAND.top - PAD_Y * 2,
+    lineHeight: LINE_HEIGHT,
+  });
 
-  // Line 15: red, shaking in sync with the camera snap-in shake.
-  if (override.mode === "word") {
-    const [dx, dy] = override.shake ? shakeOffset(frame, lineLf) : [0, 0];
-    return (
-      <CaptionBox
-        bottomPx={bottomPx}
-        fontSize={fontSize}
-        offset={[dx * SHAKE_PX_PER_UNIT, dy * SHAKE_PX_PER_UNIT]}
-      >
-        <WordHighlight entry={entry} lineLf={lineLf} color={override.color} />
-      </CaptionBox>
-    );
-  }
+  // Emotional peaks (intensity High): red words, shaking with the camera punch-in
+  const high = isHighIntensity(entry);
+  const [dx, dy] = high ? shakeOffset(frame, lf) : [0, 0];
+  const windows = wordWindows(entry);
+  const active = override.mode === "delayed-full" ? windows.length : activeWordIndex(windows, lf);
 
-  return (
-    <CaptionBox bottomPx={bottomPx} fontSize={fontSize}>
-      <WordHighlight entry={entry} lineLf={lineLf} />
-    </CaptionBox>
-  );
-}
-
-function CaptionBox({ children, offset = [0, 0], fontSize, bottomPx }) {
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <div
         style={{
           position: "absolute",
-          bottom: 1920 - bottomPx,
+          top: CAPTION_BAND.top,
           left: 0,
           right: 0,
           display: "flex",
           justifyContent: "center",
-          transform: `translate(${offset[0]}px, ${offset[1]}px)`,
-        }}
-      >
-        <div style={{ ...baseBox, fontSize }}>{children}</div>
-      </div>
-    </AbsoluteFill>
-  );
-}
-
-/** Hook overlay above Human, from 0:00 to 0:03 (converted to frames via fps). */
-export function HookOverlay({ frame, fps }) {
-  const end = Math.round(3 * fps);
-  if (frame >= end) return null;
-
-  const opacity = interpolate(frame, [0, 6, end - 6, end], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  return (
-    <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <div
-        style={{
-          position: "absolute",
-          top: 980,
-          left: 60,
-          fontFamily: FONT,
-          fontWeight: 900,
-          fontSize: 56,
-          color: "#FFFFFF",
-          textShadow: SHADOW,
           opacity,
+          transform: `translate(${dx * SHAKE_PX_PER_UNIT}px, ${dy * SHAKE_PX_PER_UNIT}px)`,
         }}
       >
-        140 applications. 3 replies.
+        <div
+          style={{
+            textAlign: "center",
+            fontFamily: CAPTION_FONT,
+            fontWeight: 900,
+            fontSize: layout.fontSize,
+            lineHeight: LINE_HEIGHT,
+            textShadow: SHADOW,
+            background: high ? "rgba(40,0,0,0.6)" : "rgba(0,0,0,0.5)",
+            borderRadius: 18,
+            padding: `${PAD_Y}px ${PAD_X}px`,
+          }}
+        >
+          <Words
+            lines={layout.lines}
+            windows={windows}
+            active={active}
+            emphasis={normalizedEmphasis(entry)}
+            color={high ? RED : undefined}
+          />
+        </div>
       </div>
     </AbsoluteFill>
   );
 }
-

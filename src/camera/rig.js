@@ -1,46 +1,49 @@
 // Vertical-native camera rig for the 1080x1920 composition.
 //
 // Layout (screen, top to bottom):
-//   upper band   — captions live here (top 42% of the frame)
-//   middle third — props / visuals
-//   lower half   — Human and Byte side by side on the bench
-//   bottom 400px — reserved for platform UI (nothing is drawn here)
+//   top 120px      — platform UI, nothing drawn
+//   caption band   — CAPTION_BAND (captions and text cards only)
+//   middle         — faces; overlay lines lower the faces to make room above
+//   bottom 200px   — platform UI, no captions
+//
+// Every line gets a shot. Unmarked lines are a two-shot that favours the
+// speaker, so the listener's reaction is always on screen; lines whose
+// visualNote asks for a framing get that shot. Within a line the camera drifts
+// slowly toward the speaker; between lines of the same shot it re-frames over
+// a short ease instead of cutting.
 //
 // Everything here is a pure function of the frame number. No clocks, no
 // Math.random, no physics, so every render produces identical frames.
 
+import { wordWindows, normalizeWord } from "../subtitles/captionTiming";
+
 // ── World layout ─────────────────────────────────────────────────────────────
 export const HUMAN_POSITION = [-0.55, -0.45, 0.2];
-export const AI_POSITION = [0.55, 0.55, 0.2];
+/** Byte's group sits on the ground; its body hovers clear of the bench seat and back. */
+export const AI_POSITION = [0.6, 0, 0.38];
 export const BYTE_BASE_YAW = -0.2;
 
-/** Face anchor points in world space. */
+/** Face centres in world space. */
 export const ANCHORS = {
-  human: [-0.55, 1.78, 0.2],
-  byte: [0.55, 1.64, 0.425],
-  pair: [0, 1.71, 0.3],
-  mid: [0.25, 1.68, 0.4],
+  human: [-0.55, 1.8, 0.32],
+  byte: [0.6, 1.68, 0.6],
+  pair: [0.02, 1.74, 0.45],
 };
 
 /** Topmost points of each character in world space (hair and antenna tips). */
 export const HEAD_TOP = {
-  human: [-0.55, 2.1, 0.2],
-  byte: [0.55, 2.35, 0.2],
+  human: [-0.55, 2.07, 0.2],
+  byte: [0.6, 2.18, 0.38],
 };
 
 // ── Frame geometry ───────────────────────────────────────────────────────────
 export const FRAME_WIDTH = 1080;
 export const FRAME_HEIGHT = 1920;
-/** Captions must sit in the top 42% of the frame. */
-export const CAPTION_SAFE_BOTTOM_PX = Math.round(FRAME_HEIGHT * 0.42);
-/** Minimum clear space between a caption box and the top of any character. */
-export const CAPTION_GAP_PX = 100;
-/** Captions never go higher than this from the top of the frame. */
-const CAPTION_MIN_BOTTOM_PX = 300;
-
-/** Faces sit in the lower half, clear of the caption zone. */
-export const PAIR_NDC = -0.3;
-export const HUMAN_NDC = -0.2;
+/** Platform UI zones: no captions inside these. */
+export const SAFE_TOP_PX = 120;
+export const SAFE_BOTTOM_PX = 200;
+/** Fixed caption band: captions and text cards live here, max 3 lines. */
+export const CAPTION_BAND = { top: 160, bottom: 470 };
 
 const tanHalf = (fov) => Math.tan((fov * Math.PI) / 360);
 
@@ -57,8 +60,8 @@ export function frameOn(anchor, ndc, distance, fov) {
   };
 }
 
-/** Default two-shot: Human and Byte side by side, faces in the lower half. */
-export const STACKED_POSE = frameOn(ANCHORS.pair, PAIR_NDC, 5.6, 44);
+/** Default two-shot. */
+export const STACKED_POSE = frameOn(ANCHORS.pair, 0, 4.7, 40);
 
 // ── Easing and interpolation ─────────────────────────────────────────────────
 const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
@@ -78,7 +81,7 @@ export function lerpPose(a, b, t) {
   };
 }
 
-// ── Projection (for caption clearance) ───────────────────────────────────────
+// ── Projection ───────────────────────────────────────────────────────────────
 
 /**
  * Screen position in pixels (origin top-left) of a world point seen through `pose`.
@@ -113,56 +116,7 @@ export function projectPx(point, pose) {
   };
 }
 
-/**
- * Where the caption box's bottom edge goes for this frame.
- *
- * The box is anchored to the safe band (top 42%) and pushed up to keep
- * CAPTION_GAP_PX clear above the topmost visible character. Characters whose
- * top is below the frame are ignored. A head cut off at the top edge cannot be
- * cleared, so `collision` is set.
- */
-export function captionClearance(pose, { byteVisible = true } = {}) {
-  const points = [HEAD_TOP.human];
-  if (byteVisible) points.push(HEAD_TOP.byte);
-
-  let topmost = null;
-  let collision = false;
-  for (const point of points) {
-    const s = projectPx(point, pose);
-    if (!s) continue;
-    if (s.y > FRAME_HEIGHT) continue; // below the frame: not in shot
-    if (s.y < 0) collision = true; // head is above the top edge
-    const y = Math.max(s.y, 0);
-    if (topmost === null || y < topmost) topmost = y;
-  }
-
-  if (topmost === null) {
-    return { bottom: CAPTION_SAFE_BOTTOM_PX, topmost: null, collision: false };
-  }
-
-  const wanted = topmost - CAPTION_GAP_PX;
-  if (wanted < CAPTION_MIN_BOTTOM_PX) collision = true;
-  return {
-    bottom: Math.min(CAPTION_SAFE_BOTTOM_PX, Math.max(wanted, CAPTION_MIN_BOTTOM_PX)),
-    topmost,
-    collision,
-  };
-}
-
-// ── Shots ────────────────────────────────────────────────────────────────────
-// A shot is one camera framing. Each line picks its shot from its visualNote
-// (see shotForVisualNote). A line with no framing direction joins the shot
-// already on screen, so the camera holds or pushes instead of cutting.
-//
-// Each shot's pose(state) receives the beat state from `beatStateAt`:
-//   state.frame   absolute frame
-//   state.lf      frames since this shot started
-//   state.segT    0..1 progress through the whole shot segment (held lines included)
-//   state.line    active dialogue entry (may be null)
-//   state.lineLf  frames since that line started
-//   state.fps
-// `transition` is the blend length in frames from the previous shot (0 = hard cut).
-// `track` pans and dollies toward whoever is speaking, eased over 12 frames per line.
+// ── Shared camera motion ─────────────────────────────────────────────────────
 
 /** Hand-held shake that decays over ~1s from the start of a line. Deterministic. */
 export function shakeOffset(frame, lineLf) {
@@ -174,121 +128,148 @@ export function shakeOffset(frame, lineLf) {
   ];
 }
 
-/** Eased progress through the whole shot segment. */
-const segEase = (state) => easeInOut(state.segT);
+export const isHighIntensity = (line) => /high/i.test(line?.intensity || "");
+
+const speakerAnchor = (line) => (line?.speaker === "ai" ? ANCHORS.byte : ANCHORS.human);
+const otherAnchor = (line) => (line?.speaker === "ai" ? ANCHORS.human : ANCHORS.byte);
+
+/** Line progress 0..1 across its spoken part (the pause after holds at 1). */
+const speechProgress = (line, lf) => clamp01(lf / Math.max(line.speakingFrames || line.endFrame - line.startFrame, 1));
 
 /**
- * Pan and dolly toward whoever is speaking, without cutting. Eases over
- * 12 frames from the previous line's speaker to the current one.
+ * Move a pose toward a world point: dolly the camera `amount` units along the
+ * line to the point and pan the target a quarter of that.
  */
-function trackOffset(state, pose) {
-  const focus = (line) => (!line ? 0 : line.speaker === "ai" ? 1 : -1);
-  const ease = easeInOut(state.lineLf / 12);
-  const f = lerp(focus(state.prevLine), focus(state.line), ease);
-
-  // Pan half-way from the shot's centre toward the speaker, so the speaker ends up central.
-  const speakerX = (line) => (line.speaker === "ai" ? AI_POSITION[0] : HUMAN_POSITION[0]);
-  const panFor = (line) => (line ? 0.5 * (speakerX(line) - pose.target[0]) : 0);
-  const pan = lerp(panFor(state.prevLine), panFor(state.line), ease);
-
-  return { pan, dolly: 0.7 * Math.abs(f) };
-}
-
-function trackedPose(pose, track) {
+function driftToward(pose, point, amount) {
+  const d = [point[0] - pose.position[0], point[1] - pose.position[1], point[2] - pose.position[2]];
+  const len = Math.hypot(d[0], d[1], d[2]) || 1;
+  const step = d.map((v) => (v / len) * amount);
   return {
     ...pose,
-    position: [pose.position[0] + track.pan, pose.position[1], pose.position[2] - track.dolly],
-    target: [pose.target[0] + track.pan, pose.target[1], pose.target[2]],
+    position: [pose.position[0] + step[0], pose.position[1] + step[1] * 0.3, pose.position[2] + step[2]],
+    target: [pose.target[0] + step[0] * 0.25, pose.target[1], pose.target[2]],
   };
 }
 
+const offset = (pose, [dx, dy, dz]) => ({
+  ...pose,
+  position: [pose.position[0] + dx, pose.position[1] + dy, pose.position[2] + dz],
+  target: [pose.target[0] + dx, pose.target[1] + dy, pose.target[2]],
+});
+
+/** Lines with an overlay in the middle of the frame: faces drop to make room above them. */
+const OVERLAY_ROOM_LINES = new Set([19, 24]);
+
+// ── Shots ────────────────────────────────────────────────────────────────────
+// pose(line, lf, frame) returns the camera for frame `lf` of `line`.
+// `blendFrames` is the ease in frames from the previous line's last pose when
+// the previous line used the same shot family; 0 means a cut.
+
 export const SHOTS = {
-  // Slow push-in on Human (lines 1–14), tracking whoever speaks.
-  HUMAN_PUSH: {
-    transition: 12,
-    track: true,
-    pose: (s) => frameOn(ANCHORS.human, HUMAN_NDC, 5.0 - 1.6 * segEase(s), 36),
-  },
-
-  // Wide two-shot with both characters small in frame (line 17). Holds through
-  // the speakers on lines 18–25, tracking whoever speaks. The pull out is eased.
-  WIDE_TWO_SHOT: {
-    transition: 36,
-    track: true,
-    pose: () => frameOn(ANCHORS.pair, PAIR_NDC, 9.0, 44),
-  },
-
-  // Snaps in tight on Human (line 15), then shakes and decays over ~1s.
-  // Hard cut, because the script says "snaps in".
-  SNAP_HUMAN: {
-    transition: 0,
-    track: false,
-    pose: (s) => {
-      const base = frameOn(ANCHORS.human, HUMAN_NDC, 2.8, 30);
-      const [dx, dy] = shakeOffset(s.frame, s.lineLf);
-      return {
-        ...base,
-        position: [base.position[0] + dx, base.position[1] + dy, base.position[2]],
-        target: [base.target[0] + dx, base.target[1] + dy, base.target[2]],
-      };
+  // Two-shot favouring the speaker: both faces fully readable, speaker nearer
+  // centre. Drifts 0.25 units toward the speaker across the line.
+  TWO: {
+    family: "two",
+    blendFrames: 16,
+    pose: (line, lf) => {
+      const s = speakerAnchor(line);
+      const o = otherAnchor(line);
+      const roomy = OVERLAY_ROOM_LINES.has(line.lineId);
+      const anchor = [lerp(s[0], o[0], 0.4), (s[1] + o[1]) / 2, ANCHORS.pair[2]];
+      const base = frameOn(anchor, roomy ? -0.3 : 0.02, roomy ? 5.0 : 4.7, 40);
+      return driftToward(base, s, 0.25 * easeInOut(speechProgress(line, lf)));
     },
   },
 
-  // Completely still on Human through the 2s despair pause (line 16). No push, no move.
-  HOLD_HUMAN: {
-    transition: 0,
-    track: false,
-    pose: () => frameOn(ANCHORS.human, HUMAN_NDC, 2.8, 30),
+  // Single on Human, Byte fully out of frame. Line 1 pushes in slowly.
+  HUMAN_SINGLE: {
+    family: "single",
+    blendFrames: 0,
+    pose: (line, lf) => {
+      const push = easeInOut(speechProgress(line, lf));
+      const look = [ANCHORS.human[0] + 0.08, ANCHORS.human[1], ANCHORS.human[2]];
+      return frameOn(look, -0.02, 3.4 - 0.6 * push, 34);
+    },
   },
 
-  // Final beat: slow push-in on Byte, which turns to camera (line 26). The push
-  // finishes with the spoken line; the closing pause is a still hold, then cut to black.
+  // Line 17's wide two-shot: both small, then a slow push so faces stay readable.
+  WIDE_TWO_SHOT: {
+    family: "wide",
+    blendFrames: 0,
+    pose: (line, lf) => {
+      const push = easeInOut(clamp01(lf / Math.max(line.endFrame - line.startFrame, 1)));
+      return frameOn(ANCHORS.pair, -0.05, 6.4 - 1.5 * push, 40);
+    },
+  },
+
+  // Snaps in tight on Human, then shakes and decays over ~1s. Hard cut.
+  SNAP_HUMAN: {
+    family: "snap",
+    blendFrames: 0,
+    pose: (line, lf, frame) => {
+      const base = frameOn(ANCHORS.human, -0.02, 2.5, 30);
+      const [dx, dy] = shakeOffset(frame, lf);
+      return offset(base, [dx, dy, 0]);
+    },
+  },
+
+  // Completely still on Human through the silence beat (line 16). No drift.
+  HOLD_HUMAN: {
+    family: "hold",
+    blendFrames: 0,
+    still: true,
+    pose: () => frameOn(ANCHORS.human, -0.02, 2.5, 30),
+  },
+
+  // Final beat: from a two-shot favouring Byte, push in to a Byte single as it
+  // turns to camera. The push ends with the spoken line; the hold is still.
   FINAL_BYTE: {
-    transition: 12,
-    track: false,
-    pose: (s) => {
-      const speech = s.line ? s.line.speakingFrames : 1;
-      const push = easeInOut(Math.min(s.lineLf, speech) / speech);
-      return frameOn(ANCHORS.mid, 0.1, 4.6 - 0.8 * push, 40);
+    family: "two",
+    blendFrames: 16,
+    still: true,
+    pose: (line, lf) => {
+      const push = easeInOut(speechProgress(line, lf));
+      const s = ANCHORS.byte;
+      const start = [lerp(s[0], ANCHORS.human[0], 0.4), (s[1] + ANCHORS.human[1]) / 2, ANCHORS.pair[2]];
+      const anchor = lerpVec(start, [s[0], s[1], s[2]], push);
+      return frameOn(anchor, lerp(0.02, -0.02, push), lerp(4.7, 2.7, push), lerp(40, 36, push));
     },
   },
 };
 
 /**
  * Ordered rules: the first match on a line's visualNote picks its shot.
- * Anything that matches no rule (including "none") returns null, so the line
- * joins the shot already on screen.
+ * Anything that matches no rule (including "none") is a speaker-favouring two-shot.
  */
 const VISUAL_RULES = [
   [/turns to camera/, "FINAL_BYTE"],
   [/snaps in/, "SNAP_HUMAN"],
   [/hold on human/, "HOLD_HUMAN"],
   [/wide two-shot/, "WIDE_TWO_SHOT"],
-  [/human/, "HUMAN_PUSH"],
+  [/push-in on human|on human's face/, "HUMAN_SINGLE"],
 ];
 
-/** @returns {string|null} shot name, or null when the line should inherit the current shot */
-export function shotForVisualNote(note) {
-  if (!note) return null;
-  const t = note.toLowerCase();
+/** Shot name for a timeline entry. */
+export function shotForLine(entry) {
+  const note = (entry?.visualNote || "").toLowerCase();
   for (const [pattern, shot] of VISUAL_RULES) {
-    if (pattern.test(t)) return shot;
+    if (pattern.test(note)) return shot;
   }
-  return null;
+  return "TWO";
 }
 
-// ── Timeline → shot segments ─────────────────────────────────────────────────
+/** Kept for callers that only have a note. */
+export function shotForVisualNote(note) {
+  return shotForLine({ visualNote: note });
+}
 
-/**
- * Group consecutive lines that share a shot into segments. Lines with no shot
- * join the segment before them. Each segment runs until the next one starts,
- * or to the end of the timeline.
- */
+// ── Timeline → per-frame state ───────────────────────────────────────────────
+
+/** Consecutive lines that share a shot, as segments. */
 export function buildBeatSegments(timeline) {
   const segments = [];
   for (const entry of timeline) {
-    const shot = shotForVisualNote(entry.visualNote);
-    if (!shot) continue;
+    const shot = shotForLine(entry);
     const last = segments[segments.length - 1];
     if (last && last.beat === shot) {
       last.lines.push(entry.lineId);
@@ -296,7 +277,6 @@ export function buildBeatSegments(timeline) {
       segments.push({ beat: shot, startFrame: entry.startFrame, lines: [entry.lineId] });
     }
   }
-
   const end = timeline.length ? timeline[timeline.length - 1].endFrame : 0;
   segments.forEach((seg, i) => {
     seg.endFrame = i + 1 < segments.length ? segments[i + 1].startFrame : end;
@@ -305,24 +285,15 @@ export function buildBeatSegments(timeline) {
 }
 
 /**
- * Everything a shot needs to know about `frame`.
+ * Everything the overlays and camera need to know about `frame`.
  * The active line includes its trailing pause; past the end, the last line holds.
  */
 export function beatStateAt(frame, timeline, segments, fps = 30) {
-  let line = null;
-  for (const entry of timeline) {
-    if (frame >= entry.startFrame && frame < entry.endFrame) {
-      line = entry;
-      break;
-    }
-  }
-  if (!line) {
-    for (const entry of timeline) {
-      if (entry.startFrame <= frame) line = entry;
-    }
-  }
-
-  const lineIndex = line ? timeline.indexOf(line) : -1;
+  let lineIndex = -1;
+  timeline.forEach((entry, i) => {
+    if (entry.startFrame <= frame) lineIndex = i;
+  });
+  const line = lineIndex >= 0 ? timeline[lineIndex] : null;
   const prevLine = lineIndex > 0 ? timeline[lineIndex - 1] : null;
 
   let segIndex = -1;
@@ -341,48 +312,62 @@ export function beatStateAt(frame, timeline, segments, fps = 30) {
     prevLine,
     segIndex,
     seg,
-    beat: seg ? seg.beat : null,
+    beat: line ? shotForLine(line) : null,
     lf,
     segT: clamp01(lf / segLen),
   };
 }
 
-function poseForState(state) {
-  const shot = SHOTS[state.beat];
-  const pose = shot.pose(state);
-  return shot.track ? trackedPose(pose, trackOffset(state, pose)) : pose;
+/** A line's pose at line-frame `lf`, with breathing and the high-intensity punch-in. */
+function linePose(line, lf, frame) {
+  const shot = SHOTS[shotForLine(line)];
+  let pose = shot.pose(line, lf, frame);
+
+  // Emotional peak: fast push toward the speaker plus a decaying shake
+  if (isHighIntensity(line) && shotForLine(line) !== "SNAP_HUMAN") {
+    pose = driftToward(pose, speakerAnchor(line), 0.6 * easeOut(lf / 8));
+    const [dx, dy] = shakeOffset(frame, lf);
+    pose = offset(pose, [dx * 0.6, dy * 0.6, 0]);
+  }
+
+  // Breathing: a slow, tiny float so no shot is ever dead still. Holds stay locked.
+  if (!shot.still) {
+    pose = offset(pose, [Math.sin(frame * 0.021) * 0.012, Math.sin(frame * 0.017 + 1) * 0.008, 0]);
+  }
+  return pose;
 }
 
 /**
- * Camera pose for `frame`. Blends from the previous shot over that shot's
- * transition length, or cuts when the transition is 0.
+ * Camera pose for `frame`. Within one shot family the camera eases from the
+ * previous line's final framing to this line's; across families it cuts.
  */
 export function cameraPoseAt(frame, timeline, segments, fps = 30) {
   const state = beatStateAt(frame, timeline, segments, fps);
-  if (!state.seg) return STACKED_POSE;
+  const line = state.line;
+  if (!line) return STACKED_POSE;
 
-  const shot = SHOTS[state.beat];
-  const current = poseForState(state);
+  const current = linePose(line, state.lineLf, frame);
+  const prev = state.prevLine;
+  if (!prev) return current;
 
-  const prevSeg = segments[state.segIndex - 1];
-  if (!prevSeg || shot.transition === 0 || state.lf >= shot.transition) {
+  const shot = SHOTS[shotForLine(line)];
+  const prevShot = SHOTS[shotForLine(prev)];
+  if (shot.blendFrames === 0 || prevShot.family !== shot.family || state.lineLf >= shot.blendFrames) {
     return current;
   }
-
-  // Previous shot, evaluated at its last frame before this one starts.
-  const prevState = beatStateAt(state.seg.startFrame - 1, timeline, segments, fps);
-  const previous = poseForState(prevState);
-  return lerpPose(previous, current, easeInOut(state.lf / shot.transition));
+  const from = linePose(prev, prev.endFrame - prev.startFrame - 1, line.startFrame - 1);
+  return lerpPose(from, current, easeInOut(state.lineLf / shot.blendFrames));
 }
 
-/** Byte turns to face camera during the final shot (line 26). */
+/** Frame offset of a spoken word in a line, or null. */
+function wordLf(line, word) {
+  const hit = wordWindows(line).find((w) => normalizeWord(w.word) === word);
+  return hit ? hit.start : null;
+}
+
+/** Byte turns to face camera on "you" in the final line. */
 export function byteYawAt(state) {
-  if (state.beat !== "FINAL_BYTE") return BYTE_BASE_YAW;
-  return lerp(BYTE_BASE_YAW, 0, easeOut(state.lf / (1 * state.fps)));
-}
-
-/** Human is out of focus behind Byte during the final shot (1 = sharp). */
-export function humanFocusAt(state) {
-  if (state.beat !== "FINAL_BYTE") return 1;
-  return lerp(1, 0.45, easeOut(state.lf / (1 * state.fps)));
+  if (state.beat !== "FINAL_BYTE" || !state.line) return BYTE_BASE_YAW;
+  const turnAt = wordLf(state.line, "you") ?? Math.round(state.line.speakingFrames * 0.5);
+  return lerp(BYTE_BASE_YAW, 0.05, easeOut((state.lineLf - turnAt) / 24));
 }

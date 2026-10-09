@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import dialogue from "../episodes/ep01-degree/dialogue.json";
+import audioDurations from "../episodes/ep01-degree/audioDurations.json";
 import { buildComposition } from "../timeline/buildTimeline";
 import Stage from "../stage/Stage";
 import CameraRig from "../camera/CameraRig";
@@ -11,55 +12,35 @@ import {
   beatStateAt,
   buildBeatSegments,
   byteYawAt,
-  captionClearance,
   cameraPoseAt,
-  humanFocusAt,
 } from "../camera/rig";
 import BeatProps3D from "../beats/BeatProps3D";
-import BeatOverlays from "../beats/BeatOverlays";
+import BeatOverlays, { WarmGrade } from "../beats/BeatOverlays";
 import LineVisuals from "../beats/LineVisuals";
 import { Human } from "../characters/Human";
 import { AIAgent } from "../characters/AIAgent";
 import Captions from "../subtitles/Captions";
 
 const FPS = 30;
-const { timeline, totalFrames } = buildComposition(dialogue, FPS);
+const { timeline, totalFrames } = buildComposition(dialogue, FPS, audioDurations);
 const segments = buildBeatSegments(timeline);
 
-const ExpressionDriver = ({ humanRef, agentRef, frame }) => {
-  useLayoutEffect(() => {
-    humanRef.current?.updateExpression(frame)
-    agentRef.current?.updateExpression(frame)
-  })
-  return null
-}
+// Golden-hour sky tone behind the 3D scene (also the canvas clear colour)
+const SKY = "#E9A574";
 
-/** Bend legs so Human reads as seated on the bench. */
-const SitDriver = ({ humanRef }) => {
+/**
+ * Drives both characters from the script for this frame: expressions, gaze,
+ * blinks, talking mouths, listener reactions, poses, breathing and hover.
+ * Each character's plan is built once from the timeline; update(frame) is pure.
+ */
+const PerformanceDriver = ({ humanRef, agentRef, frame }) => {
   useLayoutEffect(() => {
-    const human = humanRef.current;
-    if (!human) return;
-    human.leftUpperLeg.rotation.x = -Math.PI / 2;
-    human.rightUpperLeg.rotation.x = -Math.PI / 2;
-    human.leftLowerLeg.rotation.x = Math.PI / 2.2;
-    human.rightLowerLeg.rotation.x = Math.PI / 2.2;
-  });
-  return null;
-};
-
-/** Soft focus on Human (V11). Opacity-based approximation of a depth-of-field blur. */
-const FocusDriver = ({ humanRef, focus }) => {
-  useLayoutEffect(() => {
-    const human = humanRef.current;
-    if (!human) return;
-    human.group.traverse((obj) => {
-      if (!obj.isMesh) return;
-      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-      mats.forEach((m) => {
-        m.transparent = focus < 1;
-        m.opacity = focus;
-      });
-    });
+    for (const ref of [humanRef, agentRef]) {
+      const character = ref.current;
+      if (!character) continue;
+      if (!character.plan) character.setTimeline(timeline);
+      character.update(frame, FPS);
+    }
   });
   return null;
 };
@@ -80,21 +61,12 @@ export default function Episode() {
 
   // Byte is not on screen during line 1 (the hook), except while speaking.
   const byteVisible = !(currentLine.lineId === 1 && currentLine.speaker === "human");
-  const clearance = captionClearance(pose, { byteVisible });
-
-  useEffect(() => {
-    if (!humanRef.current || !agentRef.current) return
-    const isSpeaking = currentLine.speaker === 'human'
-    const ctx = { humanPos: HUMAN_POSITION, aiPos: AI_POSITION, cameraPos: pose.position }
-    humanRef.current.setLine(currentLine, isSpeaking, currentLine.startFrame, ctx)
-    agentRef.current.setLine(currentLine, !isSpeaking, currentLine.startFrame, ctx)
-  }, [currentLine.lineId])
 
   // Line 26's hold is the final pause. The last frame cuts to black.
   const cutToBlack = frame >= totalFrames - 1;
 
   return (
-    <AbsoluteFill style={{ background: "#5E8FC4" }}>
+    <AbsoluteFill style={{ background: SKY }}>
       <ThreeCanvas
         width={width}
         height={height}
@@ -102,8 +74,8 @@ export default function Episode() {
         gl={{ antialias: true }}
         shadows
       >
-        <color attach="background" args={["#5E8FC4"]} />
-        <fog attach="fog" args={["#D4906A", 16, 52]} />
+        <color attach="background" args={[SKY]} />
+        <fog attach="fog" args={["#E2A57A", 16, 52]} />
         <Stage />
         <CameraRig pose={pose} />
         <BeatProps3D beat={beat} />
@@ -115,17 +87,9 @@ export default function Episode() {
           rotation={[0, byteYawAt(beat), 0]}
           visible={byteVisible}
         />
-        <SitDriver humanRef={humanRef} />
-        <FocusDriver humanRef={humanRef} focus={humanFocusAt(beat)} />
-        <ExpressionDriver humanRef={humanRef} agentRef={agentRef} frame={frame} />
+        <PerformanceDriver humanRef={humanRef} agentRef={agentRef} frame={frame} />
       </ThreeCanvas>
-      {/* Vignette — draws focus toward center */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.42) 100%)',
-        pointerEvents: 'none',
-      }} />
+      <WarmGrade />
       <BeatOverlays beat={beat} />
       <LineVisuals line={currentLine} lineLf={frame - currentLine.startFrame} />
       {/* One audio track per line, offset to its exact start frame */}
@@ -142,7 +106,7 @@ export default function Episode() {
           </Sequence>
         )
       )}
-      <Captions frame={frame} timeline={timeline} bottomPx={clearance.bottom} />
+      <Captions frame={frame} timeline={timeline} />
       {cutToBlack && <AbsoluteFill style={{ background: "#000" }} />}
     </AbsoluteFill>
   );

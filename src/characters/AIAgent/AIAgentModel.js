@@ -1,19 +1,25 @@
 import * as THREE from "three";
-import { EXPRESSIONS, blendExpressions, speakerExpression, listenerExpression } from '../expressions.js'
-import { GAZE, parseEyes, gazeOffset } from '../gaze.js'
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import { ScreenFaceController } from '../FaceController.js'
+import { EXPRESSIONS, speakerExpression, listenerExpression } from '../expressions.js'
+import { buildPerformance } from '../performance.js'
 
 
 /**
- * Standalone voxel "AI Agent" character — floating robot, no legs.
- * Fully independent of HumanDeveloper — add `agent.group` to any scene.
+ * "Byte" — a floating robot, no legs.
+ * Chamfered brick-red torso and head, a recessed chest panel, shoulder nubs
+ * with stubby arms, a display face (ScreenFaceController) and a single
+ * antenna with a pulsing tip.
  *
  * Hierarchy:
- *   aiAgentGroup
- *     └── body
- *           ├── facepanel → leftEye, rightEye, mouth
- *           ├── antenna (+ tip)
- *           ├── leftModule, rightModule
- *           └── bottomThruster
+ *   aiAgentGroup            (placed on the ground; Episode sets its yaw)
+ *     └── body              (hover bob, tilts, drift)
+ *           ├── torso, chestPanel, shoulders, leftArm, rightArm, base, hoverGlow
+ *           └── head → bezel, screen (face), antenna → rod, tip
+ *
+ * Driving it:
+ *   setTimeline(timeline)  once, then update(frame) every frame (pure; any order)
+ *   setLine / updateExpression remain for callers of the older per-line API.
  */
 export class AIAgentModel {
   /** @param {Partial<typeof AIAgentModel.DEFAULT_PARAMS>} [params] */
@@ -29,212 +35,291 @@ export class AIAgentModel {
 
     this._hoverBaseY = this.body.position.y;
 
-    // Gaze moves the glowing eye panels a little within the face; the eyes keep their geometry
-    this._eyeBase = {
-      left: this.leftEye.position.clone(),
-      right: this.rightEye.position.clone(),
-    };
-    this._eyeTravel = { x: 0.03, y: 0.02 };
+    this.face = new ScreenFaceController(this.screen, {
+      colors: { screen: AIAgentModel.COLORS.screen, sclera: AIAgentModel.COLORS.sclera, glow: AIAgentModel.COLORS.teal },
+      scale: 0.95,
+    });
 
+    this.plan = null;
+    // Legacy per-line state (setLine / updateExpression without a timeline)
     this.isSpeaking = false
-    this.currentExpression = { ...EXPRESSIONS.NEUTRAL }
-    this.targetExpression  = { ...EXPRESSIONS.NEUTRAL }
-    this.expressionStartFrame = 0
+    this.targetExpression = { ...EXPRESSIONS.NEUTRAL }
     this.speakUntil = 0
-    this.currentGaze = { x: 0, y: 0 }
-    this.targetGaze  = { x: 0, y: 0 }
   }
 
-  static DEFAULT_PARAMS = {
-    bodyWidth: 0.7,
-    bodyHeight: 0.9,
-    bodyDepth: 0.45,
-    /** Body center height — thruster sits just above Y=0 */
-    floatHeight: 0.85,
+  static COLORS = {
+    body: "#8B2020",
+    panel: "#6B1818",
+    accent: "#A02828",
+    bezel: "#4E1212",
+    screen: "#0A1A1A",
+    sclera: "#0A2A2A",
+    teal: "#00FFB2",
   };
 
+  static DEFAULT_PARAMS = {
+    torsoWidth: 0.66,
+    torsoHeight: 0.54,
+    torsoDepth: 0.44,
+    headWidth: 0.58,
+    headHeight: 0.44,
+    headDepth: 0.42,
+    /** Torso centre height above the group origin (the ground). Clears the bench seat and back. */
+    floatHeight: 1.12,
+  };
+
+  // ── Driving ────────────────────────────────────────────────────────────
+
+  /** Builds the frame-pure performance plan from the episode timeline. */
+  setTimeline(timeline) {
+    this.plan = buildPerformance(timeline, 'ai');
+  }
+
+  /** Older per-line API. Only used when no timeline has been set. */
+  setLine(line, isSpeaking, frame) {
+    this.isSpeaking = isSpeaking
+    const key = isSpeaking ? speakerExpression(line) : listenerExpression(line)
+    this.targetExpression = { ...EXPRESSIONS[key] }
+    this.speakUntil = frame + (line.speakingFrames ?? 0)
+  }
+
+  updateExpression(frame, fps = 30) {
+    if (this.plan) return this.update(frame, fps)
+    this.face.setMouthOpen(this.isSpeaking && frame < this.speakUntil ? Math.abs(Math.sin(frame * 0.6)) * 0.6 : 0)
+    this.face.applyExpression(this.targetExpression)
+  }
+
+  /** Applies the whole performance for `frame`. Pure: depends only on frame and timeline. */
+  update(frame, fps = 30) {
+    if (!this.plan) return
+    const st = this.plan.at(frame);
+    const P = st.pose;
+    const t = frame / fps;
+    const e = { ...st.expr };
+
+    let nod = 0;
+    let antBob = 0;
+    let asym = 0;
+    for (const ev of st.events) {
+      const bell = Math.sin(Math.PI * ev.p);
+      if (ev.type === 'nod') nod += 0.2 * bell;
+      if (ev.type === 'antennaBob') antBob += bell;
+      if (ev.type === 'asym') asym = Math.min(1, ev.p * 6);
+    }
+
+    // Hover: always bobbing, less when the script asks for stillness
+    const phase = (t * Math.PI * 2) / 2.6;
+    const bob = Math.sin(phase) * 0.035 * P.bob;
+    this.body.position.set(-P.drift, this._hoverBaseY + bob, 0);
+
+    // Talking: a little bounce and sway, scaled by intensity
+    const talk = st.talkEnergy;
+    const talkSway = Math.sin(st.lf * 0.17) * 0.035 * talk;
+    const talkNod = Math.abs(Math.sin(st.lf * 0.23)) * 0.035 * talk;
+
+    // Toward Human is -x for Byte, so its yaw goes negative
+    this.body.rotation.set(
+      P.tiltX + nod + talkNod + Math.sin(phase + 0.6) * 0.01,
+      -(P.yaw + st.gaze.x * 0.12),
+      -P.tiltZ + talkSway * 0.5 + Math.sin(phase * 0.5) * 0.012,
+    );
+    this.head.rotation.set(talkNod * 0.5, 0, P.headTilt + talkSway);
+
+    // Arms trail the hover slightly and gesture a little while talking
+    const lag = Math.sin(phase - 0.9);
+    this.leftArm.rotation.set(-talk * 0.25 * Math.max(Math.sin(st.lf * 0.15), 0), 0, -0.3 - lag * 0.08);
+    this.rightArm.rotation.set(-talk * 0.25 * Math.max(Math.sin(st.lf * 0.15 + 2), 0), 0, 0.3 + lag * 0.08);
+
+    // Antenna: droop / rise from the script, a beat bob, and a gently pulsing tip
+    this.antenna.rotation.x = P.antTilt * 0.85 - antBob * 0.3;
+    this.antenna.scale.y = P.antLift;
+    const pulse = 1 + 0.075 * (1 + Math.sin(frame / 10)); // 1.0 → 1.15 → 1.0, ~60 frames
+    // The antenna group stretches in y; undo that on the tip so it stays round
+    this.antennaTip.scale.set(pulse, pulse / P.antLift, pulse);
+    this.antennaHalo.scale.set(pulse, pulse / P.antLift, pulse);
+    this.antennaHalo.material.opacity = (0.18 + 0.8 * (pulse - 1)) * P.brightness;
+    this.hoverGlow.material.opacity = 0.16 + 0.08 * Math.sin(phase + Math.PI) * P.bob;
+
+    // Face: gaze mirrored (toward Human is screen-left)
+    const face = this.face;
+    face.setGaze(-st.gaze.x * 0.9, st.gaze.y);
+    face.setBlink(st.blink);
+    face.setMouthOpen(st.mouthOpen);
+    face.setAsymmetry(asym);
+    face.setBrightness(P.brightness);
+    face.applyExpression(e);
+  }
+
+  // ── Build ──────────────────────────────────────────────────────────────
+
   _buildMaterials() {
-    const lambert = (hex) =>
-      new THREE.MeshLambertMaterial({ color: new THREE.Color(hex) });
-    const glow = (hex, intensity = 1.2) =>
-      new THREE.MeshLambertMaterial({
-        color: new THREE.Color(hex),
-        emissive: new THREE.Color(hex),
-        emissiveIntensity: intensity,
+    const C = AIAgentModel.COLORS;
+    const std = (hex, extra = {}) =>
+      new THREE.MeshStandardMaterial({ color: new THREE.Color(hex), roughness: 0.55, metalness: 0.08, ...extra });
+    const glow = (hex, opacity) =>
+      new THREE.MeshBasicMaterial({
+        color: new THREE.Color(hex), transparent: opacity < 1, opacity, depthWrite: opacity >= 1,
       });
 
-    // Claude / Anthropic coral-orange palette
     this.materials = {
-      chassis: lambert("#D97757"),
-      chassisLight: lambert("#E68A68"),
-      metal: lambert("#B85C3E"),
-      accent: glow("#FFB08A", 0.9),
-      eyeGlow: glow("#FFF4EC", 1.6),
-      thruster: glow("#FF8C5A", 1.4),
+      body: std(C.body),
+      panel: std(C.panel, { roughness: 0.7 }),
+      accent: std(C.accent),
+      bezel: std(C.bezel, { roughness: 0.6 }),
+      screen: std(C.screen, { roughness: 0.3, metalness: 0.2 }),
+      teal: glow(C.teal, 1),
+      tealHalo: glow(C.teal, 0.25),
+      hover: glow(C.teal, 0.2),
     };
   }
 
-  _box(w, h, d, material) {
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
+  _rounded(w, h, d, radius, material) {
+    const mesh = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 5, radius), material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     return mesh;
   }
 
+  _mesh(geo, material, shadows = true) {
+    const mesh = new THREE.Mesh(geo, material);
+    mesh.castShadow = shadows;
+    mesh.receiveShadow = shadows;
+    return mesh;
+  }
+
   _buildBody() {
     const p = this.params;
+    const m = this.materials;
 
     this.body = new THREE.Group();
     this.body.name = "body";
     this.body.position.set(0, p.floatHeight, 0);
 
-    const chassis = this._box(p.bodyWidth, p.bodyHeight, p.bodyDepth, this.materials.chassis);
-    chassis.name = "bodyMesh";
-    this.body.add(chassis);
+    // Torso: chamfered box
+    const torso = this._rounded(p.torsoWidth, p.torsoHeight, p.torsoDepth, 0.1, m.body);
+    torso.name = "torso";
+    this.body.add(torso);
 
-    // Face panel with glowing eyes + mouth line
-    this.facepanel = new THREE.Group();
-    this.facepanel.name = "facepanel";
-    this.facepanel.position.set(0, 0.18, p.bodyDepth * 0.5 + 0.01);
+    // Chest panel: darker inset with a lighter rim and a small status light
+    const rim = this._rounded(p.torsoWidth * 0.6, p.torsoHeight * 0.5, 0.03, 0.03, m.accent);
+    rim.name = "chestRim";
+    rim.position.set(0, -0.03, p.torsoDepth * 0.5 - 0.006);
+    const panel = this._rounded(p.torsoWidth * 0.52, p.torsoHeight * 0.4, 0.03, 0.025, m.panel);
+    panel.name = "chestPanel";
+    panel.position.set(0, -0.03, p.torsoDepth * 0.5 - 0.001);
+    const light = this._mesh(new THREE.CircleGeometry(0.018, 20), m.teal, false);
+    light.name = "statusLight";
+    light.position.set(p.torsoWidth * 0.17, 0.02, p.torsoDepth * 0.5 + 0.0151);
+    this.body.add(rim, panel, light);
 
-    this.leftEye = this._box(0.12, 0.12, 0.03, this.materials.eyeGlow);
-    this.leftEye.name = "leftEye";
-    this.leftEye.position.set(-0.14, 0.06, 0);
-    this.facepanel.add(this.leftEye);
+    // Shoulder nubs and stubby arms with rounded end caps
+    const nubGeo = new THREE.SphereGeometry(0.085, 24, 16);
+    this.shoulders = [];
+    for (const sign of [-1, 1]) {
+      const side = sign < 0 ? "left" : "right";
+      const nub = this._mesh(nubGeo, m.accent);
+      nub.name = `${side}Shoulder`;
+      nub.position.set(sign * (p.torsoWidth * 0.5 - 0.01), p.torsoHeight * 0.3, 0);
+      nub.scale.set(1, 0.85, 1);
+      this.body.add(nub);
+      this.shoulders.push(nub);
 
-    this.rightEye = this._box(0.12, 0.12, 0.03, this.materials.eyeGlow);
-    this.rightEye.name = "rightEye";
-    this.rightEye.position.set(0.14, 0.06, 0);
-    this.facepanel.add(this.rightEye);
+      const arm = new THREE.Group();
+      arm.name = `${side}Arm`;
+      arm.position.copy(nub.position);
+      const limb = this._mesh(new THREE.CapsuleGeometry(0.052, 0.14, 8, 16), m.body);
+      limb.position.y = -0.12;
+      const cap = this._mesh(new THREE.SphereGeometry(0.066, 20, 14), m.accent);
+      cap.position.y = -0.22;
+      arm.add(limb, cap);
+      this.body.add(arm);
+      if (sign < 0) this.leftArm = arm;
+      else this.rightArm = arm;
+    }
 
-    this.mouth = this._box(0.28, 0.035, 0.025, this.materials.eyeGlow);
-    this.mouth.name = "mouth";
-    this.mouth.position.set(0, -0.1, 0);
-    this.facepanel.add(this.mouth);
+    // Hover base and glow (no legs)
+    const base = this._mesh(new THREE.CylinderGeometry(0.15, 0.11, 0.05, 28), m.bezel);
+    base.name = "hoverBase";
+    base.position.y = -p.torsoHeight * 0.5 - 0.02;
+    this.body.add(base);
+    this.hoverGlow = this._mesh(new THREE.CircleGeometry(0.2, 32), m.hover.clone(), false);
+    this.hoverGlow.name = "hoverGlow";
+    this.hoverGlow.rotation.x = -Math.PI / 2;
+    this.hoverGlow.position.y = -p.torsoHeight * 0.5 - 0.06;
+    this.body.add(this.hoverGlow);
 
-    this.body.add(this.facepanel);
+    // Neck
+    const neck = this._mesh(new THREE.CylinderGeometry(0.08, 0.09, 0.07, 24), m.bezel);
+    neck.name = "neck";
+    neck.position.y = p.torsoHeight * 0.5 + 0.025;
+    this.body.add(neck);
 
-    // Antenna
-    this.antenna = new THREE.Group();
-    this.antenna.name = "antenna";
-    this.antenna.position.set(0, p.bodyHeight * 0.5, 0);
-    const rod = this._box(0.05, 0.32, 0.05, this.materials.metal);
-    rod.name = "antennaRod";
-    rod.position.y = 0.16;
-    this.antenna.add(rod);
-    const tip = this._box(0.1, 0.1, 0.1, this.materials.accent);
-    tip.name = "antennaTip";
-    tip.position.y = 0.36;
-    this.antenna.add(tip);
-    this.body.add(this.antenna);
-
-    // Side modules
-    this.leftModule = this._buildModule("left");
-    this.rightModule = this._buildModule("right");
-    this.body.add(this.leftModule, this.rightModule);
-
-    // Bottom thruster
-    this.bottomThruster = new THREE.Group();
-    this.bottomThruster.name = "bottomThruster";
-    this.bottomThruster.position.set(0, -p.bodyHeight * 0.5 - 0.08, 0);
-    const thrusterBody = this._box(0.32, 0.16, 0.28, this.materials.metal);
-    thrusterBody.name = "thrusterBody";
-    this.bottomThruster.add(thrusterBody);
-    const flame = this._box(0.2, 0.08, 0.18, this.materials.thruster);
-    flame.name = "thrusterFlame";
-    flame.position.y = -0.12;
-    this.bottomThruster.add(flame);
-    this.body.add(this.bottomThruster);
-
+    this._buildHead();
     this.aiAgentGroup.add(this.body);
   }
 
-  _buildModule(side) {
-    const sign = side === "left" ? -1 : 1;
-    const module = new THREE.Group();
-    module.name = `${side}Module`;
-    module.position.set(sign * 0.44, 0, 0);
+  _buildHead() {
+    const p = this.params;
+    const m = this.materials;
 
-    const box = this._box(0.18, 0.4, 0.3, this.materials.chassisLight);
-    box.name = `${side}ModuleMesh`;
-    module.add(box);
+    this.head = new THREE.Group();
+    this.head.name = "head";
+    this.head.position.y = p.torsoHeight * 0.5 + 0.05 + p.headHeight * 0.5;
 
-    const accent = this._box(0.05, 0.14, 0.14, this.materials.accent);
-    accent.name = `${side}ModuleAccent`;
-    accent.position.set(sign * 0.1, 0.05, 0);
-    module.add(accent);
+    const shell = this._rounded(p.headWidth, p.headHeight, p.headDepth, 0.1, m.body);
+    shell.name = "headShell";
+    this.head.add(shell);
 
-    return module;
+    // Bezel then screen, so the display reads as set into the head
+    const front = p.headDepth * 0.5;
+    const bezel = this._rounded(p.headWidth * 0.86, p.headHeight * 0.76, 0.03, 0.06, m.bezel);
+    bezel.name = "bezel";
+    bezel.position.z = front - 0.008;
+    this.head.add(bezel);
+
+    const sw = p.headWidth * 0.78;
+    const sh = p.headHeight * 0.66;
+    const shape = new THREE.Shape();
+    const r = 0.05;
+    shape.moveTo(-sw / 2 + r, -sh / 2);
+    shape.lineTo(sw / 2 - r, -sh / 2);
+    shape.quadraticCurveTo(sw / 2, -sh / 2, sw / 2, -sh / 2 + r);
+    shape.lineTo(sw / 2, sh / 2 - r);
+    shape.quadraticCurveTo(sw / 2, sh / 2, sw / 2 - r, sh / 2);
+    shape.lineTo(-sw / 2 + r, sh / 2);
+    shape.quadraticCurveTo(-sw / 2, sh / 2, -sw / 2, sh / 2 - r);
+    shape.lineTo(-sw / 2, -sh / 2 + r);
+    shape.quadraticCurveTo(-sw / 2, -sh / 2, -sw / 2 + r, -sh / 2);
+    const screenMesh = this._mesh(new THREE.ShapeGeometry(shape, 8), m.screen, false);
+    screenMesh.name = "screenPanel";
+
+    this.screen = new THREE.Group();
+    this.screen.name = "screen";
+    this.screen.position.set(0, 0, front + 0.009);
+    this.screen.add(screenMesh);
+    this.head.add(this.screen);
+
+    // Antenna: collar, thin rod, teal tip with a soft halo
+    this.antenna = new THREE.Group();
+    this.antenna.name = "antenna";
+    this.antenna.position.y = p.headHeight * 0.5 - 0.01;
+    const collar = this._mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.035, 20), m.accent);
+    collar.position.y = 0.012;
+    const rod = this._mesh(new THREE.CylinderGeometry(0.011, 0.013, 0.2, 12), m.bezel);
+    rod.name = "antennaRod";
+    rod.position.y = 0.12;
+    this.antennaTip = this._mesh(new THREE.SphereGeometry(0.042, 20, 14), m.teal, false);
+    this.antennaTip.name = "antennaTip";
+    this.antennaTip.position.y = 0.24;
+    this.antennaHalo = this._mesh(new THREE.SphereGeometry(0.075, 20, 14), m.tealHalo.clone(), false);
+    this.antennaHalo.position.y = 0.24;
+    this.antenna.add(collar, rod, this.antennaTip, this.antennaHalo);
+    this.head.add(this.antenna);
+
+    this.body.add(this.head);
   }
 
-  // ── Expression system ──────────────────────────────────────────────────
-
-  /**
-   * Sets the expression and gaze for one dialogue line.
-   * Speaker: own line's emotion/face/eyes. Listener: that line's reaction, and eyes on the speaker.
-   * @param {object} line       - dialogue line (timeline entry works too)
-   * @param {boolean} isSpeaking
-   * @param {number} frame      - line start frame, the blend origin
-   * @param {{humanPos:number[], aiPos:number[], cameraPos:number[]}} ctx
-   */
-  setLine(line, isSpeaking, frame, ctx) {
-    this.isSpeaking = isSpeaking
-    const key = isSpeaking ? speakerExpression(line) : listenerExpression(line)
-    this.targetExpression = { ...EXPRESSIONS[key] }
-
-    const gazeKey = isSpeaking ? parseEyes(line.eyes) : GAZE.AT_OTHER
-    const gaze = gazeOffset(gazeKey, ctx.aiPos, ctx.humanPos, ctx.cameraPos)
-    if (gaze) this.targetGaze = gaze // no direction in the line: keep the last gaze
-
-    this.expressionStartFrame = frame
-    // Talking stops when the spoken part ends; the pause after it is silent
-    this.speakUntil = frame + (line.speakingFrames ?? 0)
-  }
-
-  /** Shifts the glowing eye panels. x/y are normalised gaze offsets in [-1, 1]. */
-  _applyGaze(x, y) {
-    const base = this._eyeBase;
-    this.leftEye.position.set(base.left.x + x * this._eyeTravel.x, base.left.y + y * this._eyeTravel.y, base.left.z);
-    this.rightEye.position.set(base.right.x + x * this._eyeTravel.x, base.right.y + y * this._eyeTravel.y, base.right.z);
-  }
-
-  updateExpression(frame, fps = 30) {
-    const elapsed = frame - this.expressionStartFrame
-    const t = Math.min(elapsed / 12, 1.0)
-    const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t
-
-    const expr = blendExpressions(this.currentExpression, this.targetExpression, ease)
-    this._applyGaze(
-      this.currentGaze.x + (this.targetGaze.x - this.currentGaze.x) * ease,
-      this.currentGaze.y + (this.targetGaze.y - this.currentGaze.y) * ease,
-    )
-
-    const eyeScaleY = Math.max(0.1, 1.0 + expr.eyeWide * 0.5 - expr.eyeSquint * 0.6)
-    this.leftEye.scale.y = eyeScaleY
-    this.rightEye.scale.y = eyeScaleY
-
-    const glow = 1.6 + expr.mouthSmile * 0.6 - expr.eyeSquint * 0.8
-    this.leftEye.material.emissiveIntensity = Math.max(0.3, glow)
-    this.rightEye.material.emissiveIntensity = Math.max(0.3, glow)
-
-    if (this.isSpeaking && frame < this.speakUntil) {
-      const talk = Math.abs(Math.sin(frame * 0.65))
-      this.mouth.scale.x = 1.0 + talk * 0.15
-      this.mouth.scale.y = 1.0 + talk * 1.8
-      this.mouth.material.emissiveIntensity = 1.6 + talk * 0.4
-    } else {
-      this.mouth.scale.x = Math.max(0.3, 1.0 + expr.mouthSmile * 0.5 - expr.mouthFrown * 0.3)
-      this.mouth.scale.y = 1.0
-      this.mouth.material.emissiveIntensity = 1.6
-    }
-
-    if (t >= 1.0) {
-      this.currentExpression = { ...this.targetExpression }
-      this.currentGaze = { ...this.targetGaze }
-    }
-  }
-
-  // ── Animation helpers (agent-specific) ─────────────────────────────────
+  // ── Animation helpers ─────────────────────────────────────────────────
 
   /** Gentle float bob — call each frame with elapsed seconds. */
   idleHover(timeSeconds, amount = 0.06, speed = 2) {
