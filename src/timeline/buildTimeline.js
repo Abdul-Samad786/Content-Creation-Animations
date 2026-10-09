@@ -1,30 +1,3 @@
-// Fields copied from each dialogue line onto its timeline entry, so consumers
-// (camera rig, captions, audio, face/pose system) never need a second lookup
-// into dialogue.json.
-const CARRIED_FIELDS = [
-  "speaker",
-  "text",
-  "emotion",
-  "subtext",
-  "delivery",
-  "intensity",
-  "pacing",
-  "tone",
-  "emphasis",
-  "face",
-  "eyes",
-  "body",
-  "reaction",
-  "visualNote",
-  "visualBeat",
-  "scene",
-  "expression",
-  "gesture",
-  "camera",
-  "purpose",
-  "audio",
-];
-
 // Lines that hold a still camera with no movement or cut for their whole pause.
 // Each must have a pauseAfter of at least STATIC_HOLD_MIN_SECONDS.
 const STATIC_HOLD_LINE_IDS = [16, 26];
@@ -34,26 +7,24 @@ const STATIC_HOLD_MIN_SECONDS = 2;
 const PLACEHOLDER_SPEAKING_FRAMES = 90;
 
 /**
- * Speaking length in whole frames, and where it came from.
- *   - audio null           → 0 frames; the line is its pauseAfter only
- *   - measured clip        → audioDurations[id].frames, rounded up
- *   - missing or stale     → PLACEHOLDER_SPEAKING_FRAMES, so the composition still renders
- * An entry counts as stale when its `file` is not this line's audio path.
+ * Speaking length in whole frames.
+ *   - audio null        → 0; the line is its pauseAfter only (line 16)
+ *   - id in audioDurations → the measured audioDurations[id].frames, rounded up
+ *     to a whole frame (Remotion sequences need integers)
+ *   - id missing        → PLACEHOLDER_SPEAKING_FRAMES, so the composition still renders
  */
 function speakingFramesFor(line, audioDurations) {
-  if (!line.audio) return { frames: 0, source: "none" };
-  const entry = audioDurations[String(line.id)];
-  if (entry && typeof entry.frames === "number" && entry.file === line.audio) {
-    return { frames: Math.ceil(entry.frames), source: "audio" };
-  }
-  return { frames: PLACEHOLDER_SPEAKING_FRAMES, source: "placeholder" };
+  if (!line.audio) return 0;
+  const measured = audioDurations[String(line.id)]?.frames;
+  return typeof measured === "number" ? Math.ceil(measured) : PLACEHOLDER_SPEAKING_FRAMES;
 }
 
 /**
  * Frame-accurate timeline from the dialogue lines.
  *
  * Each line's screen time is its speaking length (see speakingFramesFor)
- * followed by its pauseAfter (already in frames).
+ * followed by its pauseAfter (already in frames);
+ * start and end frames run sequentially from those totals.
  *
  * @param {object[]} lines           - dialogue.lines
  * @param {number}   fps             - frames per second
@@ -63,7 +34,7 @@ function speakingFramesFor(line, audioDurations) {
 export function buildTimeline(lines, fps = 30, audioDurations = {}) {
   let frame = 0;
   return lines.map((line) => {
-    const { frames: speakingFrames, source: speakingSource } = speakingFramesFor(line, audioDurations);
+    const speakingFrames = speakingFramesFor(line, audioDurations);
     const pauseFrames = line.pauseAfter || 0;
 
     const isStaticHold = STATIC_HOLD_LINE_IDS.includes(line.id);
@@ -76,8 +47,13 @@ export function buildTimeline(lines, fps = 30, audioDurations = {}) {
 
     const startFrame = frame;
     const endFrame = startFrame + speakingFrames + pauseFrames;
+    frame = endFrame;
 
-    const entry = {
+    // Every dialogue field is carried through (face, eyes, body, reaction,
+    // visualNote, audio, …) so consumers never need a second lookup into
+    // dialogue.json. The timing fields below are computed and win on any clash.
+    return {
+      ...line,
       lineId: line.id,
       startFrame,
       speakingFrames,
@@ -89,12 +65,6 @@ export function buildTimeline(lines, fps = 30, audioDurations = {}) {
         ? { startFrame: startFrame + speakingFrames, endFrame }
         : null,
     };
-    for (const key of CARRIED_FIELDS) {
-      entry[key] = line[key] ?? null;
-    }
-
-    frame = endFrame;
-    return entry;
   });
 }
 
@@ -118,7 +88,7 @@ export function buildComposition(dialogue, fps = 30, audioDurations = null) {
   if (!audioDurations) {
     try {
       // Require is a special case for JSON in Webpack; it's safe to use here.
-      durations = require("../../episodes/ep01-degree/audioDurations.json");
+      durations = require("../episodes/ep01-degree/audioDurations.json");
     } catch (e) {
       // If the file doesn't exist yet (fresh project), fall back to placeholder durations.
       durations = {};

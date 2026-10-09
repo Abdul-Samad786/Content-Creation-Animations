@@ -64,9 +64,9 @@ const FocusDriver = ({ humanRef, focus }) => {
   return null;
 };
 
-// Flip to true after the ElevenLabs step has regenerated audio/degree-short/001–026.mp3.
-// A constant, not a prop, so Studio's props panel cannot re-enable audio by accident.
-const AUDIO_READY = false;
+// Plays public/audio/degree/NNN.mp3 (scripts/generate_audio.py). Set false for a silent draft.
+// A constant, not a prop, so Studio's props panel cannot override it by accident.
+const AUDIO_READY = true;
 
 export default function Episode() {
   const frame = useCurrentFrame();
@@ -129,17 +129,19 @@ export default function Episode() {
       <BeatOverlays beat={beat} />
       <LineVisuals line={currentLine} lineLf={frame - currentLine.startFrame} />
       {/* One audio track per line, offset to its exact start frame */}
-      {/* Audio is skipped until AUDIO_READY: the clips in public/audio are from the old 23-line script */}
-      {AUDIO_READY && timeline.map((entry) => (
-        <Sequence
-          key={entry.lineId}
-          from={entry.startFrame}
-          durationInFrames={entry.speakingFrames}
-          layout="none"
-        >
-          <Audio src={staticFile(entry.audio)} />
-        </Sequence>
-      ))}
+      {/* Lines with no audio (line 16) are silent: their screen time is the pause alone */}
+      {AUDIO_READY && timeline.map((entry) =>
+        !entry.audio ? null : (
+          <Sequence
+            key={entry.lineId}
+            from={entry.startFrame}
+            durationInFrames={entry.endFrame - entry.startFrame}
+            layout="none"
+          >
+            <Audio src={staticFile(entry.audio)} startFrom={0} />
+          </Sequence>
+        )
+      )}
       <Captions frame={frame} timeline={timeline} bottomPx={clearance.bottom} />
       {cutToBlack && <AbsoluteFill style={{ background: "#000" }} />}
     </AbsoluteFill>
