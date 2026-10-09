@@ -208,7 +208,21 @@ export const HUMAN_POSES = {
   SLUMP: { torsoX: 0.12, headX: 0.08, shoulder: -0.02 },
   HAND_FACE: { ruX: -0.95, ruIn: 0.4, rfX: -1.75, rfIn: 0.25, headX: -0.06 },
   ELBOWS_KNEES: { torsoX: 0.3, headX: -0.18, luX: -0.55, luIn: 0.25, lfX: -0.6, lfIn: 0.55, ruX: -0.55, ruIn: 0.25, rfX: -0.6, rfIn: 0.55 },
+  // Defeated and open: arms hanging loose at the sides, shoulders dropped.
+  ARMS_LOOSE: { torsoX: 0.16, headX: 0.12, shoulder: -0.04, luX: -0.08, luIn: 0.07, lfX: -0.18, lfIn: 0.05, ruX: -0.08, ruIn: 0.07, rfX: -0.18, rfIn: 0.05 },
+  // One thumb miming a tap, held low over the lap. The other arm stays loose:
+  // two forearms up in front of the chest would read as crossed arms.
+  THUMB_TAP: { torsoX: 0.16, headX: 0.14, shoulder: -0.04, luX: -0.08, luIn: 0.07, lfX: -0.18, lfIn: 0.05, ruX: -0.42, ruIn: 0.2, rfX: -0.95, rfIn: 0.26 },
 }
+
+/** Poses that cross the forearms in front of the chest. */
+const CROSSED_ARM_POSES = new Set(['FOLDED', 'FOLDED_BACK'])
+
+/** Envy or grievance — social pain, which is never played as defensiveness. */
+const isGrievanceLine = (line) =>
+  /envy|envious|jealous|grievance|resentment/i.test(
+    [line.emotion, line.face, line.body].filter(Boolean).join(' '),
+  )
 
 /** Human pose name from a body / reaction direction, or null to keep the last one. */
 function humanPoseFor(text) {
@@ -221,7 +235,9 @@ function humanPoseFor(text) {
   if (/both hands out|steps forward/.test(t)) return 'HANDS_OUT'
   if (/hands fall|shoulders cave/.test(t)) return 'HANDS_FALL'
   if (/ticks the items|on their fingers/.test(t)) return 'TICK'
+  if (/thumb|invisible phone/.test(t)) return 'THUMB_TAP'
   if (/tap/.test(t)) return 'PHONE'
+  if (/arms loose|hands at their sides/.test(t)) return 'ARMS_LOOSE'
   if (/palms up|arms open/.test(t)) return 'OPEN_PALMS'
   if (/rub|between the knees/.test(t)) return 'HANDS_LAP'
   if (/elbows on knees|leans forward/.test(t)) return 'ELBOWS_KNEES'
@@ -286,7 +302,32 @@ function expressionKeys(line, role, prevExprKey) {
   if (/smile that holds a beat too long, then drops/.test(t)) {
     return [{ lf: 0, key: 'FORCED_SMILE' }, { lf: Math.round(span * 0.85), key: 'SAD' }]
   }
+  // Comic timing: the setup is delivered straight-faced, and the face only
+  // reacts once the punchline lands.
+  if (speaking && span > 20 && isHumorLine(line, text)) {
+    // A short blend onto the straight face, so an amused look left over from
+    // the previous line cannot run into the setup.
+    return [{ lf: 0, key: 'NEUTRAL', blend: 6 }, { lf: punchlineFrame(line, text, span), key: base }]
+  }
   return [{ lf: 0, key: base }]
+}
+
+/** Dry, wry, deadpan, amused or playful: the line is landing a joke. */
+function isHumorLine(line, faceText) {
+  const text = [line.tone, line.emotion, faceText].filter(Boolean).join(' ')
+  return /\b(wry|dry|deadpan|amused|amusement|playful|smug|sly|joke|funny)\b/i.test(text)
+}
+
+/**
+ * Frame the punchline lands on: the face's own cue word if it names one, else
+ * the line's emphasis word, else a third of the way in. Clamped so the reaction
+ * is never before the setup is under way, nor so late it misses the laugh.
+ */
+function punchlineFrame(line, faceText, span) {
+  const cued = cueWord(faceText) || line.emphasis
+  const at = cued ? wordFrame(line, cued) : null
+  const lf = at ?? Math.round(span * 0.35)
+  return Math.min(Math.max(lf, Math.round(span * 0.3)), Math.round(span * 0.75))
 }
 
 // Extra presets used only by direction-specific keys above
@@ -349,9 +390,9 @@ export function buildPerformance(timeline, role) {
     const speaking = line.speaker === role
     const start = line.startFrame
 
-    // Expression: 12-frame blend at each key
-    for (const { lf, key } of expressionKeys(line, role, prevExprKey)) {
-      exprTrack.add(start + lf, exprOf(key), 12)
+    // Expression: 12-frame blend at each key, unless the key asks for its own
+    for (const { lf, key, blend } of expressionKeys(line, role, prevExprKey)) {
+      exprTrack.add(start + lf, exprOf(key), blend ?? 12)
       prevExprKey = key
     }
 
@@ -362,7 +403,10 @@ export function buildPerformance(timeline, role) {
     // Pose: the speaker's body direction, the listener's reaction; else keep the last pose
     const direction = speaking ? line.body : line.reaction
     if (role === 'human') {
-      const name = humanPoseFor(direction)
+      let name = humanPoseFor(direction)
+      // Crossed arms are defensiveness; on an envy or grievance line the body
+      // slumps open instead.
+      if (name && CROSSED_ARM_POSES.has(name) && isGrievanceLine(line)) name = 'ARMS_LOOSE'
       if (name === 'HAND_FACE') {
         const span = line.speakingFrames || line.endFrame - start
         poseTrack.add(start + Math.round(span * 0.3), { ...HUMAN_BASE, ...HUMAN_POSES.HAND_FACE }, 14)

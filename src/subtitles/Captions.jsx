@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { CAPTION_BAND, isHighIntensity, shakeOffset } from "../camera/rig";
 import { textCardAt } from "../beats/textCards";
-import { activeWordIndex, balanceCaption, normalizeWord, wordWindows } from "./captionTiming";
+import { activeWordIndex, balanceCaption, isPunctuationOnly, normalizeWord, wordWindows } from "./captionTiming";
 
 // Captions sit in a fixed band (CAPTION_BAND), top-anchored so the first line
 // is always in the same place. They never enter the top 120px or bottom 200px
@@ -92,6 +92,9 @@ export default function Captions({ frame, timeline }) {
   const hit = captionEntryAt(frame, timeline);
   if (!hit) return null;
   const { entry, lf, opacity } = hit;
+
+  // Nothing but punctuation is not a caption: no box, no lone "." on screen
+  if (isPunctuationOnly(entry.text)) return null;
 
   // A text card owns the band while it is up
   if (textCardAt(entry, lf)) return null;

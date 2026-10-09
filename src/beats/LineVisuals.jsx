@@ -152,18 +152,59 @@ function PhoneInbox({ lineLf }) {
 
 // ── Line 7: three flash-cuts, each under half a second ───────────────────────
 
-/** Lecture hall: rows of seats receding toward a projector screen. */
-function LectureHallScene() {
-  const rows = [0, 1, 2, 3, 4, 5];
+// Each flash is a card composited over the 3D scene, never a scene replacement:
+// roughly 40% of the frame width, centred, sitting low enough to clear both
+// faces and high enough to stay out of the bottom platform-UI zone.
+const FLASH_CARD = { width: 432, height: 500, top: 1150 };
+
+/** Frame for one flash: a memory card over the live scene. */
+function FlashCard({ children }) {
   return (
-    <svg viewBox="0 0 1080 1920" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-      <rect width="1080" height="1920" fill="#3A2F2A" />
-      {/* Projector screen sits below the caption band so it never sits behind caption text */}
-      <rect x="240" y="560" width="600" height="320" fill="#F2E3C8" />
-      {rows.map((r) => (
+    <div
+      style={{
+        position: "absolute",
+        top: FLASH_CARD.top,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: FLASH_CARD.width,
+        height: FLASH_CARD.height,
+        borderRadius: 30,
+        overflow: "hidden",
+        border: "7px solid #F7E6C4",
+        boxShadow: "0 26px 60px rgba(40,14,0,0.55)",
+        background: "#1A1512",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Lecture hall: a lit projector screen, with rows of seating that widen and
+ * deepen toward the viewer so the card reads as a room, not a grid.
+ */
+function LectureHallScene() {
+  // [y, half-width, row height] per row, from the back of the hall forward
+  const rows = [
+    [250, 140, 20],
+    [292, 165, 24],
+    [342, 192, 28],
+    [402, 220, 34],
+  ];
+  return (
+    <svg viewBox="0 0 432 500" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+      <rect width="432" height="500" fill="#3C312B" />
+      {/* Projector light spilling from the screen onto the hall */}
+      <polygon points="216,150 432,470 0,470" fill="#F2E3C8" opacity="0.07" />
+      <rect x="110" y="54" width="212" height="120" rx="4" fill="#F2E3C8" />
+      <rect x="110" y="174" width="212" height="8" fill="#2A221E" />
+      {rows.map(([y, hw, h], r) => (
         <g key={r}>
-          {[0, 1, 2, 3, 4, 5, 6].map((c) => (
-            <rect key={c} x={120 + c * 120} y={960 + r * 110} width="80" height="50" rx="8" fill="#1F1915" />
+          <rect x={216 - hw} y={y} width={hw * 2} height={h} rx={6} fill="#241D19" />
+          {/* Heads in the row, silhouetted against the screen */}
+          {[-0.62, -0.21, 0.21, 0.62].map((u, i) => (
+            <circle key={i} cx={216 + u * hw} cy={y - h * 0.26} r={h * 0.3} fill="#1A1512" />
           ))}
         </g>
       ))}
@@ -174,28 +215,25 @@ function LectureHallScene() {
 /** Graduation cap on a dark ground. */
 function CapScene() {
   return (
-    <AbsoluteFill style={{ background: "#1A1512", justifyContent: "center", alignItems: "center" }}>
-      <GradCap width={700} />
-    </AbsoluteFill>
+    <div style={{ width: "100%", height: "100%", background: "#1A1512", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <GradCap width={300} />
+    </div>
   );
 }
 
-/** Posed grad photo on a phone: a silhouette in a cap, inside a phone frame. */
-function PhotoOnPhoneScene() {
+/** Posed grad photo: a silhouette in a cap on the gold card. */
+function GradPhotoScene() {
   return (
-    <AbsoluteFill style={{ background: "#14100D", justifyContent: "center", alignItems: "center" }}>
-      <div style={{ width: 520, height: 960, background: "#1E2430", borderRadius: 60, border: "10px solid #3A4152", overflow: "hidden", position: "relative" }}>
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(#F4C890, #C98A5A)" }} />
-        <div style={{ position: "absolute", left: "50%", top: "32%", transform: "translateX(-50%)" }}>
-          <div style={{ position: "relative", width: 260 }}>
-            <Silhouette width={260} fill="#1A1A24" />
-            <div style={{ position: "absolute", left: "50%", top: "-4%", transform: "translateX(-50%)" }}>
-              <GradCap width={230} />
-            </div>
+    <div style={{ width: "100%", height: "100%", background: "linear-gradient(#F4C890, #C98A5A)", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: "50%", top: "30%", transform: "translateX(-50%)" }}>
+        <div style={{ position: "relative", width: 190 }}>
+          <Silhouette width={190} fill="#1A1A24" />
+          <div style={{ position: "absolute", left: "50%", top: "-6%", transform: "translateX(-50%)" }}>
+            <GradCap width={170} />
           </div>
         </div>
       </div>
-    </AbsoluteFill>
+    </div>
   );
 }
 
@@ -203,7 +241,7 @@ function PhotoOnPhoneScene() {
 const FLASH_CUTS = [
   { from: 6, to: 18, scene: LectureHallScene },
   { from: 18, to: 30, scene: CapScene },
-  { from: 30, to: 42, scene: PhotoOnPhoneScene },
+  { from: 30, to: 42, scene: GradPhotoScene },
 ];
 
 function FlashCuts({ lineLf }) {
@@ -212,7 +250,9 @@ function FlashCuts({ lineLf }) {
   const Scene = cut.scene;
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <Scene />
+      <FlashCard>
+        <Scene />
+      </FlashCard>
     </AbsoluteFill>
   );
 }

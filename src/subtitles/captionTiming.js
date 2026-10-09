@@ -4,8 +4,21 @@
 // is split across its words in proportion to word length, so long words get
 // more time than short ones.
 
+/** True when a token carries no letters or digits (a stray "." or "—"). */
+export const isPunctuationOnly = (token) => !/[a-z0-9]/i.test(token);
+
+/**
+ * Caption words. A token that is punctuation alone is joined onto the word
+ * before it, so a lone "." can never take a word slot — and so never gets a
+ * timing window of its own or a line of its own on screen.
+ */
 export function splitWords(text) {
-  return text.split(/\s+/).filter(Boolean);
+  const words = [];
+  for (const token of text.split(/\s+/).filter(Boolean)) {
+    if (words.length && isPunctuationOnly(token)) words[words.length - 1] += token;
+    else words.push(token);
+  }
+  return words;
 }
 
 /**

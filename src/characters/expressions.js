@@ -13,6 +13,9 @@ export const EXPRESSIONS = {
   CALM:        { browRaise: 0.1,  browFurrow: 0,    browInner: 0,    mouthSmile: 0.1,  mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.1 },
   THOUGHTFUL:  { browRaise: 0.2,  browFurrow: 0.4,  browInner: -0.1, mouthSmile: 0,    mouthFrown: 0.1, eyeWide: 0,    eyeSquint: 0.25 },
   DEFEATED:    { browRaise: 0,    browFurrow: 0.3,  browInner: 0.7,  mouthSmile: 0,    mouthFrown: 0.6, eyeWide: 0,    eyeSquint: 0.5 },
+  // Envy and grievance: social pain, not defensiveness — the hurt reads in the
+  // inner brows and the sunk mouth, with none of FRUSTRATED's downward glare.
+  GRIEVANCE:   { browRaise: 0.1,  browFurrow: 0.2,  browInner: 0.75, mouthSmile: 0,    mouthFrown: 0.45, eyeWide: 0,   eyeSquint: 0.35 },
   BITTER:      { browRaise: 0,    browFurrow: 0.7,  browInner: -0.4, mouthSmile: 0.15, mouthFrown: 0.2, eyeWide: 0,    eyeSquint: 0.6 },
   LISTENING:   { browRaise: 0.15, browFurrow: 0.1,  browInner: 0.1,  mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0.2,  eyeSquint: 0   },
   ANGRY:       { browRaise: 0,    browFurrow: 1.0,  browInner: -1.0, mouthSmile: 0,    mouthFrown: 0.4, eyeWide: 0.2,  eyeSquint: 0.3 },
@@ -25,6 +28,7 @@ export const EXPRESSIONS = {
 export function toneToExpression(tone) {
   if (!tone) return 'NEUTRAL'
   const t = tone.toLowerCase()
+  if (t.includes('envy') || t.includes('envious') || t.includes('jealous') || t.includes('grievance')) return 'GRIEVANCE'
   if (t.includes('tired') || t.includes('exhausted') || t.includes('flat')) return 'TIRED'
   if (t.includes('frustrated') || t.includes('angry') || t.includes('sharp')) return 'FRUSTRATED'
   if (t.includes('sad') || t.includes('devastat') || t.includes('hurt')) return 'SAD'
@@ -46,7 +50,10 @@ const TEXT_RULES = [
   [/sarcas|bitter|smug|sardonic|mock/, 'BITTER'],
   [/despair|defeat|hollow|cave|numb|surrender|collapse|deflat|hopeless|dims/, 'DEFEATED'],
   [/furious|angry|fury|rage|terror|snap/, 'ANGRY'],
-  [/defensive|chin up|brows down|frustrat|clamp|grievance|nostrils flare|lip curls|brows drawing/, 'FRUSTRATED'],
+  // Envy and grievance before the defensive rule: they are social pain, and a
+  // guarded, chin-up face reads as the wrong emotion on them.
+  [/envy|envious|jealous|grievance|resentment|counting debts/, 'GRIEVANCE'],
+  [/defensive|chin up|brows down|frustrat|clamp|nostrils flare|lip curls|brows drawing/, 'FRUSTRATED'],
   [/warm|tender|gentle|affection|soft|crescent|sincere/, 'WARM'],
   [/tears|cracking|crack|tremble|wet|red-rimmed|ashamed|shame|hurt|breaks/, 'SAD'],
   [/\b(dry|deadpan|wry|sly|smirk|lopsided)\b/, 'WRY'],
