@@ -1,0 +1,402 @@
+Byte Episode: You Have a Degree. So Why Can't You Get a Job?
+Oct 9, 2026 · @Ali tariq
+Emotional arc
+Shame → Numbness → Envy → Grievance → Defensiveness → Fury → Despair → Disarmed → Exposure → Wary hope
+26 lines, about 200 spoken words. With the pauses as written it runs roughly 80–90 seconds.
+Script, part 1: the wound (lines 1–9)
+[1] HUMAN
+"My degree's framed in my parents' hallway. I walk past it to ask for rent."
+• EMOTION: Ashamed, and practised at hiding it — they've turned it into a dry observation so it won't sound like a confession, and it still costs them
+• SUBTEXT: I'm the quiet joke of my own house, and nobody says it.
+• DELIVERY: Flat, almost conversational; the second sentence quieter than the first
+• INTENSITY: Medium
+• PACING: Slow
+• TONE: Dry, tight, a little hollow
+• EMPHASIS: past
+• PAUSE: 1
+• FACE: A half-smile that never reaches the eyes; on "rent" the jaw tightens and the smile goes flat; one visible swallow after the line
+• EYES: Down and to the side, as if looking at the hallway
+• BODY: Hands buried in hoodie pocket, shoulders slightly raised
+• REACTION: Byte's screen-eyes widen a fraction, then soften; antenna dips
+• VISUAL: Slow push-in on Human. Brief cutaway: a framed degree on a hallway wall, slightly crooked, under a dim ceiling light.
+[2] BYTE
+"How many?"
+• EMOTION: Quietly attentive — choosing not to comfort yet, because comfort this early would sound cheap
+• SUBTEXT: I'm not going to look away. Tell me the real number.
+• DELIVERY: Soft and simple, no sympathy voice
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Warm, low, steady
+• EMPHASIS: many
+• PAUSE: 0.5
+• FACE: Screen-eyes level and steady, small neutral mouth line, one slow blink
+• EYES: At Human
+• BODY: Cube tilts forward a few degrees
+• REACTION: Human lets out a short breath through the nose — the "you really want to know?" exhale
+• VISUAL: none
+[3] HUMAN
+"Two hundred and twelve. Forty said no. The rest said nothing."
+• EMOTION: Numb precision — they know the exact number because they check it at night, and reciting it is easier than feeling it
+• SUBTEXT: I count them because counting is the only part I control.
+• DELIVERY: Recited like an inventory; the last sentence drops away
+• INTENSITY: Medium
+• PACING: Normal, slowing on the last sentence
+• TONE: Hollow, matter-of-fact, fraying at the end
+• EMPHASIS: nothing
+• PAUSE: 1.5
+• FACE: Mouth barely moving on the numbers; after "nothing" the lips press together and the chin dimples slightly
+• EYES: Fixed on a point somewhere past Byte
+• BODY: Thumb rubbing the side of the index finger
+• REACTION: Byte's screen dims a shade; eyes lower
+• VISUAL: Faint phone glow on Human's face; an empty inbox, out of focus.
+[4] BYTE
+"The nothing is the worst part."
+• EMOTION: Grave recognition — not consoling, agreeing, because agreeing is the kindest thing available
+• SUBTEXT: You're not being dramatic. Silence is a real kind of rejection.
+• DELIVERY: Quiet and plain, no lift at the end
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Low, grounded
+• EMPHASIS: worst
+• PAUSE: 1
+• FACE: Screen-eyes lowered to half-lids; mouth a short flat line
+• EYES: Down, then back up to Human on "worst"
+• BODY: Antenna droops slightly
+• REACTION: Human's eyes flick to Byte for the first time — surprised to be agreed with
+• VISUAL: none
+[5] HUMAN
+"My friends post offer letters. I like every one."
+• EMOTION: Brittle cheerfulness over envy — trying to sound like a good friend, and it comes out as a confession
+• SUBTEXT: I'm happy for them, and I hate how much it hurts.
+• DELIVERY: Too bright on the first sentence; the second sags
+• INTENSITY: Medium
+• PACING: Normal
+• TONE: Forced lightness, catching on the last word
+• EMPHASIS: every
+• PAUSE: 0.5
+• FACE: Brows lifted in a performed "it's fine"; a quick tight smile that holds a beat too long, then drops
+• EYES: At Byte, then away on "every one"
+• BODY: Thumb mimes a tap on an invisible phone
+• REACTION: Byte's screen-eyes curve into gentle crescents — it sees straight through the smile
+• VISUAL: none
+[6] BYTE
+"And you mean it. Mostly."
+• EMOTION: Knowing tenderness — letting them off the hook by naming the thing they're ashamed of
+• SUBTEXT: You're allowed to be jealous. It doesn't make you a bad friend.
+• DELIVERY: Warm; a tiny beat before "Mostly", which lands dry
+• INTENSITY: Low
+• PACING: Normal
+• TONE: Warm, dry, affectionate
+• EMPHASIS: Mostly
+• PAUSE: 0.5
+• FACE: One screen-eye narrows slightly on "Mostly"; mouth a small lopsided curve
+• EYES: At Human
+• BODY: Cube tilts to one side
+• REACTION: Human gives a short, caught half-laugh through the nose and looks down — busted
+• VISUAL: none
+[7] HUMAN
+"I did everything. Four years. The gown. The photo."
+• EMOTION: Grievance building — listing it is like counting debts nobody is going to repay
+• SUBTEXT: I kept my side of the deal.
+• DELIVERY: Each item its own sentence, each landing harder; "The photo" comes out bitter
+• INTENSITY: Medium
+• PACING: Slow, one step per item
+• TONE: Firm, heating up
+• EMPHASIS: everything
+• PAUSE: 0.5
+• FACE: Brows drawing together item by item; nostrils flare on "The gown"; upper lip curls slightly on "The photo"
+• EYES: Locked on Byte
+• BODY: Ticks the items off on their fingers, then the hand drops
+• REACTION: Byte stays completely still, eyes steady — listening, not waiting to talk
+• VISUAL: Quick flash-cuts on each beat, under half a second each: a lecture hall, a graduation cap, a posed grad photo on a phone screen.
+[8] BYTE
+"You followed the map."
+• EMOTION: Respect — acknowledging the effort, offering no lesson yet
+• SUBTEXT: You did nothing wrong.
+• DELIVERY: Simple, confirming
+• INTENSITY: Low
+• PACING: Normal
+• TONE: Even, sincere
+• EMPHASIS: followed
+• PAUSE: 0.3
+• FACE: Eyes open fully; a small upward curve, not a smile
+• EYES: At Human
+• BODY: Cube dips forward once, a nod
+• REACTION: Human's jaw shifts sideways — the acknowledgement makes it worse, not better
+• VISUAL: none
+[9] HUMAN
+"So where's the part where it works?"
+• EMOTION: Bitter sarcasm — anger hiding inside a joke
+• SUBTEXT: Somebody lied to me, and I want to know who.
+• DELIVERY: Mock-curious, then the edge shows through on "works"
+• INTENSITY: Medium
+• PACING: Normal
+• TONE: Sardonic, sharp
+• EMPHASIS: works
+• PAUSE: 1
+• FACE: One brow up, a flat sarcastic smile; the eyes aren't smiling at all
+• EYES: At Byte, challenging
+• BODY: Arms open slightly, palms up
+• REACTION: Byte blinks once, slowly — not offended, considering
+• VISUAL: none
+Script, part 2: the trap (lines 10–17)
+[10] BYTE
+"Want to know what they're actually asking?"
+• EMOTION: Careful — Byte has something useful, and knows it's walking onto a bruise
+• SUBTEXT: I'm about to say something you might not like. I'd rather you let me.
+• DELIVERY: Gentle, genuinely asking permission
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Soft, deliberate
+• EMPHASIS: actually
+• PAUSE: 0.5
+• FACE: Screen-eyes lift slightly, open and patient
+• EYES: At Human
+• BODY: Antenna rises
+• REACTION: Human folds their arms — bracing
+• VISUAL: none
+[11] HUMAN
+"Go on."
+• EMOTION: Guarded — sick of advice, but desperate enough to listen
+• SUBTEXT: If this is "just network more", I'm done.
+• DELIVERY: Reluctant, clipped, a short beat before speaking
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Wary, low
+• EMPHASIS: on
+• PAUSE: 0.5
+• FACE: Lips pressed thin; eyes narrowed slightly
+• EYES: Sideways at Byte
+• BODY: Arms stay folded, weight shifts back onto heels
+• REACTION: none
+• VISUAL: none
+[12] BYTE
+"Your degree answers one question. Could you do this job?"
+• EMOTION: Clear and steady — teaching now, but still on Human's side
+• SUBTEXT: The degree did its job. It just answers a question nobody's leading with.
+• DELIVERY: Measured, a small lift on the question
+• INTENSITY: Medium
+• PACING: Slow
+• TONE: Clear, warm
+• EMPHASIS: Could
+• PAUSE: 0.5
+• FACE: Eyes bright and attentive
+• EYES: At Human
+• BODY: Cube turns slightly toward Human
+• REACTION: Human's brows twitch — obviously yes, where's this going
+• VISUAL: Light text overlay: COULD YOU?
+[13] HUMAN
+"Yes. That's the whole point."
+• EMOTION: Defensive certainty — protecting four years from being called a waste
+• SUBTEXT: Don't you dare tell me it was for nothing.
+• DELIVERY: Quick and firm
+• INTENSITY: Medium
+• PACING: Fast
+• TONE: Clipped, defensive
+• EMPHASIS: whole
+• PAUSE: 0.3
+• FACE: Chin up, brows down, mouth tight
+• EYES: Straight at Byte
+• BODY: One arm unfolds to gesture sharply at nothing
+• REACTION: Byte gives a small acknowledging blink — agreeing, not arguing
+• VISUAL: none
+[14] BYTE
+"They're asking something else. Have you? Can I see it?"
+• EMOTION: Quiet certainty — this is the turn, and Byte keeps its voice low so it doesn't land as a gotcha
+• SUBTEXT: It's not that you aren't good enough. It's that they can't see it yet.
+• DELIVERY: Slower; real space between "Have you?" and "Can I see it?"
+• INTENSITY: Medium
+• PACING: Slow
+• TONE: Quiet, certain
+• EMPHASIS: see
+• PAUSE: 1.5
+• FACE: Screen-eyes widen slightly on "see"
+• EYES: At Human
+• BODY: Completely still — letting the words sit
+• REACTION: Human goes still for a beat; the realisation lands before the anger does
+• VISUAL: The overlay COULD YOU? swaps to HAVE YOU?
+[15] HUMAN
+"How do I get experience if nobody gives me a chance?"
+• EMOTION: Furious, but it's really terror — shouting because if Byte is right, the trap has no exit
+• SUBTEXT: Don't make this my fault. I can't carry it being my fault.
+• DELIVERY: Loud; the voice cracks upward on "chance"
+• INTENSITY: High
+• PACING: Fast
+• TONE: Raw, sharp, breaking
+• EMPHASIS: chance
+• PAUSE: 0.3
+• FACE: Brows slammed together, teeth showing on "nobody", eyes wet but not crying; jaw clamps shut at the end
+• EYES: Straight at Byte
+• BODY: Steps forward, both hands out, palms open
+• REACTION: Byte doesn't flinch; eyes stay level and soft
+• VISUAL: Camera snaps in tight on Human.
+[16] HUMAN
+"It's a locked door. And the key's on the other side."
+• EMOTION: The anger draining into despair — the shout is spent, and what's left is the actual fear
+• SUBTEXT: I'm stuck, and I'm scared I'll be stuck for good.
+• DELIVERY: Much quieter, almost to themselves
+• INTENSITY: Medium
+• PACING: Slow
+• TONE: Hoarse, deflated
+• EMPHASIS: other
+• PAUSE: 2
+• FACE: Brows lift and pinch together in the middle; the jaw unclenches; lower lip pressed under the teeth to stop it moving
+• EYES: Drop to the floor
+• BODY: Hands fall to their sides; shoulders cave
+• REACTION: Byte's screen dims; antenna lowers all the way
+• VISUAL: Ambient sound drops out. Hold on Human through the full pause.
+[17] BYTE
+"I know. That part is real. It's not in your head. And you didn't cause it."
+• EMOTION: Still and solemn — no teaching at all, just standing beside them
+• SUBTEXT: Before anything else: this is not a verdict on you.
+• DELIVERY: Very slow, each sentence on its own, nothing rising
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Low, gentle, sure
+• EMPHASIS: didn't
+• PAUSE: 1.5
+• FACE: Screen-eyes soft and level; mouth a gentle flat line
+• EYES: At Human, even though Human isn't looking back
+• BODY: Cube drifts a little closer
+• REACTION: On "you didn't cause it", Human's chin trembles once and they blink hard — the tell right before tears, caught in time
+• VISUAL: Wide two-shot, both characters small in frame.
+Script, part 3: the question (lines 18–26)
+[18] HUMAN
+"Then what am I supposed to do?"
+• EMOTION: Disarmed exhaustion — the fight is gone, and asking for help feels less humiliating than it did a minute ago
+• SUBTEXT: Okay. I'm listening. Properly this time.
+• DELIVERY: Quiet and plain, a real question, not rhetorical
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Tired, open
+• EMPHASIS: do
+• PAUSE: 0.5
+• FACE: A long exhale through the mouth before speaking; eyes red-rimmed; brows relaxed for the first time in the episode
+• EYES: Back up to Byte
+• BODY: Sinks down to sit on a step or ledge
+• REACTION: Byte's screen brightens slightly — relief
+• VISUAL: none
+[19] BYTE
+"Two people. Same degree. One gets the call."
+• EMOTION: Gently curious — setting up a puzzle for Human to solve, not delivering a lecture
+• SUBTEXT: There is a difference, and it isn't talent.
+• DELIVERY: Rhythmic, even beats
+• INTENSITY: Medium
+• PACING: Normal
+• TONE: Light, inviting
+• EMPHASIS: One
+• PAUSE: 0.5
+• FACE: Eyes bright, one sitting slightly higher than the other — intrigued
+• EYES: At Human
+• BODY: Antenna bobs once on each beat
+• REACTION: Human's eyes narrow — already suspicious of the answer
+• VISUAL: Two identical simple silhouettes side by side; one lights up.
+[20] HUMAN
+"Let me guess. Her uncle."
+• EMOTION: Wry cynicism — humour as armour now the anger's spent
+• SUBTEXT: I need it to be something I couldn't have done.
+• DELIVERY: Dry, deadpan
+• INTENSITY: Low
+• PACING: Normal
+• TONE: Deadpan, slightly smug
+• EMPHASIS: uncle
+• PAUSE: 0.3
+• FACE: One corner of the mouth pulled sideways; brows flat
+• EYES: Sideways, then back to Byte
+• BODY: Small one-shoulder shrug
+• REACTION: Byte's eyes go half-lidded — amused
+• VISUAL: none
+[21] BYTE
+"Sometimes. Uncles are undefeated."
+• EMOTION: Dry amusement — conceding the point honestly, which is exactly why it's funny
+• SUBTEXT: I'm not going to pretend the world is fair.
+• DELIVERY: Deadpan, quick, no wink
+• INTENSITY: Low
+• PACING: Fast
+• TONE: Dry, wry
+• EMPHASIS: undefeated
+• PAUSE: 0.5
+• FACE: A tiny flat smile on the screen; one eye squints
+• EYES: At Human
+• BODY: Antenna droops in mock defeat
+• REACTION: Human laughs — a real, surprised one, the first of the episode; a hand comes up to the face
+• VISUAL: none
+[22] BYTE
+"But usually? She didn't say she could. She showed them."
+• EMOTION: Sincere — the joke opened a door, and Byte walks through it gently
+• SUBTEXT: This part is in your hands.
+• DELIVERY: Softer after the joke; slow on "showed them"
+• INTENSITY: Medium
+• PACING: Slow
+• TONE: Warm, plain
+• EMPHASIS: showed
+• PAUSE: 1
+• FACE: The smile fades into a calm, open look; eyes level
+• EYES: At Human
+• BODY: Cube settles, still
+• REACTION: Human's laugh fades mid-line; the face goes quiet, listening
+• VISUAL: none
+[23] HUMAN
+"Show them what? I've got nothing."
+• EMOTION: Exposed — the old shame is back, but this time it's an honest question, not an attack
+• SUBTEXT: This is what I'm actually afraid of: that there's nothing there.
+• DELIVERY: Starts sharp; the second sentence falls quiet
+• INTENSITY: Medium
+• PACING: Normal
+• TONE: Unsteady, small
+• EMPHASIS: nothing
+• PAUSE: 0.5
+• FACE: Brows pinched upward; a quick bite of the lower lip after; eyes look away a beat too late
+• EYES: At Byte, then down
+• BODY: Hands rub together between the knees
+• REACTION: Byte's head tilts and its eyes soften — it expected this
+• VISUAL: none
+[24] BYTE
+"Pick one job you want. Do one small piece of it. Send it with your application."
+• EMOTION: Practical warmth — handing over something deliberately small so it feels possible
+• SUBTEXT: Not a portfolio. Not a five-year plan. One thing.
+• DELIVERY: Unhurried, each sentence a single step
+• INTENSITY: Medium
+• PACING: Slow
+• TONE: Grounded, encouraging without any hype
+• EMPHASIS: one
+• PAUSE: 1
+• FACE: Eyes bright and steady; a small, sure mouth
+• EYES: At Human
+• BODY: Antenna straightens upright
+• REACTION: Human's eyes start moving — thinking it through; a small frown of concentration
+• VISUAL: Simple graphic: a job listing card, with a small file icon sliding onto it.
+[25] HUMAN
+"That's it?"
+• EMOTION: Wary hope — it sounds too small to work, which is exactly why they want to believe it
+• SUBTEXT: Don't make me hope again unless you mean it.
+• DELIVERY: Quiet, half a laugh in it
+• INTENSITY: Low
+• PACING: Normal
+• TONE: Cautious, soft
+• EMPHASIS: it
+• PAUSE: 0.5
+• FACE: Brows slightly raised; mouth unsure, not quite a smile; eyes lift to Byte
+• EYES: At Byte
+• BODY: Leans forward a little, elbows on knees
+• REACTION: Byte's eyes crinkle warmly
+• VISUAL: none
+[26] BYTE
+"If they asked to see it, what would you show them?"
+• EMOTION: Open curiosity — genuinely wants the answer, with no lesson attached
+• SUBTEXT: I'm not asking them. I'm asking you.
+• DELIVERY: Gentle; a real question that rises at the end
+• INTENSITY: Low
+• PACING: Slow
+• TONE: Warm, curious, quiet
+• EMPHASIS: you
+• PAUSE: 2.5
+• FACE: Eyes wide, open, expectant
+• EYES: From Human to camera on "you"
+• BODY: Cube rotates to face camera
+• REACTION: Human goes completely still, eyes unfocused — thinking, with no answer
+• VISUAL: Byte turns to camera on the final words. Hold the silence, then cut to black.
+Three repost lines
+1. "Forty said no. The rest said nothing."
+2. "It's a locked door. And the key's on the other side."
+3. "She didn't say she could. She showed them."

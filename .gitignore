@@ -5,3 +5,10 @@ dist
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+
+# TTS Python environment and generated test output
+tts/.venv
+tts/test_output.wav
+
+# Generated audio clips (large binaries — regenerate with tts/generate_voices.py)
+public/audio

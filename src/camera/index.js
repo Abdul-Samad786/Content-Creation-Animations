@@ -1,2 +1,2 @@
 export { default as CameraRig } from "./CameraRig";
-export { CAMERA_PRESETS } from "./presets";
+export { cameraPoseAt, beatStateAt, buildBeatSegments, STACKED_POSE, SHOTS, shotForVisualNote } from "./rig";

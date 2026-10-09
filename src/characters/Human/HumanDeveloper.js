@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { FaceController } from '../FaceController.js'
-import { toneToExpression, EXPRESSIONS } from '../expressions.js'
+import { EXPRESSIONS, speakerExpression, listenerExpression } from '../expressions.js'
+import { GAZE, parseEyes, gazeOffset } from '../gaze.js'
 
 
 /**
@@ -36,6 +37,9 @@ export class HumanDeveloper {
     this.currentExpression = { ...EXPRESSIONS.NEUTRAL }
     this.targetExpression  = { ...EXPRESSIONS.NEUTRAL }
     this.expressionStartFrame = 0
+    this.speakUntil = 0
+    this.currentGaze = { x: 0, y: 0 }
+    this.targetGaze  = { x: 0, y: 0 }
   }
 
   static DEFAULT_PARAMS = {
@@ -68,11 +72,26 @@ export class HumanDeveloper {
 
   // ── Materials (matte) ──────────────────────────────────────────────────
 
-  setTone(tone, isSpeaking, frame) {
+  /**
+   * Sets the expression and gaze for one dialogue line.
+   * Speaker: own line's emotion/face/eyes. Listener: that line's reaction, and eyes on the speaker.
+   * @param {object} line       - dialogue line (timeline entry works too)
+   * @param {boolean} isSpeaking
+   * @param {number} frame      - line start frame, the blend origin
+   * @param {{humanPos:number[], aiPos:number[], cameraPos:number[]}} ctx
+   */
+  setLine(line, isSpeaking, frame, ctx) {
     this.isSpeaking = isSpeaking
-    const key = isSpeaking ? toneToExpression(tone) : 'LISTENING'
+    const key = isSpeaking ? speakerExpression(line) : listenerExpression(line)
     this.targetExpression = { ...EXPRESSIONS[key] }
+
+    const gazeKey = isSpeaking ? parseEyes(line.eyes) : GAZE.AT_OTHER
+    const gaze = gazeOffset(gazeKey, ctx.humanPos, ctx.aiPos, ctx.cameraPos)
+    if (gaze) this.targetGaze = gaze // no direction in the line: keep the last gaze
+
     this.expressionStartFrame = frame
+    // Talking stops when the spoken part ends; the pause after it is silent
+    this.speakUntil = frame + (line.speakingFrames ?? 0)
   }
 
   updateExpression(frame, fps = 30) {
@@ -81,12 +100,17 @@ export class HumanDeveloper {
     const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t
 
     this.faceController.updateFrame(this.currentExpression, this.targetExpression, ease)
+    this._applyGaze(
+      this.currentGaze.x + (this.targetGaze.x - this.currentGaze.x) * ease,
+      this.currentGaze.y + (this.targetGaze.y - this.currentGaze.y) * ease,
+    )
 
     if (t >= 1.0) {
       this.currentExpression = { ...this.targetExpression }
+      this.currentGaze = { ...this.targetGaze }
     }
 
-    if (this.isSpeaking) {
+    if (this.isSpeaking && frame < this.speakUntil) {
       const talk = Math.abs(Math.sin(frame * 0.65))
       if (this.lips) {
         this.lips.scale.y = 0.45 + talk * 0.2
@@ -97,6 +121,19 @@ export class HumanDeveloper {
       }
     }
   }
+  /** Moves both irises within the whites. x/y are normalised gaze offsets in [-1, 1]. */
+  _applyGaze(x, y) {
+    for (const side of ["left", "right"]) {
+      const iris = this.irises[side];
+      const base = this._irisBase[side];
+      iris.position.set(
+        base.x + x * this._irisTravel,
+        base.y + y * this._irisTravel,
+        base.z,
+      );
+    }
+  }
+
   _buildMaterials() {
     const mat = (hex) =>
       new THREE.MeshLambertMaterial({ color: new THREE.Color(hex) });
@@ -259,6 +296,11 @@ export class HumanDeveloper {
     /** Face plane — just proud of the skull so every feature reads */
     const faceZ = R * 0.8;
 
+    /** Iris travel inside the white for a full gaze offset */
+    this._irisTravel = eyeR * 0.45;
+    this.irises = {};
+    this._irisBase = {};
+
     [-1, 1].forEach((sign) => {
       const side = sign < 0 ? "left" : "right";
 
@@ -273,6 +315,8 @@ export class HumanDeveloper {
       iris.name = `${side}Iris`;
       iris.position.set(sign * eyeX, eyeY, faceZ + eyeR * 0.4);
       this.head.add(iris);
+      this.irises[side] = iris;
+      this._irisBase[side] = iris.position.clone();
 
       // Brow — short thin box above its own eye, not one continuous band
       const brow = this._box(eyeR * 2.0, eyeR * 0.36, eyeR * 0.4, this.materials.brown);

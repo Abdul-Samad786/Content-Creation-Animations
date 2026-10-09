@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { toneToExpression, EXPRESSIONS, blendExpressions } from '../expressions.js'
+import { EXPRESSIONS, blendExpressions, speakerExpression, listenerExpression } from '../expressions.js'
+import { GAZE, parseEyes, gazeOffset } from '../gaze.js'
 
 
 /**
@@ -28,10 +29,20 @@ export class AIAgentModel {
 
     this._hoverBaseY = this.body.position.y;
 
+    // Gaze moves the glowing eye panels a little within the face; the eyes keep their geometry
+    this._eyeBase = {
+      left: this.leftEye.position.clone(),
+      right: this.rightEye.position.clone(),
+    };
+    this._eyeTravel = { x: 0.03, y: 0.02 };
+
     this.isSpeaking = false
     this.currentExpression = { ...EXPRESSIONS.NEUTRAL }
     this.targetExpression  = { ...EXPRESSIONS.NEUTRAL }
     this.expressionStartFrame = 0
+    this.speakUntil = 0
+    this.currentGaze = { x: 0, y: 0 }
+    this.targetGaze  = { x: 0, y: 0 }
   }
 
   static DEFAULT_PARAMS = {
@@ -158,11 +169,33 @@ export class AIAgentModel {
 
   // ── Expression system ──────────────────────────────────────────────────
 
-  setTone(tone, isSpeaking, frame) {
+  /**
+   * Sets the expression and gaze for one dialogue line.
+   * Speaker: own line's emotion/face/eyes. Listener: that line's reaction, and eyes on the speaker.
+   * @param {object} line       - dialogue line (timeline entry works too)
+   * @param {boolean} isSpeaking
+   * @param {number} frame      - line start frame, the blend origin
+   * @param {{humanPos:number[], aiPos:number[], cameraPos:number[]}} ctx
+   */
+  setLine(line, isSpeaking, frame, ctx) {
     this.isSpeaking = isSpeaking
-    const key = isSpeaking ? toneToExpression(tone) : 'LISTENING'
+    const key = isSpeaking ? speakerExpression(line) : listenerExpression(line)
     this.targetExpression = { ...EXPRESSIONS[key] }
+
+    const gazeKey = isSpeaking ? parseEyes(line.eyes) : GAZE.AT_OTHER
+    const gaze = gazeOffset(gazeKey, ctx.aiPos, ctx.humanPos, ctx.cameraPos)
+    if (gaze) this.targetGaze = gaze // no direction in the line: keep the last gaze
+
     this.expressionStartFrame = frame
+    // Talking stops when the spoken part ends; the pause after it is silent
+    this.speakUntil = frame + (line.speakingFrames ?? 0)
+  }
+
+  /** Shifts the glowing eye panels. x/y are normalised gaze offsets in [-1, 1]. */
+  _applyGaze(x, y) {
+    const base = this._eyeBase;
+    this.leftEye.position.set(base.left.x + x * this._eyeTravel.x, base.left.y + y * this._eyeTravel.y, base.left.z);
+    this.rightEye.position.set(base.right.x + x * this._eyeTravel.x, base.right.y + y * this._eyeTravel.y, base.right.z);
   }
 
   updateExpression(frame, fps = 30) {
@@ -171,6 +204,10 @@ export class AIAgentModel {
     const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t
 
     const expr = blendExpressions(this.currentExpression, this.targetExpression, ease)
+    this._applyGaze(
+      this.currentGaze.x + (this.targetGaze.x - this.currentGaze.x) * ease,
+      this.currentGaze.y + (this.targetGaze.y - this.currentGaze.y) * ease,
+    )
 
     const eyeScaleY = Math.max(0.1, 1.0 + expr.eyeWide * 0.5 - expr.eyeSquint * 0.6)
     this.leftEye.scale.y = eyeScaleY
@@ -180,7 +217,7 @@ export class AIAgentModel {
     this.leftEye.material.emissiveIntensity = Math.max(0.3, glow)
     this.rightEye.material.emissiveIntensity = Math.max(0.3, glow)
 
-    if (this.isSpeaking) {
+    if (this.isSpeaking && frame < this.speakUntil) {
       const talk = Math.abs(Math.sin(frame * 0.65))
       this.mouth.scale.x = 1.0 + talk * 0.15
       this.mouth.scale.y = 1.0 + talk * 1.8
@@ -193,6 +230,7 @@ export class AIAgentModel {
 
     if (t >= 1.0) {
       this.currentExpression = { ...this.targetExpression }
+      this.currentGaze = { ...this.targetGaze }
     }
   }
 

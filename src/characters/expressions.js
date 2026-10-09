@@ -14,6 +14,9 @@ export const EXPRESSIONS = {
   DEFEATED:    { browRaise: 0,    browFurrow: 0.4,  mouthSmile: 0,    mouthFrown: 0.6, eyeWide: 0,    eyeSquint: 0.5 },
   BITTER:      { browRaise: 0,    browFurrow: 0.7,  mouthSmile: 0.1,  mouthFrown: 0.2, eyeWide: 0,    eyeSquint: 0.6 },
   LISTENING:   { browRaise: 0.15, browFurrow: 0.1,  mouthSmile: 0,    mouthFrown: 0,   eyeWide: 0.2,  eyeSquint: 0   },
+  ANGRY:       { browRaise: 0,    browFurrow: 1.0,  mouthSmile: 0,    mouthFrown: 0.4, eyeWide: 0.2,  eyeSquint: 0.3 },
+  WARM:        { browRaise: 0.1,  browFurrow: 0,    mouthSmile: 0.25, mouthFrown: 0,   eyeWide: 0.1,  eyeSquint: 0.1 },
+  WRY:         { browRaise: 0.1,  browFurrow: 0.1,  mouthSmile: 0.25, mouthFrown: 0,   eyeWide: 0,    eyeSquint: 0.3 },
 }
 
 // Map tone keywords from dialogue.json → expression preset
@@ -31,6 +34,47 @@ export function toneToExpression(tone) {
   if (t.includes('calm') || t.includes('quiet') || t.includes('steady')) return 'CALM'
   if (t.includes('thought') || t.includes('analytic') || t.includes('paus')) return 'THOUGHTFUL'
   return 'NEUTRAL'
+}
+
+// Ordered keyword rules for the script's free-text direction fields.
+// The first rule that matches the combined text wins, so order is priority:
+// anger and sarcasm before softer words, so "furious" beats "hurt" and "wary hope" stays cautious.
+const TEXT_RULES = [
+  [/sarcas|bitter|smug|sardonic|mock/, 'BITTER'],
+  [/despair|defeat|hollow|cave|numb|surrender|collapse|deflat|hopeless|dims/, 'DEFEATED'],
+  [/furious|angry|fury|rage|terror|snap/, 'ANGRY'],
+  [/defensive|chin up|brows down|frustrat|clamp|grievance|nostrils flare|lip curls|brows drawing/, 'FRUSTRATED'],
+  [/warm|tender|gentle|affection|soft|crescent|sincere/, 'WARM'],
+  [/tears|cracking|crack|tremble|wet|red-rimmed|ashamed|shame|hurt|breaks/, 'SAD'],
+  [/\b(dry|deadpan|wry|sly|smirk|lopsided)\b/, 'WRY'],
+  [/exhaust|tired|weary|worn/, 'TIRED'],
+  [/laugh|amus|giggl|cheer|hope|relief|relieved|brighten|eager|crinkle/, 'HOPEFUL'],
+  [/surpris|shock|startle/, 'SURPRISED'],
+  [/wary|cautio|careful|bruise|guard|unsure|unsteady|lost|fragile|confus|exposed|stuck|uneasy|bracing|reluctant|worr|afraid|fear|scared|pinched|bite/, 'CONCERNED'],
+  [/thought|think|concentrat|realis|dawn|intrigu|curio|consider|suspic|narrow|pondering|puzzle|unfocused/, 'THOUGHTFUL'],
+  [/steady|calm|level|certain|grounded|serious|grave|solemn|sure|confident|even|plain|quiet|clear|firm|deliberate|still|respect|acknowledg|agree|nod/, 'CALM'],
+]
+
+// Preset from free text (emotion, face, eyes, or reaction). Null when no rule matches.
+export function expressionFromText(text) {
+  if (!text) return null
+  const t = text.toLowerCase()
+  for (const [pattern, key] of TEXT_RULES) {
+    if (pattern.test(t)) return key
+  }
+  return null
+}
+
+// Speaker's expression: their own line's emotion, face and eyes read together.
+// Falls back to the old tone keywords when the text matches nothing.
+export function speakerExpression(line) {
+  const text = [line.emotion, line.face, line.eyes].filter(Boolean).join(' | ')
+  return expressionFromText(text) ?? toneToExpression(line.tone)
+}
+
+// Listener's expression: this line's reaction field. LISTENING when it matches nothing.
+export function listenerExpression(line) {
+  return expressionFromText(line.reaction) ?? 'LISTENING'
 }
 
 // Blend between two expression sets using t (0→1)

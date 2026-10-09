@@ -17,7 +17,7 @@ export class FaceController {
   }
 
   _buildEyes() {
-    const eyeGeo = new THREE.CircleGeometry(0.055, 12)
+    const eyeGeo = new THREE.CircleGeometry(0.030, 12)
     const eyeMat = new THREE.MeshBasicMaterial({ color: '#1a1a2e' })
 
     this.leftEye  = new THREE.Mesh(eyeGeo, eyeMat)
@@ -25,7 +25,7 @@ export class FaceController {
 
     // Whites (slightly larger circle behind pupils)
     const whiteMat = new THREE.MeshBasicMaterial({ color: '#ffffff' })
-    const whiteGeo = new THREE.CircleGeometry(0.075, 12)
+    const whiteGeo = new THREE.CircleGeometry(0.050, 12)
     this.leftWhite  = new THREE.Mesh(whiteGeo, whiteMat)
     this.rightWhite = new THREE.Mesh(whiteGeo, whiteMat)
 
@@ -82,8 +82,8 @@ export class FaceController {
 
     // EYES — scale Y for wide/squint
     const eyeScaleY = 1.0 + eyeWide * 0.4 - eyeSquint * 0.5
-    this.leftEye.scale.y  = Math.max(0.15, eyeScaleY)
-    this.rightEye.scale.y = Math.max(0.15, eyeScaleY)
+    this.leftEye.scale.y  = Math.max(0.3, eyeScaleY)
+    this.rightEye.scale.y = Math.max(0.3, eyeScaleY)
     this.leftWhite.scale.y  = Math.max(0.2, eyeScaleY * 0.9)
     this.rightWhite.scale.y = Math.max(0.2, eyeScaleY * 0.9)
 

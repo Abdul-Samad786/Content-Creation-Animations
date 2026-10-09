@@ -1,0 +1,8 @@
+chatterbox-tts>=0.1.1
+torch>=2.0.0
+torchaudio>=2.0.0
+soundfile>=0.12.1
+python-dotenv>=1.0.0
+# resemble-perth (pulled in by chatterbox) uses pkg_resources which was
+# removed from setuptools >=80.  Pin to a version that still ships it.
+setuptools>=69.5.1,<80
