@@ -11,7 +11,9 @@ import { cameraPoseAt, projectPx } from "./camera";
 import { phoneStateAt } from "./overlays/phoneState";
 import Phone from "./overlays/Phone";
 import Captions from "./overlays/Captions";
-import Fx from "./overlays/Fx";
+import Fx, { Blackout } from "./overlays/Fx";
+import ScreenPopup from "./overlays/ScreenPopup";
+import FloatingChat from "./overlays/FloatingChat";
 import { Badge, Hook, Outro } from "./overlays/Stickers";
 import Soundtrack from "./audio/Soundtrack";
 import { ensureFonts } from "./fonts";
@@ -55,7 +57,8 @@ export default function EpisodeComposition({ episodeKey }) {
   const frame = useCurrentFrame();
   const ep = EPISODES.find((e) => e.key === episodeKey);
   const { plan } = ep;
-  const stage = STAGES[plan.series.stage];
+  const stage = STAGES[plan.stage];
+  if (!stage) throw new Error(`[${ep.id}] stage "${plan.stage}" is unknown. Stages: ${Object.keys(STAGES).join(", ")}`);
   const { faces, tops } = anchorsFor(plan, stage);
 
   const phone = phoneStateAt(plan, frame);
@@ -70,6 +73,10 @@ export default function EpisodeComposition({ episodeKey }) {
     const p = projectPx(tops[id], pose, plan.width, plan.height);
     return p ? { x: p.x, y: p.y, s: Math.min(2, Math.max(0.5, p.scale * 0.85)) } : null;
   };
+
+  // The robot's screen centre, for the popup that sits on it
+  const robot = onStage.find((c) => c.model === "robot");
+  const screenAnchor = robot && states[robot.id].visible ? projectPx(faces[robot.id], pose, plan.width, plan.height) : null;
 
   const Stage = stage.Component;
 
@@ -96,7 +103,10 @@ export default function EpisodeComposition({ episodeKey }) {
       {/* Soft vignette for a cosy, focused frame */}
       <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(30,15,60,0.35) 100%)", pointerEvents: "none" }} />
       <Fx plan={plan} frame={frame} anchorFor={anchorFor} />
+      <ScreenPopup plan={plan} frame={frame} anchor={screenAnchor} />
+      <FloatingChat plan={plan} frame={frame} />
       <Phone s={phone} frame={frame} />
+      <Blackout plan={plan} frame={frame} />
       <Captions plan={plan} frame={frame} />
       <Hook plan={plan} frame={frame} />
       <Badge plan={plan} frame={frame} />

@@ -64,7 +64,10 @@ export default function Robot({ state, mark, look, ctx, otherX = 0 }) {
   const bodyPitch = pose.rx + g.rx + la.headPitch * 0.4 + g.headPitch;
   const bodyRoll = pose.rz + g.rz + Math.sin(t * 0.05) * 0.03 * idle + g.headRoll;
 
-  const glowPulse = 0.75 + 0.25 * Math.sin(t * 0.15);
+  // Screen off: the lights go out. Byte 2.0: a cooler, corporate accent.
+  const off = face.screen === "off";
+  const accent = face.screen === "v2" ? "#9DB8F2" : look.accent;
+  const glowPulse = (0.75 + 0.25 * Math.sin(t * 0.15)) * (off ? 0.12 : 1);
 
   return (
     <group position={mark.position} visible={state.visible}>
@@ -96,7 +99,7 @@ export default function Robot({ state, mark, look, ctx, otherX = 0 }) {
               </mesh>
               <mesh position={[s * 0.032, 0, 0]} rotation={[0, s * Math.PI / 2, 0]}>
                 <circleGeometry args={[0.055, 20]} />
-                <meshBasicMaterial color={look.accent} toneMapped={false} transparent opacity={0.6 + 0.4 * glowPulse} />
+                <meshBasicMaterial color={accent} toneMapped={false} transparent opacity={0.6 + 0.4 * glowPulse} />
               </mesh>
             </group>
           ))}
@@ -108,11 +111,11 @@ export default function Robot({ state, mark, look, ctx, otherX = 0 }) {
             </mesh>
             <mesh position={[0, 0.18, 0]}>
               <sphereGeometry args={[0.05, 18, 14]} />
-              <meshToonMaterial color={look.accent} gradientMap={toonRamp()} emissive={look.accent} emissiveIntensity={0.5 * glowPulse} />
+              <meshToonMaterial color={accent} gradientMap={toonRamp()} emissive={accent} emissiveIntensity={0.5 * glowPulse} />
             </mesh>
             <mesh position={[0, 0.18, 0]}>
               <sphereGeometry args={[0.085, 14, 10]} />
-              <meshBasicMaterial color={look.accent} transparent opacity={0.18 * glowPulse} depthWrite={false} toneMapped={false} />
+              <meshBasicMaterial color={accent} transparent opacity={0.18 * glowPulse} depthWrite={false} toneMapped={false} />
             </mesh>
           </group>
           {/* Hover jet */}
@@ -129,7 +132,7 @@ export default function Robot({ state, mark, look, ctx, otherX = 0 }) {
         <Hand pos={pose.lHand} color={look.bodyShade} frame={t} phase={0} idle={idle} />
         <Hand pos={pose.rHand} color={look.bodyShade} frame={t} phase={1.7} idle={idle} />
       </group>
-      <pointLight position={[0, y - 0.1, 0.35]} color={look.glow} intensity={0.35} distance={1.2} decay={2} />
+      <pointLight position={[0, y - 0.1, 0.35]} color={look.glow} intensity={off ? 0.03 : 0.35} distance={1.2} decay={2} />
     </group>
   );
 }

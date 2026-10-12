@@ -526,7 +526,7 @@ function roundRect(ctx, x, y, w, h, r) {
 function drawScreen(ctx, p, S) {
   roundRect(ctx, 0, 0, S, S * 0.78, S * 0.2);
   const g = ctx.createLinearGradient(0, 0, 0, S * 0.78);
-  g.addColorStop(0, "#26345C");
+  g.addColorStop(0, p.bg === V2_COLORS.screen ? "#FFFFFF" : "#26345C");
   g.addColorStop(1, p.bg);
   ctx.fillStyle = g;
   ctx.fill();
@@ -551,12 +551,53 @@ function drawScreen(ctx, p, S) {
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} S canvas size in px (square)
  */
+// Byte 2.0: a pale, corporate screen with thin blue lines and a version tag
+const V2_COLORS = { glow: "#2F6BFF", screen: "#E9EFFA", accent: "#9DB8F2", blush: "#C9D7F5" };
+
+function drawScreenOff(ctx, S, age) {
+  roundRect(ctx, 0, 0, S, S * 0.78, S * 0.2);
+  ctx.fillStyle = "#06080F";
+  ctx.fill();
+  // Old-TV power-down: a bright line collapses to a dot in the first frames
+  if (age < 9) {
+    const u = age / 9;
+    const w = S * (1 - u) * 0.9 + S * 0.02;
+    ctx.fillStyle = `rgba(200,255,245,${1 - u * 0.6})`;
+    ctx.shadowColor = "#6FFFE3";
+    ctx.shadowBlur = S * 0.05;
+    ctx.fillRect(S / 2 - w / 2, S * 0.39 - S * 0.008, w, S * 0.016);
+    ctx.shadowBlur = 0;
+  }
+}
+
+function drawVersionTag(ctx, S) {
+  ctx.save();
+  ctx.font = `600 ${Math.round(S * 0.06)}px sans-serif`;
+  ctx.fillStyle = "#2F6BFF";
+  ctx.globalAlpha = 0.8;
+  ctx.fillText("BYTE 2.0", S * 0.08, S * 0.11);
+  // A tidy progress bar under the face
+  ctx.globalAlpha = 0.35;
+  roundRect(ctx, S * 0.3, S * 0.68, S * 0.4, S * 0.02, S * 0.01);
+  ctx.fill();
+  ctx.restore();
+}
+
 export function drawFace(ctx, S, face, style = "anime", colors = {}) {
-  const p = paletteFor(style, colors);
+  const mode = face.screen || "on";
+  const v2 = style === "screen" && mode === "v2";
+  const p = paletteFor(style, v2 ? V2_COLORS : colors);
   ctx.clearRect(0, 0, S, S);
+
+  if (p.screen && mode === "off") return drawScreenOff(ctx, S, face.screenAge ?? 1000);
+  // Waking from "off" (or switching version): the screen flickers for a few frames
+  if (p.screen && face.screenPrev !== mode && (face.screenAge ?? 1000) < 12 && [1, 2, 5, 8].includes(face.screenAge)) {
+    return drawScreenOff(ctx, S, 1000);
+  }
 
   if (p.screen) {
     drawScreen(ctx, p, S);
+    if (v2) drawVersionTag(ctx, S);
     ctx.shadowColor = p.line;
     ctx.shadowBlur = S * 0.035;
     const ey = S * 0.34;

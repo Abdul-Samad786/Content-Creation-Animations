@@ -16,6 +16,11 @@
     "wobble": { "prompt": "Cartoon wobble shake sound, boingy jelly wiggle", "seconds": 0.8, "volume": 0.45 },
     "aww": { "prompt": "Soft warm magical heart chime, gentle and sweet, single bell twinkle", "seconds": 1.0, "volume": 0.4 },
     "dun-dun": { "prompt": "Dramatic comedic orchestral sting dun dun duuun", "seconds": 1.6, "volume": 0.4 },
-    "phew": { "prompt": "Soft cartoon deflating balloon relief sound, comedic sigh of relief", "seconds": 1.0, "volume": 0.4 }
+    "phew": { "prompt": "Soft cartoon deflating balloon relief sound, comedic sigh of relief", "seconds": 1.0, "volume": 0.4 },
+    "door-knock": { "prompt": "Three polite knocks on a wooden front door, close, comedic timing", "seconds": 1.2, "volume": 0.55 },
+    "power-down": { "prompt": "Cartoon robot powering down, descending electronic whine ending in a soft click", "seconds": 1.2, "volume": 0.5 },
+    "boot-chime": { "prompt": "Clean corporate computer startup chime, bright and sterile, short", "seconds": 1.4, "volume": 0.45 },
+    "glitch": { "prompt": "Short digital glitch stutter, electronic data corruption burst", "seconds": 0.7, "volume": 0.45 },
+    "notify": { "prompt": "Single soft system notification blip, friendly UI alert", "seconds": 0.5, "volume": 0.5 }
   }
 }

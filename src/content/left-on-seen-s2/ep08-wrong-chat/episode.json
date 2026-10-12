@@ -1,0 +1,170 @@
+{
+  "number": 8,
+  "title": "wrong chat",
+  "hook": "when you send it to the wrong chat 😨",
+  "outro": "Ep 9 → byte? 🤖",
+  "phone": {
+    "contact": "Family Group 🏠",
+    "avatar": "#FFB347",
+    "messages": [
+      { "from": "them", "text": "dinner at 8 ❤️" },
+      { "from": "me", "text": "ok mama" }
+    ],
+    "visible": true
+  },
+  "start": {
+    "mia": { "face": "excited", "pose": "phone", "look": "phone" },
+    "byte": { "face": "curious", "look": "phone" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "Okay. Zara needs to know my honest feelings.",
+      "tts": "[excited whisper] Okay. Zara needs to know my honest feelings.",
+      "camera": "two",
+      "phone": [{ "draft": "HE'S SO CUTE I'M LITERALLY DYING", "at": "honest", "dur": 1.0 }],
+      "mia": { "face": "sparkle", "do": "type", "look": "phone" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": "honest" }],
+      "sfx": [{ "id": "typing", "at": "honest" }],
+      "pause": 0.1
+    },
+    {
+      "beat": 0.9,
+      "camera": "two",
+      "phone": [{ "send": "HE'S SO CUTE I'M LITERALLY DYING", "at": 0.15 }],
+      "mia": { "face": "joy", "do": "bounce", "look": "phone", "at": 0.15 },
+      "byte": { "face": "shocked", "do": "gasp", "look": "phone", "at": 0.45 },
+      "sfx": [{ "id": "whoosh", "at": 0.15 }]
+    },
+    {
+      "say": "byte",
+      "text": "Sent. To \"Family Group.\"",
+      "tts": "[deadpan] Sent. [flatly] To... Family Group.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.25
+    },
+    {
+      "say": "mia",
+      "text": "...What?",
+      "tts": "[flatly] ...What?",
+      "camera": "zoom:mia",
+      "mia": { "face": "deadpan", "do": "freeze", "look": "phone" },
+      "sfx": [{ "id": "record-scratch", "at": 0 }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Twelve members. Including Grandma.",
+      "tts": "[deadpan] Twelve members. [slowly] Including... Grandma.",
+      "camera": "two",
+      "byte": { "face": "deadpan", "look": "mia" },
+      "mia": { "face": "panic", "do": "shiver", "look": "phone", "at": "Grandma" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Grandma" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Grandma has a PHONE?!",
+      "tts": "[shrieks] Grandma has a PHONE?!",
+      "camera": "zoom:mia",
+      "mia": { "face": "shocked", "do": "gasp", "look": "byte" },
+      "fx": [{ "type": "shock", "on": "mia", "at": "PHONE" }],
+      "pause": 0.15
+    },
+    {
+      "beat": 1.5,
+      "camera": "two",
+      "phone": [{ "receive": "who is dying??", "at": 0.15 }, { "receive": "dad: ???", "at": 1.0 }],
+      "mia": { "face": "shocked", "do": "gasp", "look": "phone", "at": 0.25 },
+      "byte": { "face": "shocked", "look": "phone", "at": 0.3 },
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.3 }],
+      "sfx": [{ "id": "message-in", "at": 0.15 }, { "id": "dun-dun", "at": 0.3 }, { "id": "message-in", "at": 1.0 }]
+    },
+    {
+      "say": "mia",
+      "text": "MOM SAW IT. Byte, unsend! UNSEND!",
+      "tts": "[frantic] MOM SAW IT. [shrieks] Byte, unsend! UNSEND!",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "panic", "pose": "grab", "do": "shake", "look": "byte" },
+        { "face": "crying", "at": "UNSEND" }
+      ],
+      "byte": { "face": "dizzy", "do": "shake", "at": "unsend" },
+      "sfx": [{ "id": "wobble", "at": "unsend" }],
+      "pause": 0.1
+    },
+    {
+      "beat": 0.8,
+      "camera": "close:byte",
+      "popup": [{ "text": "Installing…", "detail": "Do not turn off Byte", "icon": "⚙", "at": 0.1 }],
+      "byte": { "face": "dizzy", "pose": "hover", "do": "freeze", "look": "camera", "at": 0.1 },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "mia",
+      "text": "Why are you installing something NOW?!",
+      "tts": "[horrified] Why are you installing something NOW?!",
+      "camera": "two",
+      "mia": { "face": "angry", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "dizzy", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, the best time to install is during a crisis.",
+      "tts": "[deadpan] Statistically, the best time to install... is during a crisis.",
+      "camera": "close:byte",
+      "popup": [{ "glitch": true, "at": "crisis", "dur": 0.5 }],
+      "byte": { "face": "deadpan", "look": "camera" },
+      "sfx": [{ "id": "glitch", "at": "crisis" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "This IS a crisis!",
+      "tts": "[frantic] This IS a crisis!",
+      "camera": "two",
+      "mia": { "face": "angry", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "dizzy", "look": "mia" },
+      "pause": 0.1
+    },
+    {
+      "beat": 1.1,
+      "camera": "two",
+      "phone": [{ "typing": true, "at": 0.1 }],
+      "mia": { "face": "panic", "pose": "phone", "look": "phone", "at": 0.2 },
+      "byte": { "face": "worried", "look": "phone" },
+      "sfx": [{ "id": "phone-buzz", "at": 0.1 }]
+    },
+    {
+      "say": "mia",
+      "text": "Grandma's typing! Byte, what do I say?!",
+      "tts": "[panicking] Grandma's typing! [frantic] Byte, what do I say?!",
+      "camera": "two",
+      "mia": { "face": "panic", "pose": "grab", "do": "shake", "look": "byte" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": 0 }, { "type": "question", "on": "mia", "at": "say" }],
+      "pause": 0.1
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, the safest reply is—",
+      "tts": "[reassuring] Statistically, the safest reply is—",
+      "camera": "close:byte",
+      "popup": [{ "glitch": true, "at": "safest", "dur": 0.4 }, { "dismiss": true, "at": "end" }],
+      "byte": [
+        { "face": "focused", "look": "camera" },
+        { "screen": "off", "pose": "droop", "do": "freeze", "at": "end" }
+      ],
+      "sfx": [{ "id": "glitch", "at": "safest" }, { "id": "power-down", "at": "end" }],
+      "pause": 0.1
+    },
+    {
+      "beat": 2.2,
+      "camera": "two",
+      "mia": { "face": "shocked", "pose": "sit", "do": "freeze", "look": "byte", "at": 0.2 },
+      "byte": { "pose": "droop" },
+      "sfx": [{ "id": "crickets", "at": 0.4 }]
+    }
+  ]
+}

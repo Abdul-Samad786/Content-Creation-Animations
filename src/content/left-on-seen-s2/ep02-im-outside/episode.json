@@ -1,0 +1,164 @@
+{
+  "number": 2,
+  "title": "i'm outside",
+  "hook": "when he texts \"i'm outside\" 🚪",
+  "outro": "Ep 3 → the café 😶",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "here 🙂" },
+      { "from": "them", "text": "i'm outside" }
+    ],
+    "visible": true
+  },
+  "start": {
+    "mia": { "face": "shocked", "pose": "phone", "look": "phone" },
+    "byte": { "face": "curious", "look": "mia" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "He's outside. Like... OUTSIDE outside.",
+      "tts": "[whispers] He's outside. Like... [panicking] OUTSIDE outside.",
+      "camera": "two",
+      "mia": [
+        { "face": "shocked", "do": "freeze", "look": "phone" },
+        { "face": "panic", "do": "shake", "look": "byte", "at": "OUTSIDE" }
+      ],
+      "fx": [{ "type": "shock", "on": "mia", "at": "OUTSIDE" }],
+      "sfx": [{ "id": "dun-dun", "at": "OUTSIDE" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, outside is where most people are.",
+      "tts": "[deadpan] Statistically, outside is where most people are.",
+      "camera": "close:byte",
+      "phone": [{ "hide": true, "at": 0 }],
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "I can't move. My legs left the chat.",
+      "tts": "[trembling] I can't move. [whispers] My legs left the chat.",
+      "camera": "close:mia",
+      "mia": { "face": "nervous", "pose": "sit", "do": "freeze", "look": "camera" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "legs" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "I could carry you. My hands are rated for two hundred grams.",
+      "tts": "[reassuring] I could carry you. [deadpan] My hands are rated for... two hundred grams.",
+      "camera": "two",
+      "byte": [
+        { "face": "determined", "pose": "cheer", "do": "zoom", "look": "mia" },
+        { "face": "deadpan", "pose": "hover", "at": "two" }
+      ],
+      "mia": { "face": "deadpan", "look": "byte", "at": "rated" },
+      "pause": 0.2
+    },
+    {
+      "beat": 1.1,
+      "camera": "two",
+      "phone": [{ "show": true, "at": 0 }, { "receive": "should i knock?", "at": 0.2 }],
+      "mia": { "face": "shocked", "do": "gasp", "pose": "phone", "look": "phone", "at": 0.3 },
+      "byte": { "face": "shocked", "look": "phone", "at": 0.35 },
+      "sfx": [{ "id": "phone-buzz", "at": 0.1 }]
+    },
+    {
+      "say": "mia",
+      "text": "He wants to KNOCK. Knocking is so intimate!",
+      "tts": "[horrified] He wants to KNOCK. [frantic] Knocking is so intimate!",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "panic", "do": "shake", "look": "byte" },
+        { "face": "flustered", "pose": "cheeks", "at": "intimate" }
+      ],
+      "fx": [{ "type": "blush", "on": "mia", "at": "intimate" }, { "type": "sweat", "on": "mia", "at": "KNOCK" }],
+      "sfx": [{ "id": "wobble", "at": "intimate" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Knocking is a door thing.",
+      "tts": "[flatly] Knocking is a door thing.",
+      "camera": "two",
+      "phone": [{ "hide": true, "at": 0 }],
+      "byte": { "face": "deadpan", "look": "mia" },
+      "pause": 0.2
+    },
+    {
+      "beat": 0.8,
+      "camera": "close:byte",
+      "popup": [{ "text": "Update available (1)", "buttons": ["Later", "Install"], "at": 0.1 }],
+      "byte": { "face": "curious", "do": "gasp", "look": "camera", "at": 0.1 },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "Not now. She's buffering.",
+      "tts": "[whispers] Not now. [deadpan] She's buffering.",
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "buffering" }],
+      "byte": { "face": "deadpan", "do": "headshake", "look": "camera" },
+      "sfx": [{ "id": "whoosh", "at": "buffering" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Okay. I'm totally chill. Super normal.",
+      "tts": "[flatly, trying to sound casual] Okay. I'm totally chill. Super normal.",
+      "camera": "two",
+      "mia": { "face": "nervous-smile", "pose": "sit", "do": "freeze", "look": "camera" },
+      "byte": { "face": "suspicious", "look": "mia" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Super" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Fake-chill voice detected.",
+      "tts": "[deadpan] Fake-chill voice... detected.",
+      "camera": "close:byte",
+      "byte": { "face": "suspicious", "do": "zoom", "look": "mia" },
+      "sfx": [{ "id": "record-scratch", "at": "detected" }],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "What do I SAY when I open it?",
+      "tts": "[anxious] What do I SAY when I open it?",
+      "camera": "two",
+      "mia": { "face": "worried", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "focused", "look": "mia" },
+      "fx": [{ "type": "question", "on": "mia", "at": "SAY" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Ninety percent of people say \"hi.\" Be the ten percent.",
+      "tts": "[deadpan] Ninety percent of people say... hi. [smugly] Be the ten percent.",
+      "camera": "close:byte",
+      "byte": [
+        { "face": "focused", "look": "camera" },
+        { "face": "smug", "pose": "proud", "do": "nod", "at": "Be" }
+      ],
+      "fx": [{ "type": "sparkles", "on": "byte", "at": "ten" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 2.0,
+      "camera": "close:mia",
+      "mia": [
+        { "face": "determined", "pose": "sit", "do": "nod", "look": "camera", "at": 0 },
+        { "face": "shocked", "do": "gasp", "at": 0.5 },
+        { "face": "determined", "do": "zoom", "look": "camera", "at": 1.1 }
+      ],
+      "byte": { "face": "shocked", "look": "mia", "at": 0.5 },
+      "fx": [{ "type": "blackout", "at": 1.45, "dur": 3.0 }],
+      "sfx": [{ "id": "door-knock", "at": 0.35 }]
+    }
+  ]
+}

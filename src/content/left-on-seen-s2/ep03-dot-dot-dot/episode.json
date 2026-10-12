@@ -1,0 +1,160 @@
+{
+  "number": 3,
+  "title": "...",
+  "stage": "cafe",
+  "hook": "the first awkward silence on a date 😶",
+  "outro": "Ep 4 → the bill 💸",
+  "start": {
+    "mia": { "face": "nervous-smile", "pose": "sit", "look": "camera" },
+    "byte": { "face": "worried", "look": "mia" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "We've been silent for forty seconds. Byte. HELP.",
+      "tts": "[whispers] We've been silent for forty seconds. [whispers] Byte. HELP.",
+      "camera": "two",
+      "mia": [
+        { "face": "nervous-smile", "do": "freeze", "look": "camera" },
+        { "face": "panic", "look": "byte", "at": "Byte" }
+      ],
+      "fx": [{ "type": "sweat", "on": "mia", "at": "forty" }],
+      "sfx": [{ "id": "clock-tick", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, silence ends when someone talks.",
+      "tts": "[whispers] Statistically, silence ends... when someone talks.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "mia" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Wow. Thank you. So helpful.",
+      "tts": "[whispers] [flatly] Wow. Thank you. So helpful.",
+      "camera": "two",
+      "mia": { "face": "deadpan", "look": "byte" },
+      "byte": { "face": "happy", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Ask him his favorite number.",
+      "tts": "[excited whisper] Ask him his favorite number.",
+      "camera": "two",
+      "byte": { "face": "sparkle", "do": "bounce", "look": "mia" },
+      "mia": { "face": "curious", "look": "byte" },
+      "fx": [{ "type": "sparkles", "on": "byte", "at": "number" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "So... what's your favorite number?",
+      "tts": "[flatly, trying to sound casual] So... what's your favorite number?",
+      "camera": "close:mia",
+      "mia": { "face": "nervous-smile", "pose": "lean", "look": "camera" },
+      "pause": 0.15
+    },
+    {
+      "beat": 1.3,
+      "camera": "two",
+      "bubble": [
+        { "typing": true, "name": "Leo", "pos": "center", "at": 0.1 },
+        { "text": "uh. 7?", "at": 0.8 }
+      ],
+      "mia": { "face": "hopeful", "pose": "sit", "look": "camera", "at": 0.85 },
+      "byte": { "face": "curious", "look": "camera" },
+      "sfx": [{ "id": "message-in", "at": 0.8 }]
+    },
+    {
+      "say": "mia",
+      "text": "He said seven! Is seven good?!",
+      "tts": "[excited whisper] He said seven! [anxious] Is seven good?!",
+      "camera": "two",
+      "mia": { "face": "excited", "do": "bounce", "look": "byte" },
+      "byte": { "face": "focused", "look": "mia" },
+      "fx": [{ "type": "question", "on": "mia", "at": "good" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Seven is prime. Tell him you respect primes.",
+      "tts": "[whispers] Seven is prime. [deadpan] Tell him you respect primes.",
+      "camera": "close:byte",
+      "byte": { "face": "determined", "do": "nod", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "I really respect primes.",
+      "tts": "[flatly, trying to sound casual] I really respect primes.",
+      "camera": "close:mia",
+      "mia": { "face": "smug", "do": "nod", "look": "camera" },
+      "pause": 0.15
+    },
+    {
+      "beat": 1.1,
+      "camera": "two",
+      "bubble": [{ "text": "haha ok 😅", "at": 0.2 }],
+      "mia": { "face": "nervous-smile", "do": "freeze", "look": "camera", "at": 0.3 },
+      "byte": { "face": "deadpan", "look": "camera", "at": 0.3 },
+      "sfx": [{ "id": "message-in", "at": 0.2 }, { "id": "crickets", "at": 0.5 }]
+    },
+    {
+      "say": "mia",
+      "text": "He said \"haha ok.\" That's OUR thing.",
+      "tts": "[excited whisper] He said haha ok. [dreamy] That's OUR thing.",
+      "camera": "close:mia",
+      "mia": { "face": "love", "pose": "cheeks", "do": "wiggle", "look": "byte" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": "OUR" }],
+      "sfx": [{ "id": "aww", "at": "OUR" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Now compliment something specific.",
+      "tts": "[whispers] Now compliment something... specific.",
+      "camera": "two",
+      "bubble": [{ "clear": true, "at": 0 }],
+      "byte": { "face": "determined", "do": "zoom", "look": "mia" },
+      "mia": { "face": "focused", "look": "byte" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "You have... really nice elbows.",
+      "tts": "[nervous] You have... [nervously] really nice elbows.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "nervous-smile", "pose": "lean", "look": "camera" },
+        { "face": "flustered", "pose": "cheeks", "at": "elbows" }
+      ],
+      "fx": [{ "type": "blush", "on": "mia", "at": "elbows" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 2.0,
+      "camera": "two",
+      "bubble": [
+        { "typing": true, "at": 0.2 },
+        { "typing": false, "at": 1.3 }
+      ],
+      "mia": [
+        { "face": "hopeful", "pose": "sit", "look": "camera" },
+        { "face": "shocked", "do": "freeze", "at": 1.3 }
+      ],
+      "byte": { "face": "shocked", "do": "freeze", "look": "camera", "at": 1.3 },
+      "sfx": [{ "id": "crickets", "at": 1.3 }]
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, that was a mistake.",
+      "tts": "[whispers] [deadpan] Statistically... that was a mistake.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.5
+    }
+  ]
+}

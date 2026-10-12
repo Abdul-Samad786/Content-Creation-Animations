@@ -70,6 +70,10 @@ export function characterState(plan, id, frame) {
     t: lookPrev ? easeInOut((frame - lookEv.frame) / LOOK_BLEND) : 1,
   };
 
+  // Robot screen mode ("on" | "off" | "v2") and how long since it changed
+  const screenEv = lastAt(track.screen, frame);
+  const screenPrev = prevOf(track.screen, screenEv);
+
   const g = gestureOffsets(track.gestures, frame);
   const talk = talkAt(track, frame);
   const blink = g.freeze > 0.5 || NO_BLINK_EYES.has(expr.eyes) ? 0 : blinkAt(id, frame);
@@ -84,9 +88,12 @@ export function characterState(plan, id, frame) {
       mouth: expr.mouth,
       brows: expr.brows,
       blush: Math.min(1, expr.blush + blushBoostAt(track, frame)),
-      talk,
+      talk: screenEv.value === "off" ? 0 : talk,
       blink,
       t: frame,
+      screen: screenEv.value,
+      screenPrev: screenPrev ? screenPrev.value : screenEv.value,
+      screenAge: screenPrev ? frame - screenEv.frame : 1000,
     },
     faceSince: faceEv.frame,
     pose,

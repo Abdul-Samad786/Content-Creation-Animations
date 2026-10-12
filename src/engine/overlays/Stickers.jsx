@@ -49,7 +49,7 @@ export function Badge({ plan, frame }) {
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 20px", borderRadius: 26, background: "rgba(43,29,58,0.55)", color: "#FFFFFF", fontSize: 28, fontWeight: 600, letterSpacing: 1 }}>
         <span style={{ color: "#FF8EC2" }}>●</span>
         {plan.series.title.toUpperCase()}
-        {ep != null && <span style={{ opacity: 0.8 }}>· EP {ep}</span>}
+        {ep != null && <span style={{ opacity: 0.8 }}>· {plan.series.season != null ? `S${plan.series.season} ` : ""}EP {ep}</span>}
       </div>
     </div>
   );
@@ -58,11 +58,19 @@ export function Badge({ plan, frame }) {
 export function Outro({ plan, frame }) {
   const text = plan.episode.outro;
   if (!text) return null;
-  const lastSay = [...plan.lines].reverse().find((l) => l.kind === "say");
-  const speechEnd = lastSay ? lastSay.startFrame + lastSay.speakFrames + 8 : 0;
-  const start = Math.max(speechEnd, plan.totalFrames - Math.round(2.0 * plan.fps));
-  if (frame < start) return null;
-  const pop = easeOutBack(clamp01((frame - start) / 12), 2.2);
+  let start;
+  let end = Infinity;
+  if (plan.outroLine) {
+    // "outroAt": the sticker owns that line, then gets out of the way for a sting
+    start = plan.outroLine.startFrame;
+    end = plan.outroLine.endFrame;
+  } else {
+    const lastSay = [...plan.lines].reverse().find((l) => l.kind === "say");
+    const speechEnd = lastSay ? lastSay.startFrame + lastSay.speakFrames + 8 : 0;
+    start = Math.max(speechEnd, plan.totalFrames - Math.round(2.0 * plan.fps));
+  }
+  if (frame < start || frame >= end) return null;
+  const pop = easeOutBack(clamp01((frame - start) / 12), 2.2) * (end === Infinity ? 1 : 1 - easeIn((frame - (end - 8)) / 8));
   const bob = Math.sin(frame * 0.18) * 6;
   return (
     <div style={{ position: "absolute", left: 0, right: 0, top: 360 + bob, display: "flex", justifyContent: "center", fontFamily: FONT }}>

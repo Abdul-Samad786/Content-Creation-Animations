@@ -12,9 +12,9 @@ const SFX_FRAMES = 75;
 
 export default function Soundtrack({ plan }) {
   const available = new Set(assets.sfx || []);
-  const music = assets.music?.[plan.series.id];
   const m = plan.series.music || {};
-
+  // A series can reuse another series' generated loop by naming the same file
+  const music = assets.music?.[plan.series.id] ?? (m.file && Object.values(assets.music || {}).includes(m.file) ? m.file : null);
   return (
     <>
       {plan.lines.map((l) =>

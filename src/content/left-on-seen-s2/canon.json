@@ -1,0 +1,24 @@
+{
+  "_about": "Season 2 continuity rules, checked by scripts/validate_episodes.mjs. Story source of truth is the Season 2 bible; this file mirrors the parts a machine can check.",
+  "durationSeconds": [35, 45],
+  "spokenLines": [8, 12],
+  "hookWithinSeconds": 1.5,
+  "neverSpeaks": ["leo"],
+  "voiceOnly": ["mom", "zara"],
+  "recordingFile": "date_recording.mov",
+  "recordedIn": 5,
+  "erasedIn": 10,
+  "updatePopup": {
+    "1": "Software update available",
+    "2": "Update available (1)",
+    "5": "Update will install tonight",
+    "6": "Update postponed (4)",
+    "7": "Update required",
+    "8": "Installing…",
+    "9": "Restart complete",
+    "10": "Restore previous version?"
+  },
+  "alsoAllowedPopups": { "9": ["Restore previous version?"] },
+  "byte2Episodes": [9, 10],
+  "stages": { "3": "cafe", "4": "cafe" }
+}

@@ -173,7 +173,7 @@ function Confetti({ t, dur, seed, width, height }) {
  * @param anchorFor (id) => {x, y, s} | null   screen position of a character's head top
  */
 export default function Fx({ plan, frame, anchorFor }) {
-  const items = plan.fx.filter((e) => frame >= e.frame && frame < e.frame + e.dur);
+  const items = plan.fx.filter((e) => e.type !== "blackout" && frame >= e.frame && frame < e.frame + e.dur);
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       {items.map((e, k) => {
@@ -194,4 +194,12 @@ export default function Fx({ plan, frame, anchorFor }) {
       })}
     </AbsoluteFill>
   );
+}
+
+/** "blackout" effects: a full-screen cut to black, layered above the phone and captions. */
+export function Blackout({ plan, frame }) {
+  const e = plan.fx.find((x) => x.type === "blackout" && frame >= x.frame && frame < x.frame + x.dur);
+  if (!e) return null;
+  const t = frame - e.frame;
+  return <AbsoluteFill style={{ background: "#000000", opacity: clamp01(t / 3), pointerEvents: "none" }} />;
 }

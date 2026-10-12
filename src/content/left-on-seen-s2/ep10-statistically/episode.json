@@ -1,0 +1,176 @@
+{
+  "number": 10,
+  "title": "statistically",
+  "hook": "choosing your best friend over the receipts 💌",
+  "outro": "Left on Seen · follow for season 3 💌",
+  "outroAt": 13,
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "good morning ☀️" },
+      { "from": "me", "text": "good morning!! 🙂" }
+    ]
+  },
+  "start": {
+    "mia": { "face": "sad", "pose": "sit", "look": "byte" },
+    "byte": { "face": "neutral", "pose": "hover", "screen": "v2", "look": "camera" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "Restore. I don't care about the recording.",
+      "tts": "[determined] Restore. [softly] I don't care about the recording.",
+      "camera": "two",
+      "popup": [{ "text": "Restore previous version?", "detail": "This will erase: date_recording.mov", "buttons": ["Cancel", "Restore"], "at": 0 }],
+      "mia": [
+        { "face": "determined", "do": "nod", "look": "byte" },
+        { "face": "sad", "look": "byte", "at": "care" }
+      ],
+      "byte": { "face": "neutral", "look": "camera" },
+      "sfx": [{ "id": "notify", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "beat": 1.6,
+      "camera": "close:byte",
+      "popup": [
+        { "glitch": true, "at": 0.05, "dur": 0.5 },
+        { "dismiss": true, "at": 0.55 },
+        { "text": "date_recording.mov", "detail": "Deleted", "icon": "🗑", "at": 0.9 }
+      ],
+      "byte": [
+        { "face": "dizzy", "do": "shake", "at": 0.05 },
+        { "screen": "on", "at": 0.6 },
+        { "face": "neutral", "do": "pop-in", "look": "mia", "at": 0.7 }
+      ],
+      "sfx": [{ "id": "glitch", "at": 0.05 }, { "id": "boing", "at": 0.7 }, { "id": "notify", "at": 0.9 }]
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, I was gone for one day. It felt like eleven minutes.",
+      "tts": "[deadpan] Statistically, I was gone for one day. [flatly] It felt like... eleven minutes.",
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "eleven" }],
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Byte! The recording's gone. The whole date.",
+      "tts": "[gasps] Byte! [devastated] The recording's gone. The whole date.",
+      "camera": "two",
+      "mia": [
+        { "face": "joy", "pose": "grab", "do": "jump", "look": "byte" },
+        { "face": "sad", "pose": "sit", "at": "recording's" }
+      ],
+      "byte": { "face": "happy", "look": "mia" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": 0 }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "I know. I was there.",
+      "tts": "[softly] I know. [warmly] I was there.",
+      "camera": "two",
+      "byte": { "face": "warm", "do": "zoom", "look": "mia" },
+      "mia": { "face": "hopeful", "look": "byte", "at": "there" },
+      "pause": 0.25
+    },
+    {
+      "say": "mia",
+      "text": "So you remember it?",
+      "tts": "[softly] So... you remember it?",
+      "camera": "close:mia",
+      "mia": { "face": "hopeful", "look": "byte" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "I remember you laughed at his joke before he finished it.",
+      "tts": "[warmly] I remember you laughed at his joke... [laughs softly] before he finished it.",
+      "camera": "two",
+      "byte": { "face": "happy", "do": "wiggle", "look": "mia" },
+      "mia": { "face": "embarrassed", "pose": "cheeks", "look": "byte", "at": "finished" },
+      "fx": [{ "type": "blush", "on": "mia", "at": "finished" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Ugh. I was trying SO hard.",
+      "tts": "[sighs] Ugh. I was trying SO hard.",
+      "camera": "two",
+      "mia": { "face": "flustered", "pose": "flop", "look": "up" },
+      "byte": { "face": "warm", "look": "mia" },
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "So stop performing. Statistically... it's working.",
+      "tts": "[gently] So stop performing. [softly, warmly] Statistically... it's working.",
+      "camera": "close:byte",
+      "byte": [
+        { "face": "warm", "look": "mia" },
+        { "face": "love", "look": "camera", "at": "working" }
+      ],
+      "fx": [{ "type": "hearts", "on": "byte", "at": "working" }],
+      "sfx": [{ "id": "aww", "at": "working" }],
+      "pause": 0.3
+    },
+    {
+      "beat": 2.2,
+      "camera": "two",
+      "phone": [
+        { "show": true, "at": 0 },
+        { "receive": "same time saturday? 🙂", "at": 0.2 },
+        { "draft": "yes :)", "at": 0.9, "dur": 0.5 },
+        { "send": "yes :)", "at": 1.6 }
+      ],
+      "mia": [
+        { "face": "shocked", "pose": "phone", "do": "gasp", "look": "phone", "at": 0.3 },
+        { "face": "happy", "do": "type", "at": 0.9 }
+      ],
+      "byte": { "face": "happy", "look": "phone" },
+      "sfx": [{ "id": "message-in", "at": 0.2 }, { "id": "typing", "at": 0.9 }, { "id": "whoosh", "at": 1.6 }]
+    },
+    {
+      "say": "mia",
+      "text": "Yes. Same time.",
+      "tts": "[softly, happily] Yes. Same time.",
+      "camera": "close:mia",
+      "mia": { "face": "warm", "pose": "sit", "look": "camera" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": "Same" }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Real voice detected.",
+      "tts": "[warmly] Real voice... detected.",
+      "camera": "two",
+      "phone": [{ "hide": true, "at": 0 }],
+      "byte": { "face": "sparkle", "do": "spin", "look": "mia" },
+      "mia": { "face": "joy", "pose": "cheer", "do": "bounce", "look": "byte", "at": "detected" },
+      "fx": [{ "type": "confetti", "at": "detected" }],
+      "sfx": [{ "id": "sparkle", "at": "detected" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 2.0,
+      "camera": "two",
+      "mia": { "face": "love", "pose": "cheeks", "look": "byte" },
+      "byte": { "face": "love", "look": "mia" }
+    },
+    {
+      "say": "mom",
+      "text": "Mia. We need to talk.",
+      "tts": "[suspicious] Mia. [slowly] We need to talk.",
+      "camera": "zoom:mia",
+      "phone": [{ "call": "Mom", "avatar": "#FFB347", "at": 0 }],
+      "mia": { "face": "shocked", "do": "gasp", "pose": "phone", "look": "phone", "at": "talk" },
+      "byte": { "face": "shocked", "do": "gasp", "look": "phone", "at": "talk" },
+      "fx": [{ "type": "shock", "on": "mia", "at": "talk" }],
+      "sfx": [{ "id": "phone-ring", "at": 0 }, { "id": "dun-dun", "at": "talk" }],
+      "pause": 0.9
+    }
+  ]
+}

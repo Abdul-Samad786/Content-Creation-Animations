@@ -1,0 +1,153 @@
+{
+  "number": 9,
+  "title": "byte?",
+  "hook": "when your AI best friend restarts 🤖",
+  "outro": "Ep 10 → the finale 💌",
+  "phone": {
+    "contact": "Family Group 🏠",
+    "avatar": "#FFB347",
+    "messages": [
+      { "from": "me", "text": "HE'S SO CUTE I'M LITERALLY DYING" },
+      { "from": "them", "text": "who is dying??" }
+    ]
+  },
+  "start": {
+    "mia": { "face": "worried", "pose": "grab", "look": "byte" },
+    "byte": { "face": "neutral", "pose": "droop", "screen": "off", "look": "down" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "Byte? Byte, wake up. Grandma is still typing.",
+      "tts": "[whispers] Byte? [anxious] Byte, wake up. [panicking] Grandma is still typing.",
+      "camera": "two",
+      "mia": [
+        { "face": "worried", "do": "shake", "look": "byte" },
+        { "face": "panic", "look": "camera", "at": "Grandma" }
+      ],
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Grandma" }],
+      "sfx": [{ "id": "clock-tick", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "beat": 1.7,
+      "camera": "close:byte",
+      "popup": [{ "text": "Restart complete", "detail": "Byte 2.0 is ready", "icon": "✓", "at": 0.9 }],
+      "byte": [
+        { "screen": "v2", "at": 0.35 },
+        { "face": "neutral", "pose": "proud", "do": "pop-in", "look": "camera", "at": 0.45 }
+      ],
+      "mia": { "face": "hopeful", "pose": "sit", "look": "byte", "at": 0.5 },
+      "sfx": [{ "id": "boot-chime", "at": 0.35 }, { "id": "notify", "at": 0.9 }]
+    },
+    {
+      "say": "byte",
+      "text": "Hello, user. I am Byte two point oh. How may I assist you?",
+      "tts": "[flatly, overly polite] Hello, user. I am Byte two point oh. [slowly] How may I assist you?",
+      "stability": 1.0,
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "assist" }],
+      "byte": { "face": "neutral", "pose": "hover", "do": "nod", "look": "camera" },
+      "sfx": [{ "id": "whoosh", "at": "assist" }],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "User?! It's me. Mia.",
+      "tts": "[horrified] User?! [softly] It's me. Mia.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "shocked", "do": "gasp", "look": "byte" },
+        { "face": "sad", "pose": "cheeks", "at": "Mia" }
+      ],
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.1 }],
+      "sfx": [{ "id": "record-scratch", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Thank you, Mia. Your feedback is important to us.",
+      "tts": "[flatly, overly polite] Thank you, Mia. Your feedback is important to us.",
+      "stability": 1.0,
+      "camera": "two",
+      "byte": { "face": "happy", "do": "nod", "look": "camera" },
+      "mia": { "face": "deadpan", "pose": "sit", "look": "byte", "at": "feedback" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Okay, emergency. My mom thinks I'm dying.",
+      "tts": "[frantic] Okay, emergency. [anxious] My mom thinks I'm dying.",
+      "camera": "two",
+      "mia": { "face": "panic", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "neutral", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "I'm sorry to hear that. Please rate this conversation.",
+      "tts": "[flatly, overly polite] I'm sorry to hear that. Please rate this conversation.",
+      "stability": 1.0,
+      "camera": "close:byte",
+      "popup": [{ "text": "Rate this conversation", "detail": "★ ★ ★ ★ ★", "icon": "★", "at": "rate" }],
+      "byte": { "face": "happy", "look": "camera" },
+      "sfx": [{ "id": "notify", "at": "rate" }],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "No fake statistic? Nothing?",
+      "tts": "[nervous] No fake statistic? [whispers] Nothing?",
+      "camera": "two",
+      "popup": [{ "dismiss": true, "at": 0 }],
+      "mia": { "face": "worried", "pose": "sit", "look": "byte" },
+      "byte": { "face": "neutral", "look": "mia" },
+      "fx": [{ "type": "question", "on": "mia", "at": "statistic" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Statistics have been removed for your safety.",
+      "tts": "[flatly, overly polite] Statistics have been removed... for your safety.",
+      "stability": 1.0,
+      "camera": "close:byte",
+      "byte": { "face": "happy", "pose": "proud", "look": "camera" },
+      "sfx": [{ "id": "crickets", "at": "end" }],
+      "pause": 0.25
+    },
+    {
+      "say": "mia",
+      "text": "I want my weird Byte back.",
+      "tts": "[sobbing] I want my weird Byte back.",
+      "camera": "close:mia",
+      "mia": { "face": "crying", "pose": "slump", "look": "byte" },
+      "fx": [{ "type": "rain", "on": "mia", "at": "weird", "dur": 2.0 }],
+      "pause": 0.2
+    },
+    {
+      "beat": 0.9,
+      "camera": "close:byte",
+      "popup": [{ "text": "Restore previous version?", "detail": "This will erase: date_recording.mov", "buttons": ["Cancel", "Restore"], "at": 0.1 }],
+      "byte": { "face": "neutral", "pose": "hover", "look": "camera" },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "Restoring will erase one file. Date recording dot mov.",
+      "tts": "[flatly, overly polite] Restoring will erase one file. [slowly] Date recording... dot mov.",
+      "stability": 1.0,
+      "camera": "close:byte",
+      "byte": { "face": "neutral", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "The recording...",
+      "tts": "[whispers] The recording...",
+      "camera": "zoom:mia",
+      "mia": { "face": "sad", "do": "freeze", "look": "byte" },
+      "sfx": [{ "id": "dun-dun", "at": "end" }],
+      "pause": 0.6
+    }
+  ]
+}

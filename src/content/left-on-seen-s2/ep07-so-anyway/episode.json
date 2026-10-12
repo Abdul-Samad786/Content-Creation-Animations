@@ -1,0 +1,157 @@
+{
+  "number": 7,
+  "title": "so anyway",
+  "hook": "telling your best friend about the date 📞",
+  "outro": "Ep 8 → wrong chat 😨",
+  "phone": {
+    "contact": "Zara",
+    "avatar": "#B98CFF",
+    "messages": [
+      { "from": "them", "text": "CALL ME. NOW." }
+    ]
+  },
+  "start": {
+    "mia": { "face": "excited", "pose": "phone", "look": "phone" },
+    "byte": { "face": "curious", "look": "mia" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "Zara. Sit down. The date was a MOVIE.",
+      "tts": "[excited] Zara. Sit down. [dramatic] The date was a MOVIE.",
+      "camera": "two",
+      "phone": [{ "call": "Zara", "at": 0 }],
+      "mia": [
+        { "face": "excited", "do": "bounce", "look": "phone" },
+        { "face": "sparkle", "pose": "cheer", "look": "camera", "at": "MOVIE" }
+      ],
+      "fx": [{ "type": "sparkles", "on": "mia", "at": "MOVIE" }],
+      "sfx": [{ "id": "phone-ring", "at": 0 }, { "id": "sparkle", "at": "MOVIE" }],
+      "pause": 0.15
+    },
+    {
+      "say": "zara",
+      "text": "Okay, I'm sitting. Tell me EVERYTHING.",
+      "tts": "[excited] Okay, I'm sitting. [squeals] Tell me EVERYTHING.",
+      "camera": "two",
+      "mia": { "face": "joy", "pose": "phone", "look": "phone" },
+      "byte": { "face": "curious", "look": "phone" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "He stared into my eyes for like ten minutes.",
+      "tts": "[dreamy] He stared into my eyes for like... ten minutes.",
+      "camera": "close:mia",
+      "mia": { "face": "love", "pose": "cheeks", "do": "wiggle", "look": "away" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": "eyes" }, { "type": "blush", "on": "mia", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Four seconds. I have the data.",
+      "tts": "[deadpan] Four seconds. [flatly] I have the data.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "sfx": [{ "id": "record-scratch", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "And he said I was SO funny. Like, comedian funny.",
+      "tts": "[giggles] And he said I was SO funny. [smugly] Like, comedian funny.",
+      "camera": "two",
+      "mia": { "face": "smug", "pose": "phone", "do": "wiggle", "look": "phone" },
+      "byte": { "face": "suspicious", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "He said \"haha ok.\" Once.",
+      "tts": "[deadpan] He said... haha ok. [flatly] Once.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "do": "zoom", "look": "camera" },
+      "mia": { "face": "embarrassed", "pose": "slump", "look": "byte", "at": "Once" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Once" }],
+      "sfx": [{ "id": "crickets", "at": "Once" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 0.8,
+      "camera": "close:byte",
+      "popup": [{ "text": "Update required", "detail": "Restart to continue", "buttons": ["Later", "Restart"], "at": 0.1 }],
+      "byte": { "face": "worried", "do": "gasp", "look": "camera", "at": 0.1 },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "\"Required\" is a strong word.",
+      "tts": "[nervously] Required... is a strong word.",
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "strong" }],
+      "byte": { "face": "nervous-smile", "do": "headshake", "look": "camera" },
+      "fx": [{ "type": "sweat", "on": "byte", "at": "strong" }],
+      "sfx": [{ "id": "whoosh", "at": "strong" }],
+      "pause": 0.15
+    },
+    {
+      "say": "zara",
+      "text": "Wait. Is that the robot?",
+      "tts": "[suspicious] Wait. [slowly] Is that the robot?",
+      "camera": "two",
+      "mia": { "face": "shocked", "do": "freeze", "look": "byte" },
+      "byte": { "face": "shocked", "pose": "hide", "look": "mia", "at": "robot" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Hi, Zara.",
+      "tts": "[happily] Hi, Zara.",
+      "camera": "close:byte",
+      "byte": { "face": "happy", "pose": "hover", "do": "pop-in", "look": "phone" },
+      "sfx": [{ "id": "boing", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "No one. Anyway. He basically proposed.",
+      "tts": "[flatly, trying to sound casual] No one. Anyway. [dreamy] He basically proposed.",
+      "camera": "close:mia",
+      "mia": [
+        { "face": "nervous-smile", "pose": "phone", "look": "phone" },
+        { "face": "love", "do": "wiggle", "look": "away", "at": "proposed" }
+      ],
+      "fx": [{ "type": "hearts", "on": "mia", "at": "proposed" }],
+      "sfx": [{ "id": "aww", "at": "proposed" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "He offered to walk you home.",
+      "tts": "[deadpan] He offered... to walk you home.",
+      "camera": "two",
+      "byte": { "face": "deadpan", "pose": "hover", "do": "pop-in", "look": "mia" },
+      "mia": { "face": "angry", "look": "byte", "at": "walk" },
+      "pause": 0.2
+    },
+    {
+      "beat": 1.0,
+      "camera": "two",
+      "mia": { "face": "angry", "pose": "grab", "do": "zoom", "look": "byte" },
+      "byte": { "face": "nervous", "pose": "hide", "look": "mia", "at": 0.2 },
+      "fx": [{ "type": "sweat", "on": "byte", "at": 0.3 }],
+      "sfx": [{ "id": "wobble", "at": 0.2 }]
+    },
+    {
+      "say": "zara",
+      "text": "Okay. Send me exactly what he said.",
+      "tts": "[suspicious] Okay. [slowly] Send me... exactly what he said.",
+      "camera": "zoom:mia",
+      "mia": { "face": "shocked", "do": "gasp", "look": "phone", "at": "exactly" },
+      "byte": { "face": "shocked", "look": "phone", "at": "exactly" },
+      "fx": [{ "type": "shock", "on": "mia", "at": "exactly" }],
+      "sfx": [{ "id": "dun-dun", "at": "said" }],
+      "pause": 0.9
+    }
+  ]
+}

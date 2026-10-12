@@ -1,0 +1,176 @@
+{
+  "number": 1,
+  "title": "what do i wear",
+  "hook": "when your first date is in 20 minutes 😱",
+  "outro": "Ep 2 → he's outside 😳",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "pick you up at 7?" },
+      { "from": "me", "text": "yes!! 🙂" }
+    ]
+  },
+  "start": {
+    "mia": { "face": "panic", "pose": "sit", "look": "camera" },
+    "byte": { "face": "neutral", "look": "mia" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "Leo's here in twenty minutes and I own ZERO clothes.",
+      "tts": "[panicking] Leo's here in twenty minutes and I own... ZERO clothes.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "panic", "do": "shake", "look": "camera" },
+        { "face": "crying", "pose": "cheeks", "at": "ZERO" }
+      ],
+      "fx": [{ "type": "sweat", "on": "mia", "at": "twenty" }, { "type": "shock", "on": "mia", "at": "ZERO" }],
+      "sfx": [{ "id": "clock-tick", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, you own forty-one tops.",
+      "tts": "[deadpan] Statistically, you own... forty-one tops.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Okay. Outfit one. Cute, but casual.",
+      "tts": "[breathing fast] Okay. Outfit one. [hopeful] Cute, but casual.",
+      "camera": "two",
+      "mia": [
+        { "face": "determined", "pose": "sit", "do": "nod", "look": "byte" },
+        { "face": "hopeful", "pose": "cheer", "do": "bounce", "at": "Cute" }
+      ],
+      "byte": { "face": "focused", "look": "mia" },
+      "fx": [{ "type": "sparkles", "on": "mia", "at": "Cute" }],
+      "sfx": [{ "id": "pop", "at": "Cute" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Cute, six. Casual, four. Trying too hard, ninety-one.",
+      "tts": "[deadpan] Cute, six. Casual, four. [flatly] Trying too hard... ninety-one.",
+      "camera": "close:byte",
+      "byte": [
+        { "face": "focused", "look": "mia" },
+        { "face": "deadpan", "look": "camera", "at": "ninety-one" }
+      ],
+      "sfx": [{ "id": "record-scratch", "at": "ninety-one" }],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Outfit two. Effortless.",
+      "tts": "[flatly, trying to sound casual] Outfit two. Effortless.",
+      "camera": "two",
+      "mia": { "face": "smug", "pose": "sit", "do": "freeze", "look": "camera" },
+      "byte": { "face": "suspicious", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "That's your fake-chill voice. Effortless, zero.",
+      "tts": "[deadpan] That's your fake-chill voice. [flatly] Effortless... zero.",
+      "camera": "two",
+      "byte": { "face": "suspicious", "do": "zoom", "look": "mia" },
+      "mia": { "face": "embarrassed", "pose": "slump", "look": "byte", "at": "fake-chill" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "fake-chill" }],
+      "sfx": [{ "id": "wobble", "at": "fake-chill" }],
+      "pause": 0.15
+    },
+    {
+      "beat": 0.9,
+      "camera": "close:byte",
+      "popup": [{ "text": "Software update available", "buttons": ["Later", "Install"], "at": 0.1 }],
+      "byte": { "face": "shocked", "do": "gasp", "look": "camera", "at": 0.1 },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "Remind me later.",
+      "tts": "[sighs] Remind me later.",
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "later" }],
+      "byte": { "face": "deadpan", "do": "headshake", "look": "camera" },
+      "sfx": [{ "id": "whoosh", "at": "later" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Byte, just TELL me what to wear!",
+      "tts": "[frantic] Byte, just TELL me what to wear!",
+      "camera": "two",
+      "mia": { "face": "panic", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "dizzy", "do": "shake", "at": "TELL" },
+      "sfx": [{ "id": "wobble", "at": "TELL" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Eighty-three percent of first dates fail because of shoes.",
+      "tts": "[deadpan] Eighty-three percent of first dates... fail because of shoes.",
+      "camera": "close:byte",
+      "byte": [
+        { "face": "focused", "pose": "proud", "look": "camera" },
+        { "face": "deadpan", "at": "shoes" }
+      ],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "SHOES?! Then I'm staying home. Forever.",
+      "tts": "[shrieks] SHOES?! [sobbing] Then I'm staying home. Forever.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "shocked", "pose": "sit", "do": "gasp", "look": "byte" },
+        { "face": "crying", "pose": "flop", "at": "staying" }
+      ],
+      "fx": [{ "type": "shock", "on": "mia", "at": 0 }, { "type": "rain", "on": "mia", "at": "staying", "dur": 2.4 }],
+      "sfx": [{ "id": "record-scratch", "at": 0 }, { "id": "sad-trombone", "at": "Forever" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 1.3,
+      "camera": "two",
+      "mia": [
+        { "face": "sad", "pose": "flop", "look": "up" },
+        { "face": "determined", "pose": "sit", "do": "bounce", "look": "byte", "at": 0.8 }
+      ],
+      "byte": { "face": "curious", "pose": "hover", "look": "mia" },
+      "sfx": [{ "id": "boing", "at": 0.8 }]
+    },
+    {
+      "say": "mia",
+      "text": "...I'm wearing the hoodie.",
+      "tts": "[flatly] ...I'm wearing the hoodie.",
+      "camera": "close:mia",
+      "mia": { "face": "deadpan", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Comfort, one hundred. Trying too hard, zero.",
+      "tts": "[warmly] Comfort, one hundred. [laughs softly] Trying too hard... zero.",
+      "camera": "two",
+      "byte": { "face": "happy", "do": "wiggle", "look": "mia" },
+      "mia": { "face": "flustered", "pose": "cheeks", "look": "byte", "at": "zero" },
+      "fx": [{ "type": "hearts", "on": "byte", "at": "hundred" }, { "type": "blush", "on": "mia", "at": "zero" }],
+      "sfx": [{ "id": "aww", "at": "hundred" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 1.6,
+      "camera": "two",
+      "phone": [{ "show": true, "at": 0 }, { "receive": "here 🙂", "at": 0.25 }],
+      "mia": { "face": "shocked", "do": "gasp", "pose": "phone", "look": "phone", "at": 0.35 },
+      "byte": { "face": "shocked", "do": "gasp", "look": "phone", "at": 0.4 },
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.4 }],
+      "sfx": [{ "id": "phone-buzz", "at": 0.15 }, { "id": "dun-dun", "at": 0.4 }]
+    }
+  ]
+}

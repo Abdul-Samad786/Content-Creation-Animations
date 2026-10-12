@@ -12,7 +12,7 @@ const BOTTOM = 1720; // keep clear of the platform UI below ~1720px
 
 const PINK = "#FF6FAE";
 
-function Bubble({ m, frame, isLast, seen, seenSince, tailed }) {
+export function Bubble({ m, frame, isLast, seen, seenSince, tailed }) {
   const me = m.from === "me";
   const age = frame - m.frame;
   const pop = m.frame < 0 ? 1 : easeOutBack(clamp01(age / 10), 2.2);
@@ -45,7 +45,7 @@ function Bubble({ m, frame, isLast, seen, seenSince, tailed }) {
   );
 }
 
-function TypingBubble({ frame, since }) {
+export function TypingBubble({ frame, since }) {
   const pop = easeOutBack(clamp01((frame - since) / 8), 2.2);
   return (
     <div style={{ display: "flex", margin: "6px 0" }}>
@@ -71,7 +71,7 @@ function CallScreen({ s, frame }) {
     <div style={{ position: "absolute", inset: 0, borderRadius: 44, background: "linear-gradient(180deg,#5B4A9E,#C77DB5)", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 90, color: "#FFFFFF", opacity: fadeOut }}>
       <div style={{ position: "relative", width: 170, height: 170 }}>
         {!connected && !ended && <div style={{ position: "absolute", inset: -20 - ring * 16, borderRadius: "50%", border: "4px solid rgba(255,255,255,0.5)", opacity: 1 - ring }} />}
-        <div style={{ width: 170, height: 170, borderRadius: "50%", background: s.avatar, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 84, fontWeight: 600, border: "6px solid #FFFFFF" }}>{c.name[0]}</div>
+        <div style={{ width: 170, height: 170, borderRadius: "50%", background: c.avatar || s.avatar, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 84, fontWeight: 600, border: "6px solid #FFFFFF" }}>{c.name[0]}</div>
       </div>
       <div style={{ fontSize: 58, fontWeight: 600, marginTop: 26 }}>{c.name}</div>
       <div style={{ fontSize: 34, opacity: 0.85, marginTop: 6 }}>

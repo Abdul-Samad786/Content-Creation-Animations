@@ -8,7 +8,7 @@
 //   { "draft": "text", "dur": 0.8 }  Mia types into the input box over dur seconds
 //   { "clear": true }           delete the draft
 //   { "seen": "Seen 9:41 PM" }  read receipt under Mia's last message
-//   { "call": "Mom" } / { "endCall": true }
+//   { "call": "Mom", "avatar": "#FFB347" } / { "endCall": true }   (avatar defaults to the chat's)
 
 import { clamp01, easeIn, easeOutBack } from "../math";
 
@@ -73,7 +73,7 @@ export function phoneStateAt(plan, frame) {
     }
     if (e.call != null) {
       show(f);
-      s.call = { name: e.call, since: f, ended: null };
+      s.call = { name: e.call, avatar: e.avatar, since: f, ended: null };
     }
     if (e.endCall && s.call) s.call = { ...s.call, ended: f };
   }

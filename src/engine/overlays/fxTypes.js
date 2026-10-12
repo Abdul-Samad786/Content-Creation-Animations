@@ -8,4 +8,6 @@ export const FX_TYPES = {
   question: { seconds: 1.5, needsCharacter: true },
   blush: { seconds: 2.6, needsCharacter: true },
   confetti: { seconds: 2.2, needsCharacter: false },
+  // Full-screen cut to black (fast fade in, holds for `dur`)
+  blackout: { seconds: 1.0, needsCharacter: false },
 };

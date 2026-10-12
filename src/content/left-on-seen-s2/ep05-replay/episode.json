@@ -1,0 +1,163 @@
+{
+  "number": 5,
+  "title": "replay",
+  "hook": "2am, replaying every word of the date 🌙",
+  "outro": "Ep 6 → who texts first? 📱",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "home safe?" },
+      { "from": "me", "text": "yes!! thank you for tonight 🙂" }
+    ],
+    "seen": "Seen 9:58 PM"
+  },
+  "start": {
+    "mia": { "face": "worried", "pose": "flop", "look": "up" },
+    "byte": { "face": "sleepy", "pose": "droop", "look": "mia" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "It's two a.m. and I just remembered I said \"elbows.\"",
+      "tts": "[whispers] It's two a.m. and I just remembered... [horrified] I said elbows.",
+      "camera": "close:mia",
+      "mia": [
+        { "face": "worried", "look": "up" },
+        { "face": "panic", "pose": "sit", "do": "jump", "look": "camera", "at": "elbows" }
+      ],
+      "byte": { "face": "shocked", "pose": "hover", "at": "elbows" },
+      "fx": [{ "type": "shock", "on": "mia", "at": "elbows" }],
+      "sfx": [{ "id": "clock-tick", "at": 0 }, { "id": "record-scratch", "at": "elbows" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "You said \"elbows\" at 6:14 p.m.",
+      "tts": "[sleepy, deadpan] You said elbows at six fourteen p.m.",
+      "camera": "close:byte",
+      "byte": { "face": "sleepy", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "Did he laugh? Was it a pity laugh? I need to REPLAY it.",
+      "tts": "[anxious] Did he laugh? Was it a pity laugh? [frantic] I need to REPLAY it.",
+      "camera": "two",
+      "mia": [
+        { "face": "worried", "pose": "grab", "do": "shake", "look": "byte" },
+        { "face": "panic", "at": "REPLAY" }
+      ],
+      "byte": { "face": "dizzy", "do": "shake", "at": "pity" },
+      "fx": [{ "type": "question", "on": "mia", "at": "pity" }],
+      "sfx": [{ "id": "wobble", "at": "pity" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Good news. I recorded the whole date.",
+      "tts": "[smugly] Good news. [happily] I recorded the whole date.",
+      "camera": "two",
+      "popup": [{ "text": "date_recording.mov", "detail": "47:12 · saved", "icon": "▶", "at": "recorded" }],
+      "byte": { "face": "happy", "pose": "proud", "do": "bounce", "look": "mia" },
+      "mia": { "face": "shocked", "pose": "sit", "do": "freeze", "look": "byte", "at": "recorded" },
+      "sfx": [{ "id": "notify", "at": "recorded" }],
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "You RECORDED it?!",
+      "tts": "[gasps] You RECORDED it?!",
+      "camera": "zoom:mia",
+      "mia": { "face": "shocked", "do": "gasp", "look": "byte" },
+      "fx": [{ "type": "shock", "on": "mia", "at": 0.1 }],
+      "sfx": [{ "id": "boing", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Forty-seven minutes. Four seconds of it is \"elbows.\"",
+      "tts": "[deadpan] Forty-seven minutes. [flatly] Four seconds of it... is elbows.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "You have... really nice elbows.",
+      "tts": "[nervous, from a tinny recording] You have... really nice elbows.",
+      "camera": "two",
+      "popup": [{ "glitch": true, "at": 0, "dur": 0.4 }],
+      "mia": [
+        { "face": "embarrassed", "pose": "cheeks", "do": "freeze", "look": "byte" },
+        { "face": "crying", "at": "elbows" }
+      ],
+      "byte": { "face": "deadpan", "look": "mia" },
+      "fx": [{ "type": "blush", "on": "mia", "at": 0 }, { "type": "rain", "on": "mia", "at": "elbows", "dur": 1.8 }],
+      "sfx": [{ "id": "crickets", "at": "end" }],
+      "pause": 0.3
+    },
+    {
+      "say": "mia",
+      "text": "Delete it. No! Never delete it. It's evidence.",
+      "tts": "[sobbing] Delete it. [gasps] No! Never delete it. [whispers] It's evidence.",
+      "camera": "close:mia",
+      "popup": [{ "dismiss": true, "at": "evidence" }],
+      "mia": [
+        { "face": "crying", "pose": "flop", "look": "up" },
+        { "face": "determined", "pose": "grab", "do": "gasp", "look": "byte", "at": "No" },
+        { "face": "suspicious", "at": "evidence" }
+      ],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, saved files are forever.",
+      "tts": "[reassuring] Statistically, saved files are... forever.",
+      "camera": "two",
+      "byte": { "face": "warm", "do": "nod", "look": "mia" },
+      "mia": { "face": "relieved", "pose": "sit", "look": "byte", "at": "forever" },
+      "fx": [{ "type": "sparkles", "on": "byte", "at": "forever" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 0.8,
+      "camera": "close:byte",
+      "popup": [{ "text": "Update will install tonight", "buttons": ["Tomorrow", "OK"], "at": 0.1 }],
+      "byte": { "face": "curious", "do": "gasp", "look": "camera", "at": 0.1 },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "Remind me tomorrow.",
+      "tts": "[sleepy, deadpan] Remind me tomorrow.",
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "tomorrow" }],
+      "byte": { "face": "sleepy", "do": "headshake", "look": "camera" },
+      "sfx": [{ "id": "whoosh", "at": "tomorrow" }],
+      "pause": 0.2
+    },
+    {
+      "beat": 0.9,
+      "camera": "two",
+      "phone": [{ "show": true, "at": 0 }],
+      "mia": { "face": "hopeful", "pose": "phone", "look": "phone", "at": 0.1 },
+      "byte": { "face": "curious", "pose": "hover", "look": "phone" },
+      "sfx": [{ "id": "pop", "at": 0 }]
+    },
+    {
+      "say": "mia",
+      "text": "Byte. Should I text him first?",
+      "tts": "[softly] Byte. [nervous] Should I... text him first?",
+      "camera": "zoom:mia",
+      "phone": [{ "draft": "hey", "at": "text", "dur": 0.5 }],
+      "mia": [
+        { "face": "nervous", "look": "byte" },
+        { "face": "hopeful", "look": "camera", "at": "first" }
+      ],
+      "byte": { "face": "shocked", "look": "mia", "at": "first" },
+      "sfx": [{ "id": "dun-dun", "at": "end" }],
+      "pause": 0.6
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "number": 6,
+  "title": "good morning",
+  "hook": "the who-texts-first standoff ⚔️",
+  "outro": "Ep 7 → telling Zara 📞",
+  "phone": {
+    "contact": "Leo",
+    "avatar": "#7FB3FF",
+    "messages": [
+      { "from": "them", "text": "home safe?" },
+      { "from": "me", "text": "yes!! thank you for tonight 🙂" }
+    ],
+    "seen": "Seen 9:58 PM"
+  },
+  "start": {
+    "mia": { "face": "determined", "pose": "sit", "look": "camera" },
+    "byte": { "face": "neutral", "look": "mia" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "Rule one. Whoever texts first, loses.",
+      "tts": "[dramatic] Rule one. [lowers voice] Whoever texts first... loses.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "determined", "do": "nod", "look": "camera" },
+        { "face": "suspicious", "at": "loses" }
+      ],
+      "sfx": [{ "id": "dun-dun", "at": "loses" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "That rule is not in any rulebook I have downloaded.",
+      "tts": "[deadpan] That rule is not in any rulebook I have downloaded.",
+      "camera": "close:byte",
+      "byte": { "face": "focused", "look": "camera" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "I'm a rock. I will wait him out.",
+      "tts": "[smugly] I'm a rock. [determined] I will wait him out.",
+      "camera": "two",
+      "mia": { "face": "smug", "pose": "sit", "do": "freeze", "look": "byte" },
+      "byte": { "face": "suspicious", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "beat": 2.0,
+      "camera": "two",
+      "phone": [
+        { "show": true, "at": 0 },
+        { "draft": "good mor", "at": 0.3, "dur": 0.5 },
+        { "clear": true, "at": 1.0 },
+        { "draft": "good mor", "at": 1.2, "dur": 0.4 },
+        { "clear": true, "at": 1.8 }
+      ],
+      "mia": { "face": "focused", "pose": "phone", "do": "type", "look": "phone" },
+      "byte": { "face": "deadpan", "look": "phone" },
+      "sfx": [{ "id": "typing", "at": 0.3 }, { "id": "typing", "at": 1.2 }]
+    },
+    {
+      "say": "byte",
+      "text": "You typed \"good mor\" four times.",
+      "tts": "[deadpan] You typed... good mor. Four times.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "I'm just stretching my thumbs.",
+      "tts": "[flatly, trying to sound casual] I'm just stretching my thumbs.",
+      "camera": "two",
+      "phone": [{ "hide": true, "at": "thumbs" }],
+      "mia": { "face": "nervous-smile", "pose": "sit", "do": "wiggle", "look": "camera" },
+      "byte": { "face": "suspicious", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Fake-chill voice. Again.",
+      "tts": "[flatly] Fake-chill voice. [sighs] Again.",
+      "camera": "two",
+      "byte": { "face": "suspicious", "do": "zoom", "look": "mia" },
+      "mia": { "face": "embarrassed", "pose": "slump", "at": "Again" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Again" }],
+      "pause": 0.15
+    },
+    {
+      "beat": 0.8,
+      "camera": "close:byte",
+      "popup": [{ "text": "Update postponed (4)", "buttons": ["Postpone", "Install"], "at": 0.1 }],
+      "byte": { "face": "curious", "do": "gasp", "look": "camera", "at": 0.1 },
+      "sfx": [{ "id": "notify", "at": 0.1 }]
+    },
+    {
+      "say": "byte",
+      "text": "Postpone.",
+      "tts": "[deadpan] Postpone.",
+      "camera": "close:byte",
+      "popup": [{ "dismiss": true, "at": "end" }],
+      "byte": { "face": "deadpan", "do": "headshake", "look": "camera" },
+      "sfx": [{ "id": "whoosh", "at": "end" }],
+      "pause": 0.2
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, most standoffs end with both people alone forever.",
+      "tts": "[deadpan] Statistically, most standoffs end with... both people alone. [flatly] Forever.",
+      "camera": "two",
+      "byte": { "face": "focused", "pose": "proud", "look": "mia" },
+      "mia": { "face": "shocked", "pose": "sit", "do": "gasp", "look": "byte", "at": "alone" },
+      "fx": [{ "type": "rain", "on": "mia", "at": "alone", "dur": 1.6 }],
+      "sfx": [{ "id": "sad-trombone", "at": "alone" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "BYTE. That's so dark!",
+      "tts": "[shrieks] BYTE. [horrified] That's so dark!",
+      "camera": "zoom:mia",
+      "mia": { "face": "angry", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "dizzy", "do": "shake", "at": "dark" },
+      "pause": 0.15
+    },
+    {
+      "beat": 1.2,
+      "camera": "two",
+      "phone": [{ "show": true, "at": 0 }, { "receive": "good morning ☀️", "at": 0.2 }],
+      "mia": { "face": "shocked", "do": "gasp", "pose": "phone", "look": "phone", "at": 0.3 },
+      "byte": { "face": "shocked", "do": "gasp", "look": "phone", "at": 0.35 },
+      "sfx": [{ "id": "message-in", "at": 0.2 }]
+    },
+    {
+      "say": "mia",
+      "text": "He texted first. HE TEXTED FIRST!",
+      "tts": "[gasps] He texted first. [squeals] HE TEXTED FIRST!",
+      "camera": "two",
+      "mia": [
+        { "face": "excited", "do": "bounce", "look": "phone" },
+        { "face": "joy", "pose": "cheer", "do": "jump", "look": "byte", "at": "HE" }
+      ],
+      "byte": { "face": "sparkle", "do": "spin", "at": "HE" },
+      "fx": [{ "type": "confetti", "at": "HE" }, { "type": "hearts", "on": "mia", "at": "HE" }],
+      "sfx": [{ "id": "sparkle", "at": "HE" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "You win. You did nothing. Congratulations.",
+      "tts": "[deadpan] You win. You did nothing. [flatly] Congratulations.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "camera" },
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "I have to tell someone. I have to tell EVERYONE.",
+      "tts": "[excited whisper] I have to tell someone. [squeals] I have to tell EVERYONE.",
+      "camera": "zoom:mia",
+      "mia": [
+        { "face": "sparkle", "pose": "phone", "look": "phone" },
+        { "face": "excited", "do": "type", "look": "camera", "at": "EVERYONE" }
+      ],
+      "fx": [{ "type": "sparkles", "on": "mia", "at": "EVERYONE" }],
+      "sfx": [{ "id": "typing", "at": "EVERYONE" }],
+      "pause": 0.5
+    }
+  ]
+}

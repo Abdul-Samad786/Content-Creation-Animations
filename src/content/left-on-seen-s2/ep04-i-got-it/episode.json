@@ -1,0 +1,163 @@
+{
+  "number": 4,
+  "title": "i got it",
+  "stage": "cafe",
+  "hook": "when the bill arrives on a first date 💸",
+  "outro": "Ep 5 → 2am 🌙",
+  "start": {
+    "mia": { "face": "worried", "pose": "sit", "look": "down" },
+    "byte": { "face": "focused", "look": "down" }
+  },
+  "lines": [
+    {
+      "say": "mia",
+      "text": "The bill is here. Nobody touch the bill.",
+      "tts": "[whispers] The bill is here. [dramatic] Nobody... touch the bill.",
+      "camera": "two",
+      "mia": [
+        { "face": "worried", "do": "freeze", "look": "down" },
+        { "face": "panic", "look": "byte", "at": "Nobody" }
+      ],
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Nobody" }],
+      "sfx": [{ "id": "dun-dun", "at": "Nobody" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "The bill is touching the table.",
+      "tts": "[deadpan] The bill is touching the table.",
+      "camera": "close:byte",
+      "byte": { "face": "deadpan", "look": "down" },
+      "pause": 0.2
+    },
+    {
+      "say": "mia",
+      "text": "If I reach, he reaches. If he reaches, I FAKE reach.",
+      "tts": "[whispers] If I reach, he reaches. [dramatic] If he reaches... I FAKE reach.",
+      "camera": "two",
+      "mia": [
+        { "face": "focused", "pose": "lean", "look": "down" },
+        { "face": "determined", "look": "byte", "at": "FAKE" }
+      ],
+      "byte": { "face": "suspicious", "look": "mia" },
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Fake reach detected. Probability, one hundred percent.",
+      "tts": "[deadpan] Fake reach detected. [flatly] Probability... one hundred percent.",
+      "camera": "close:byte",
+      "byte": { "face": "focused", "look": "camera" },
+      "pause": 0.15
+    },
+    {
+      "beat": 1.0,
+      "camera": "two",
+      "bubble": [{ "text": "i got it", "name": "Leo", "pos": "center", "at": 0.2 }],
+      "mia": { "face": "shocked", "do": "gasp", "pose": "sit", "look": "camera", "at": 0.3 },
+      "byte": { "face": "shocked", "look": "camera", "at": 0.35 },
+      "sfx": [{ "id": "message-in", "at": 0.2 }]
+    },
+    {
+      "say": "mia",
+      "text": "No, no. I got it.",
+      "tts": "[flatly, trying to sound casual] No, no. [slowly] I got it.",
+      "camera": "close:mia",
+      "mia": [
+        { "face": "nervous-smile", "look": "camera" },
+        { "face": "nervous-smile", "pose": "lean", "look": "down", "at": "got" }
+      ],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "THE TOTAL IS FORTY-TWO DOLLARS AND EIGHTY CENTS.",
+      "tts": "[dramatic] THE TOTAL IS... FORTY-TWO DOLLARS AND EIGHTY CENTS.",
+      "camera": "zoom:byte",
+      "byte": { "face": "sparkle", "pose": "proud", "look": "camera" },
+      "mia": { "face": "panic", "do": "gasp", "pose": "sit", "look": "byte", "at": "TOTAL" },
+      "fx": [{ "type": "shock", "on": "mia", "at": "TOTAL" }],
+      "sfx": [{ "id": "record-scratch", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Byte. Inside voice!",
+      "tts": "[whispers] Byte. [frantic] Inside voice!",
+      "camera": "two",
+      "bubble": [{ "clear": true, "at": 0 }],
+      "mia": { "face": "angry", "pose": "grab", "do": "shake", "look": "byte" },
+      "byte": { "face": "dizzy", "do": "shake", "at": "Inside" },
+      "pause": 0.1
+    },
+    {
+      "say": "byte",
+      "text": "WITH TIP, FIFTY-ONE.",
+      "tts": "[dramatic] WITH TIP... FIFTY-ONE.",
+      "camera": "close:byte",
+      "byte": { "face": "smug", "pose": "proud", "do": "nod", "look": "camera" },
+      "sfx": [{ "id": "boing", "at": "FIFTY-ONE" }],
+      "pause": 0.15
+    },
+    {
+      "say": "mia",
+      "text": "Wow. Fifty-one. Haha. So cheap.",
+      "tts": "[flatly, trying to sound casual] Wow. Fifty-one. [laughs nervously] Haha. So cheap.",
+      "camera": "close:mia",
+      "mia": { "face": "nervous-smile", "pose": "sit", "do": "freeze", "look": "camera" },
+      "fx": [{ "type": "sweat", "on": "mia", "at": "Haha" }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Your fake-chill voice is louder than me.",
+      "tts": "[deadpan] Your fake-chill voice... is louder than me.",
+      "camera": "two",
+      "byte": { "face": "suspicious", "do": "zoom", "look": "mia" },
+      "mia": { "face": "embarrassed", "pose": "slump", "look": "byte", "at": "louder" },
+      "pause": 0.15
+    },
+    {
+      "beat": 1.0,
+      "camera": "two",
+      "bubble": [{ "text": "lol i got it 🙂", "at": 0.2 }],
+      "mia": { "face": "love", "look": "camera", "at": 0.4 },
+      "byte": { "face": "happy", "look": "camera", "at": 0.4 },
+      "sfx": [{ "id": "message-in", "at": 0.2 }]
+    },
+    {
+      "say": "mia",
+      "text": "He got it. He GOT it.",
+      "tts": "[dreamy sigh] He got it. [giggles] He GOT it.",
+      "camera": "close:mia",
+      "mia": { "face": "love", "pose": "cheeks", "do": "wiggle", "look": "away" },
+      "fx": [{ "type": "hearts", "on": "mia", "at": 0 }, { "type": "blush", "on": "mia", "at": 0 }],
+      "pause": 0.15
+    },
+    {
+      "say": "byte",
+      "text": "Statistically, you now owe him one muffin.",
+      "tts": "[deadpan] Statistically, you now owe him... one muffin.",
+      "camera": "two",
+      "byte": { "face": "focused", "do": "nod", "look": "mia" },
+      "mia": { "face": "deadpan", "pose": "sit", "look": "byte", "at": "muffin" },
+      "pause": 0.2
+    },
+    {
+      "beat": 2.6,
+      "camera": "two",
+      "bubble": [
+        { "clear": true, "at": 0 },
+        { "typing": true, "at": 0.15 },
+        { "text": "can i walk you home?", "at": 0.8 }
+      ],
+      "mia": [
+        { "face": "shocked", "do": "gasp", "look": "camera", "at": 0.9 },
+        { "face": "love", "pose": "cheeks", "at": 1.4 }
+      ],
+      "byte": { "face": "shocked", "do": "gasp", "look": "camera", "at": 1.0 },
+      "fx": [{ "type": "hearts", "on": "mia", "at": 1.4 }, { "type": "blush", "on": "mia", "at": 1.4 }],
+      "sfx": [{ "id": "message-in", "at": 0.8 }, { "id": "aww", "at": 1.4 }]
+    }
+  ]
+}

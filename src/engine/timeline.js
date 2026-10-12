@@ -16,6 +16,11 @@ const DEFAULT_PAUSE = 0.2;
 /** Extra screen time after the last line when there is an outro sticker. */
 const OUTRO_TAIL = 1.1;
 const LOOK_TARGETS = new Set(["camera", "phone", "away", "up", "down"]);
+/** Robot screen modes a script can set with `"screen"` (see faces/drawFace.js). */
+export const SCREEN_MODES = ["on", "off", "v2"];
+
+/** Where a floating chat bubble can sit (see overlays/FloatingChat.jsx). */
+export const BUBBLE_POSITIONS = ["left", "right", "center", "low-left", "low-right"];
 
 class ScriptError extends Error {}
 
@@ -57,7 +62,10 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
       gestures: [],
       speech: [],
       blushBoost: [],
+      screen: [{ frame: -1, value: start.screen || "on" }],
     };
+    if (start.screen && c.model !== "robot") fail(where, `start.${c.id}.screen — only a robot has a screen`);
+    if (!SCREEN_MODES.includes(chars[c.id].screen[0].value)) fail(where, `start.${c.id}.screen "${start.screen}" — use ${SCREEN_MODES.join(", ")}`);
   }
 
   const lines = [];
@@ -65,6 +73,8 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
   const phone = [];
   const fx = [];
   const sfx = [];
+  const popup = [];
+  const bubbles = [];
   let frame = 0;
 
   episode.lines.forEach((raw, i) => {
@@ -155,6 +165,11 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
           tr.look.push({ frame: f, value: d.look });
         }
         if (d.visible != null) tr.visible.push({ frame: f, value: !!d.visible });
+        if (d.screen != null) {
+          if (c.model !== "robot") fail(at, `${c.id}.screen — only a robot has a screen`);
+          if (!SCREEN_MODES.includes(d.screen)) fail(at, `${c.id}.screen "${d.screen}" — use ${SCREEN_MODES.join(", ")}`);
+          tr.screen.push({ frame: f, value: d.screen });
+        }
         for (const word of asArray(d.do).flatMap((s) => String(s).split("+"))) {
           if (GESTURES[word]) tr.gestures.push({ frame: f, name: word });
           else if (MODEL_POSES[c.model][word]) tr.pose.push({ frame: f, value: word });
@@ -167,6 +182,20 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
     for (const p of asArray(raw.phone)) {
       const f = resolveAt(p.at, "phone");
       phone.push({ frame: f, ...p, dur: p.dur != null ? sec(p.dur) : undefined });
+    }
+
+    // Popup on the robot's screen: { text, detail?, icon? } | { dismiss: true } | { glitch: true, dur? }
+    for (const p of asArray(raw.popup)) {
+      if (p.text == null && !p.dismiss && !p.glitch) fail(at, `popup needs "text", "dismiss": true or "glitch": true`);
+      popup.push({ frame: resolveAt(p.at, "popup"), ...p, dur: p.dur != null ? sec(p.dur) : undefined });
+    }
+
+    // Floating chat bubbles in the scene: { text, from?, name?, pos? } | { typing: true|false } | { clear: true }
+    for (const b of asArray(raw.bubble)) {
+      if (b.text == null && b.typing == null && !b.clear) fail(at, `bubble needs "text", "typing" or "clear": true`);
+      if (b.from && !["me", "them"].includes(b.from)) fail(at, `bubble from "${b.from}" — use "me" or "them"`);
+      if (b.pos && !BUBBLE_POSITIONS.includes(b.pos)) fail(at, `bubble pos "${b.pos}" — use ${BUBBLE_POSITIONS.join(", ")}`);
+      bubbles.push({ frame: resolveAt(b.at, "bubble"), ...b });
     }
 
     // Effects
@@ -191,15 +220,25 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
 
   const sortByFrame = (a, b) => a.frame - b.frame;
   for (const tr of Object.values(chars)) {
-    for (const k of ["face", "pose", "look", "visible", "gestures"]) tr[k].sort(sortByFrame);
+    for (const k of ["face", "pose", "look", "visible", "gestures", "screen"]) tr[k].sort(sortByFrame);
   }
   phone.sort(sortByFrame);
+  popup.sort(sortByFrame);
+  bubbles.sort(sortByFrame);
   fx.sort(sortByFrame);
   sfx.sort(sortByFrame);
   if (!camera.length || camera[0].frame > 0) camera.unshift({ frame: 0, shot: "two", target: null, line: 1 });
 
   const contentEnd = frame;
-  const tail = episode.outro ? sec(OUTRO_TAIL) : 0;
+  // "outroAt": a line number — the outro sticker plays during that line (a beat)
+  // instead of at the very end, so a short sting can follow it.
+  let outroLine = null;
+  if (episode.outroAt != null) {
+    outroLine = lines[episode.outroAt - 1];
+    if (!outroLine) fail(where, `outroAt ${episode.outroAt} — there is no line ${episode.outroAt}`);
+    if (!episode.outro) fail(where, `outroAt needs an "outro" text`);
+  }
+  const tail = episode.outro && !outroLine ? sec(OUTRO_TAIL) : 0;
 
   return {
     fps,
@@ -207,6 +246,8 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
     height: series.format?.height ?? 1920,
     series,
     episode,
+    // An episode may play on a different stage than the series default
+    stage: episode.stage || series.stage,
     cast,
     chars,
     lines,
@@ -214,6 +255,9 @@ export function buildPlan(series, episode, audio, sfxLibrary, where = "episode")
     phone,
     fx,
     sfx,
+    popup,
+    bubbles,
+    outroLine,
     contentEnd,
     totalFrames: Math.max(contentEnd + tail, 1),
     warnings,

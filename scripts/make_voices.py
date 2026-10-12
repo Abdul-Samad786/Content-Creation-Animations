@@ -16,10 +16,14 @@ the delivery and are not spoken. With other models the tags are stripped.
 For each line this writes public/audio/<series>/<episode>/NN.mp3 and records in
 <episode>/audio.json: the clip length, the timing of every word (for captions)
 and a per-frame mouth-openness curve (for lip-sync). A line is regenerated only
-when its text, voice or model changed.
+when its text, voice, model or voice settings changed (a hash of all four is
+kept as "sig"). Every run prints how many characters it sent (or, with
+--dry-run, would send) — ElevenLabs bills per character.
 """
 import argparse
 import base64
+import hashlib
+import json
 import sys
 
 from content_lib import (CONTENT, PUBLIC, ApiError, ffprobe_seconds, load_json, request,
@@ -127,7 +131,13 @@ def synthesize(voice_id, text, model, settings):
         raise
 
 
-def run_episode(series_id, ep_dir, only, force, dry_run):
+def signature(tts, voice_id, model, settings):
+    """Cache key: regenerate only when what is sent to ElevenLabs changes."""
+    raw = json.dumps([tts, voice_id, model, settings], sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+
+
+def run_episode(series_id, ep_dir, only, force, dry_run, usage):
     s = series(series_id)
     ep = load_json(CONTENT / series_id / ep_dir / "episode.json")
     fps = s.get("format", {}).get("fps", 30)
@@ -154,15 +164,21 @@ def run_episode(series_id, ep_dir, only, force, dry_run):
         tts = line.get("tts") or line["text"]
         file_rel = f"audio/{series_id}/{ep_dir}/{i:02d}.mp3"
         prev = audio["lines"].get(str(i))
-        unchanged = prev and prev.get("tts") == tts and prev.get("voice") == voice["id"] and prev.get("model") in (model, fallback)
+        use_model = model
+        spoken = tts if use_model == "eleven_v3" else strip_tags(tts)
+        settings = voice_settings(voice, line, use_model)
+        sig = signature(tts, voice["id"], model, settings)
+        if prev and "sig" in prev:
+            unchanged = prev["sig"] == sig
+        else:  # clips made before "sig" existed
+            unchanged = prev and prev.get("tts") == tts and prev.get("voice") == voice["id"] and prev.get("model") in (model, fallback)
         if unchanged and (PUBLIC / prev["file"]).exists() and not force:
             print(f"  line {i:2d}: unchanged")
             continue
 
-        use_model = model
-        spoken = tts if use_model == "eleven_v3" else strip_tags(tts)
-        settings = voice_settings(voice, line, use_model)
         print(f"  line {i:2d} [{who['id']} · {voice.get('name', voice['id'])}]: {spoken}")
+        usage["chars"] += len(spoken)
+        usage["lines"] += 1
         if dry_run:
             continue
         try:
@@ -183,7 +199,9 @@ def run_episode(series_id, ep_dir, only, force, dry_run):
         seconds = ffprobe_seconds(out)
         if seconds is None:
             seconds = (al["character_end_times_seconds"][-1] + 0.15) if al else 2.0
-        entry = {"file": file_rel, "tts": tts, "voice": voice["id"], "model": use_model, "seconds": round(seconds, 3)}
+        if seconds < 0.3:
+            print(f"    ! line {i}: clip is only {seconds:.2f}s — empty or truncated? (kept; re-run with --only {i} --force)")
+        entry = {"file": file_rel, "tts": tts, "voice": voice["id"], "model": use_model, "sig": sig, "seconds": round(seconds, 3)}
         if al:
             entry["words"] = words_from_alignment(al)
             entry["mouth"] = mouth_curve(al, seconds, fps)
@@ -208,8 +226,11 @@ def main():
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args()
     only = {int(x) for x in a.only.split(",")} if a.only else None
+    usage = {"chars": 0, "lines": 0}
     for s, e in resolve_episode_args(a.targets):
-        run_episode(s, e, only, a.force, a.dry_run)
+        run_episode(s, e, only, a.force, a.dry_run, usage)
+    verb = "would send" if a.dry_run else "sent"
+    print(f"\nElevenLabs: {verb} {usage['chars']} characters for {usage['lines']} line(s).")
 
 
 if __name__ == "__main__":
